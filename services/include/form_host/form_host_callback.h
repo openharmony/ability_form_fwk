@@ -97,6 +97,7 @@ public:
     /**
      * @brief Lock form or unlock form.
      * @param formIds The Id list of forms.
+     * @param userId User ID.
      * @param lock True is lock form, false is unlock form.
      * @param callerToken Caller ability token.
      */
@@ -111,13 +112,6 @@ public:
      */
     void OnDueControlForms(const std::vector<int64_t> &formIds, const bool isDisablePolicy, const bool isControl,
         const sptr<IRemoteObject> &callerToken);
-
-    /**
-     * @brief Check if form is abnormal.
-     * @param formIds The Id list of forms.
-     * @param callerToken Caller ability token.
-     */
-    void OnCheckForms(const std::vector<int64_t> &formIds, const sptr<IRemoteObject> &callerToken);
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS

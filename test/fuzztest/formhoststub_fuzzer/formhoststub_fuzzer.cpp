@@ -47,8 +47,6 @@ public:
     {}
     void OnAcquireDataResponse(const AAFwk::WantParams &wantParams, int64_t requestCode) override
     {}
-    void OnCheckForm(const std::vector<int64_t> &formIds) override
-    {}
 };
 
 uint32_t GetU32Data(const char* ptr)
