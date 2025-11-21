@@ -190,8 +190,6 @@ public:
     {}
     void ProcessRecycleForm() override
     {}
-    void ProcessCheckForm() override
-    {}
 };
 }   // namespace OHOS
 #endif  // MOCK_SYSTEM_ABILITY_MANAGER_H_
