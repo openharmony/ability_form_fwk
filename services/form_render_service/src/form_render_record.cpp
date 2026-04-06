@@ -1327,6 +1327,7 @@ inline std::string FormRenderRecord::GenerateContextKey(const FormJsInfo &formJs
 int32_t FormRenderRecord::ReloadFormRecord(const std::vector<FormJsInfo> &&formJsInfos, const Want &want)
 {
     HILOG_INFO("Reload form record");
+    UpdateFormRequestsApiVersion(want);
     std::shared_ptr<EventHandler> eventHandler = GetEventHandler();
     if (eventHandler == nullptr) {
         if (GetEventHandler(true, true) == nullptr) {
@@ -2341,6 +2342,45 @@ void FormRenderRecord::UpdateContextConfiguration()
             continue;
         }
         (static_cast<OHOS::AbilityRuntime::ContextImpl &>(*iter.second)).SetConfiguration(config);
+    }
+}
+
+void FormRenderRecord::UpdateFormRequestsApiVersion(const Want &want)
+{
+    std::shared_ptr<EventHandler> eventHandler = GetEventHandler();
+    if (eventHandler == nullptr) {
+        HILOG_WARN("eventHandler is null, execute directly");
+        UpdateFormRequestsApiVersionInner(want);
+        return;
+    }
+
+    auto task = [weakThis = weak_from_this(), &want]() {
+        auto renderRecord = weakThis.lock();
+        if (renderRecord != nullptr) {
+            renderRecord->UpdateFormRequestsApiVersionInner(want);
+        }
+    };
+    eventHandler->PostSyncTask(task, "UpdateFormRequestsApiVersion");
+}
+
+void FormRenderRecord::UpdateFormRequestsApiVersionInner(const Want &want)
+{
+    int32_t apiCompatibleVersion = want.GetIntParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 0);
+    int32_t apiTargetVersion = want.GetIntParam(Constants::FORM_TARGET_VERSION_KEY, 0);
+    if (apiCompatibleVersion == 0 && apiTargetVersion == 0) {
+        HILOG_WARN("apiVersion not found in want, skip update");
+        return;
+    }
+    std::lock_guard<std::mutex> lock(formRequestsMutex_);
+    for (auto &[formId, innerMap] : formRequests_) {
+        for (auto &[compId, request] : innerMap) {
+            if (apiCompatibleVersion != 0) {
+                request.want.SetParam(Constants::FORM_COMPATIBLE_VERSION_KEY, apiCompatibleVersion);
+            }
+            if (apiTargetVersion != 0) {
+                request.want.SetParam(Constants::FORM_TARGET_VERSION_KEY, apiTargetVersion);
+            }
+        }
     }
 }
 } // namespace FormRender

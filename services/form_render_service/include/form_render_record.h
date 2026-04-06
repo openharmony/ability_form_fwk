@@ -280,6 +280,10 @@ private:
 
     void UpdateAllFormRequest(const std::vector<FormJsInfo> &formJsInfos, bool hasRelease);
 
+    void UpdateFormRequestsApiVersion(const Want &want);
+
+    void UpdateFormRequestsApiVersionInner(const Want &want);
+
     void HandleReleaseAllRendererInJsThread();
 
     void UpdateGroupRequestsWhenRecover(const int64_t &formId, const FormJsInfo &formJsInfo,
