@@ -143,7 +143,17 @@ public:
      * @return Returns ERR_OK on success, others on failure.
      */
     ErrCode RequestPublishForm(Want &want, bool withFormBindingData,
-                               std::unique_ptr<FormProviderData> &formBindingData, int64_t &formId) override;
+        std::unique_ptr<FormProviderData> &formBindingData, int64_t &formId) override;
+
+    /**
+    * @brief Request to publish a form to the form host with specific userId.
+    *
+    * @param want The want of the form to publish.
+     * @param userId User ID.
+    * @param formId Return the form id to be published.
+    * @return Returns ERR_OK on success, others on failure.
+    */
+    ErrCode RequestPublishFormCrossUser(Want &want, int32_t userId, int64_t &formId);
 
     ErrCode SetPublishFormResult(const int64_t formId, Constants::PublishFormResult &errorCodeInfo) override;
 
