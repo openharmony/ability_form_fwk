@@ -74,6 +74,14 @@ public:
     ErrCode QueryPublishFormToHost(Want &want);
 
     /**
+     * @brief Query the request host with specific userId.
+     * @param want The want of the form to publish.
+     * @param userId User ID.
+     * @return Returns ERR_OK on success, others on failure.
+     */
+    ErrCode QueryPublishFormToHost(Want &want, int32_t userId);
+
+    /**
      * @brief Add form with want, send want to form manager service.
      * @param formId The Id of the forms to add.
      * @param want The want of the form to add.
@@ -257,6 +265,26 @@ public:
     ErrCode RequestPublishForm(Want &want, bool withFormBindingData,
         std::unique_ptr<FormProviderData> &formBindingData, int64_t &formId,
         const std::vector<FormDataProxy> &formDataProxies = {}, bool needCheckFormPermission = true);
+
+    /**
+     * @brief Request to publish a form to the form host with specific userId.
+     *
+     * @param want The want of the form to publish.
+     * @param userId User ID.
+     * @param formId Return the form id to be published.
+     * @return Returns ERR_OK on success, others on failure.
+     */
+    ErrCode RequestPublishFormCommon(Want &want, int32_t userId, int64_t &formId);
+
+    /**
+     * @brief Request to publish a form to the form host with specific userId.
+     *
+     * @param want The want of the form to publish.
+     * @param userId User ID.
+     * @param formId Return the form id to be published.
+     * @return Returns ERR_OK on success, others on failure.
+     */
+    ErrCode RequestPublishFormCrossUser(Want &want, int32_t userId, int64_t &formId);
 
     ErrCode StartAbilityByFms(const Want &want);
 
@@ -1175,6 +1203,14 @@ private:
      * @return Returns ERR_OK on success, others on failure.
      */
     ErrCode RequestPublishFormToHost(Want &want);
+
+    /**
+     * @brief Post request publish form to host with specific userId.
+     * @param want The want of the form to publish.
+     * @param userId User ID.
+     * @return Returns ERR_OK on success, others on failure.
+     */
+    ErrCode RequestPublishFormToHost(Want &want, int32_t userId);
 
     /**
      * @brief check request publish form want.

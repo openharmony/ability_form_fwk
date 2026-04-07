@@ -665,7 +665,6 @@ ErrCode FormMgr::RequestPublishForm(Want &want, bool withFormBindingData,
     return ret;
 }
 
-
 ErrCode FormMgr::SetPublishFormResult(const int64_t formId, Constants::PublishFormResult &errorCodeInfo)
 {
     HILOG_INFO("call");
