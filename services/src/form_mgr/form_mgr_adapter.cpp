@@ -2480,6 +2480,13 @@ bool FormMgrAdapter::CheckSnapshotWant(const Want &want)
 
 ErrCode FormMgrAdapter::RequestPublishFormToHost(Want &want)
 {
+    int callingUid = IPCSkeleton::GetCallingUid();
+    int32_t userId = FormUtil::GetCallerUserId(callingUid);
+    return RequestPublishFormToHost(want, userId);
+}
+
+ErrCode FormMgrAdapter::RequestPublishFormToHost(Want &want, int32_t userId)
+{
     Want wantToHost(want);
     ElementName elementName = want.GetElement();
     wantToHost.SetParam(Constants::PARAM_BUNDLE_NAME_KEY, elementName.GetBundleName());
@@ -2490,7 +2497,7 @@ ErrCode FormMgrAdapter::RequestPublishFormToHost(Want &want)
     wantToHost.SetAction(Constants::FORM_PUBLISH_ACTION);
     CheckSnapshotWant(wantToHost);
 
-    ErrCode errCode = QueryPublishFormToHost(wantToHost);
+    ErrCode errCode = QueryPublishFormToHost(wantToHost, userId);
     if (errCode == ERR_OK) {
         int32_t userId = want.GetIntParam(Constants::PARAM_FORM_USER_ID, -1);
         int ret = FormAmsHelper::GetInstance().StartAbility(wantToHost, userId);
