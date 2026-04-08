@@ -116,6 +116,16 @@ public:
     ErrCode RequestPublishForm(Want &want, bool withFormBindingData,
                                std::unique_ptr<FormProviderData> &formBindingData, int64_t &formId) override;
 
+    /**
+     * @brief Request to publish a form to the form host with specific userId.
+     *
+     * @param want The want of the form to publish.
+     * @param userId User ID.
+     * @param formId Return the form id to be published.
+     * @return Returns ERR_OK on success, others on failure.
+     */
+    ErrCode RequestPublishFormCrossUser(Want &want, int32_t userId, int64_t &formId) override;
+
     ErrCode SetPublishFormResult(const int64_t formId, Constants::PublishFormResult &errorCodeInfo) override;
 
     ErrCode AcquireAddFormResult(const int64_t formId) override;
@@ -874,7 +884,7 @@ public:
      * @return Return ERR_OK on success, others on failure
      */
     ErrCode RegisterTemplateFormDetailInfoChange(const sptr<IRemoteObject> &callerToken) override;
- 
+
     /**
      * @brief UnRegister template from detail info change proxy in fms.
      * @return Return ERR_OK on success, others on failure

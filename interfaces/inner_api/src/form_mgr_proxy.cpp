@@ -345,6 +345,39 @@ ErrCode FormMgrProxy::RequestPublishForm(Want &want, bool withFormBindingData,
     return errCode;
 }
 
+ErrCode FormMgrProxy::RequestPublishFormCrossUser(Want &want, int32_t userId, int64_t &formId)
+{
+    MessageParcel data;
+    if (!WriteInterfaceToken(data)) {
+        HILOG_ERROR("write interface token failed");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    if (!data.WriteParcelable(&want)) {
+        HILOG_ERROR("write want failed");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    if (!data.WriteInt32(userId)) {
+        HILOG_ERROR("write userId failed");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    MessageOption option;
+    MessageParcel reply;
+    int32_t error = SendTransactCmd(
+        IFormMgr::Message::FORM_MGR_REQUEST_PUBLISH_FORM_CROSS_USER,
+        data,
+        reply,
+        option);
+    if (error != ERR_OK) {
+        HILOG_ERROR("SendRequest:%{public}d failed", error);
+        return ERR_APPEXECFWK_FORM_SEND_FMS_MSG;
+    }
+    ErrCode errCode = reply.ReadInt32();
+    if (errCode == ERR_OK) {
+        formId = reply.ReadInt64();
+    }
+    return errCode;
+}
+
 ErrCode FormMgrProxy::SetPublishFormResult(const int64_t formId, Constants::PublishFormResult &errorCodeInfo)
 {
     MessageParcel data;
