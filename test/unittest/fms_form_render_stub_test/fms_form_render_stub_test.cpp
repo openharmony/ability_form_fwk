@@ -220,6 +220,10 @@ public:
     {
         return number_;
     }
+    ErrCode RequestPublishFormCrossUser(Want &want, int32_t userId, int64_t &formId) override
+    {
+        return 0;
+    }
     ErrCode RequestPublishForm(Want &want, bool withFormBindingData,
         std::unique_ptr<FormProviderData> &formBindingData, int64_t &formId) override
     {

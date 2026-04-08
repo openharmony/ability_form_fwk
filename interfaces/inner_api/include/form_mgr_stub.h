@@ -122,6 +122,14 @@ private:
      */
     ErrCode HandleRequestPublishForm(MessageParcel &data, MessageParcel &reply);
 
+    /**
+     * @brief handle RequestPublishFormCrossUser message.
+     * @param data input param.
+     * @param reply output param.
+     * @return Returns ERR_OK on success, others on failure.
+     */
+    ErrCode HandleRequestPublishFormCrossUser(MessageParcel &data, MessageParcel &reply);
+
     ErrCode HandleSetPublishFormResult(MessageParcel &data, MessageParcel &reply);
 
     ErrCode HandleAcquireAddFormResult(MessageParcel &data, MessageParcel &reply);

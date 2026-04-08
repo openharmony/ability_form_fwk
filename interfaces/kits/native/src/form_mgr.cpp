@@ -628,6 +628,42 @@ int FormMgr::SetNextRefreshTime(const int64_t formId, const int64_t nextTime)
     return remoteProxy_->SetNextRefreshTime(formId, nextTime);
 }
 
+ErrCode FormMgr::RequestPublishFormCrossUser(Want &want, int32_t userId, int64_t &formId)
+{
+    HILOG_INFO("call,userId:%{public}d", userId);
+    std::string bundleName = want.GetElement().GetBundleName();
+    std::string abilityName = want.GetElement().GetAbilityName();
+    if (bundleName.empty() || abilityName.empty()) {
+        HILOG_ERROR("bundleName:%{public}s,abilityName:%{public}s",
+            bundleName.c_str(), abilityName.c_str());
+        return ERR_APPEXECFWK_FORM_INVALID_PARAM;
+    }
+    std::string formName = want.GetStringParam(AppExecFwk::Constants::PARAM_FORM_NAME_KEY);
+    std::string moduleName = want.GetStringParam(Constants::PARAM_MODULE_NAME_KEY);
+    int32_t dimensionId = want.GetIntParam(Constants::PARAM_FORM_DIMENSION_KEY, 0);
+    if (formName.empty() || moduleName.empty() || dimensionId == 0) {
+        HILOG_ERROR("formName:%{public}s,moduleName:%{public}s,dimensionId:%{public}d",
+            formName.c_str(), moduleName.c_str(), dimensionId);
+        return ERR_APPEXECFWK_FORM_INVALID_PARAM;
+    }
+    if (userId == Constants::INVALID_USER_ID) {
+        HILOG_ERROR("invalid userId:%{public}d", userId);
+        return ERR_APPEXECFWK_FORM_INVALID_PARAM;
+    }
+
+    ErrCode errCode = Connect();
+    if (errCode != ERR_OK) {
+        HILOG_ERROR("errCode:%{public}d", errCode);
+        return errCode;
+    }
+    std::shared_lock<std::shared_mutex> lock(connectMutex_);
+    if (remoteProxy_ == nullptr) {
+        HILOG_ERROR("null remoteProxy_");
+        return ERR_APPEXECFWK_FORM_COMMON_CODE;
+    }
+    return remoteProxy_->RequestPublishFormCrossUser(want, userId, formId);
+}
+
 ErrCode FormMgr::RequestPublishForm(Want &want, bool withFormBindingData,
     std::unique_ptr<FormProviderData> &formBindingData, int64_t &formId,
     const std::vector<FormDataProxy> &formDataProxies)
