@@ -19,11 +19,9 @@
 #include <set>
 
 #include "common/connection/form_ability_connection.h"
-#include "want.h"
 
 namespace OHOS {
 namespace AppExecFwk {
-using WantParams = OHOS::AAFwk::WantParams;
 
 /**
  * @class FormBatchDeleteConnection
@@ -35,18 +33,16 @@ public:
         const std::string &abilityName, const int32_t userId);
     virtual ~FormBatchDeleteConnection() = default;
 
+protected:
     /**
-     * @brief OnAbilityConnectDone, AbilityMs notify caller ability the result of connect.
-     * @param element service ability's ElementName.
-     * @param remoteObject the session proxy of service ability.
-     * @param resultCode ERR_OK on success, others on failure.
+     * @brief Execute batch delete task after connection success.
+     * @param want Task Want parameter.
+     * @param remoteObject Remote object.
      */
-    void OnAbilityConnectDone(
-        const AppExecFwk::ElementName &element, const sptr<IRemoteObject> &remoteObject, int resultCode) override;
+    void OnExecuteConnectTask(const Want &want, const sptr<IRemoteObject> &remoteObject) override;
 
 private:
     std::set<int64_t> formIds_;
-
     DISALLOW_COPY_AND_MOVE(FormBatchDeleteConnection);
 };
 }  // namespace AppExecFwk

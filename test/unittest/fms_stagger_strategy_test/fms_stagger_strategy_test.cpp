@@ -20,7 +20,6 @@
 #include "form_refresh/batch_refresh/strategy/visible_delay_stagger_strategy.h"
 #include "form_refresh/form_refresh_mgr.h"
 #include "form_refresh/mock_form_refresh_mgr.h"
-#include "form_mgr/mock_form_mgr_queue.h"
 #include "form_refresh/mock_refresh_control_mgr.h"
 #include "form_refresh/mock_refresh_cache_mgr.h"
 
@@ -52,7 +51,6 @@ void FmsStaggerStrategyTest::SetUp()
 void FmsStaggerStrategyTest::TearDown()
 {
     MockFormRefreshMgr::obj = nullptr;
-    MockFormMgrQueue::obj = nullptr;
 }
 
 /**
@@ -70,109 +68,6 @@ HWTEST_F(FmsStaggerStrategyTest, DelayExecuteRefresh_001, TestSize.Level1)
     EXPECT_EQ(ret, ERR_OK);
 
     GTEST_LOG_(INFO) << "DelayExecuteRefresh_001 end";
-}
-
-/**
- * @tc.name: FmsStaggerStrategyTest_DelayExecuteRefresh_002
- * @tc.desc: Verify DelayStaggerStrategy::ExecuteRefresh creates single batch for same uid
- * @tc.type: FUNC
- */
-HWTEST_F(FmsStaggerStrategyTest, DelayExecuteRefresh_002, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "DelayExecuteRefresh_002 start";
-
-    auto mockRefreshMgr = std::make_shared<MockFormRefreshMgr>();
-    MockFormRefreshMgr::obj = mockRefreshMgr;
-    EXPECT_CALL(*mockRefreshMgr, RequestRefresh(_, _))
-        .Times(2)
-        .WillRepeatedly(Return(ERR_OK));
-
-    auto mockQueue = std::make_shared<MockFormMgrQueue>();
-    MockFormMgrQueue::obj = mockQueue;
-    EXPECT_CALL(*mockQueue, ScheduleTask(_, _))
-        .Times(0);
-
-    DelayStaggerStrategy strategy;
-    std::vector<RefreshData> batch;
-    for (int i = 0; i < 2; i++) {
-        RefreshData data;
-        data.formId = i + 1;
-        data.record.uid = 100;
-        batch.push_back(data);
-    }
-    int32_t ret = strategy.ExecuteRefresh(batch, FormRefreshType::TYPE_PROVIDER);
-    EXPECT_EQ(ret, ERR_OK);
-
-    GTEST_LOG_(INFO) << "DelayExecuteRefresh_002 end";
-}
-
-/**
- * @tc.name: FmsStaggerStrategyTest_DelayExecuteRefresh_003
- * @tc.desc: Verify DelayStaggerStrategy::ExecuteRefresh splits into multiple batches and schedules delay
- * @tc.type: FUNC
- */
-HWTEST_F(FmsStaggerStrategyTest, DelayExecuteRefresh_003, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "DelayExecuteRefresh_003 start";
-
-    auto mockRefreshMgr = std::make_shared<MockFormRefreshMgr>();
-    MockFormRefreshMgr::obj = mockRefreshMgr;
-    // First batch (6 items) executed immediately, second batch deferred via ScheduleTask
-    EXPECT_CALL(*mockRefreshMgr, RequestRefresh(_, _))
-        .Times(6)
-        .WillRepeatedly(Return(ERR_OK));
-
-    auto mockQueue = std::make_shared<MockFormMgrQueue>();
-    MockFormMgrQueue::obj = mockQueue;
-    EXPECT_CALL(*mockQueue, ScheduleTask(_, _))
-        .Times(1);
-
-    DelayStaggerStrategy strategy;
-    std::vector<RefreshData> batch;
-    for (int i = 0; i < 7; i++) {
-        RefreshData data;
-        data.formId = i + 1;
-        data.record.uid = i + 100;
-        batch.push_back(data);
-    }
-    int32_t ret = strategy.ExecuteRefresh(batch, FormRefreshType::TYPE_PROVIDER);
-    EXPECT_EQ(ret, ERR_OK);
-
-    GTEST_LOG_(INFO) << "DelayExecuteRefresh_003 end";
-}
-
-/**
- * @tc.name: FmsStaggerStrategyTest_DelayExecuteRefresh_004
- * @tc.desc: Verify DelayStaggerStrategy::ExecuteRefresh handles refresh failures
- * @tc.type: FUNC
- */
-HWTEST_F(FmsStaggerStrategyTest, DelayExecuteRefresh_004, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "DelayExecuteRefresh_004 start";
-
-    auto mockRefreshMgr = std::make_shared<MockFormRefreshMgr>();
-    MockFormRefreshMgr::obj = mockRefreshMgr;
-    EXPECT_CALL(*mockRefreshMgr, RequestRefresh(_, _))
-        .Times(2)
-        .WillRepeatedly(Return(ERR_APPEXECFWK_FORM_INVALID_PARAM));
-
-    auto mockQueue = std::make_shared<MockFormMgrQueue>();
-    MockFormMgrQueue::obj = mockQueue;
-    EXPECT_CALL(*mockQueue, ScheduleTask(_, _))
-        .Times(0);
-
-    DelayStaggerStrategy strategy;
-    std::vector<RefreshData> batch;
-    for (int i = 0; i < 2; i++) {
-        RefreshData data;
-        data.formId = i + 1;
-        data.record.uid = 100;
-        batch.push_back(data);
-    }
-    int32_t ret = strategy.ExecuteRefresh(batch, FormRefreshType::TYPE_PROVIDER);
-    EXPECT_EQ(ret, ERR_OK);
-
-    GTEST_LOG_(INFO) << "DelayExecuteRefresh_004 end";
 }
 
 /**

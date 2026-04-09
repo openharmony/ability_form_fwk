@@ -45,8 +45,6 @@ bool DoSomethingInterestingWithMyAPI(FuzzedDataProvider *fdp)
         return true;
     }
 
-    FormRenderEventReport::GetNowMillisecond();
-    
     PerformanceEventInfo eventInfo;
     eventInfo.bundleName = fdp->ConsumeRandomLengthString(MAX_LENGTH);
     eventInfo.sceneId = fdp->ConsumeRandomLengthString(MAX_LENGTH);

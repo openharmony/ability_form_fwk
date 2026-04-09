@@ -23,6 +23,7 @@
 #include "form_constants.h"
 #include "data_center/form_data_proxy_mgr.h"
 #include "form_mgr_errors.h"
+#include "common/util/form_task_common.h"
 #include "form_provider/form_provider_mgr.h"
 #include "form_provider/form_provider_task_mgr.h"
 #include "form_provider/form_provider_queue.h"
@@ -143,7 +144,7 @@ int FormSupplyCallback::OnEventHandle(const Want &want)
     std::string supplyInfo = want.GetStringParam(Constants::FORM_SUPPLY_INFO);
     HILOG_INFO("connectId:%{public}d, supplyInfo:%{public}s", connectId, supplyInfo.c_str());
     FormProviderQueue::GetInstance().CancelDelayTask(
-        { Constants::DETECT_FORM_EXIT_DELAY_TASK, static_cast<int64_t>(connectId) });
+        std::make_pair(static_cast<int64_t>(Constants::DETECT_FORM_EXIT_DELAY_TASK), static_cast<int64_t>(connectId)));
     RemoveConnection(connectId);
     HILOG_INFO("end");
     return ERR_OK;

@@ -51,7 +51,6 @@ bool DoSomethingInterestingWithMyAPI(FuzzedDataProvider *fdp)
     FormUtil::GetCurrentNanosecond();
     FormUtil::GetCurrentMillisecond();
     FormUtil::GetCurrentSteadyClockMillseconds();
-    FormUtil::GetNowMillisecond();
 
     struct tm timeStruct;
     timeStruct.tm_year = fdp->ConsumeIntegralInRange(0, 100);

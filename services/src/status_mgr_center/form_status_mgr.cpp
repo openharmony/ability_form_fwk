@@ -22,7 +22,7 @@
 #include "common/timer_mgr/form_timer_mgr.h"
 #include "form_event_report.h"
 #include "fms_log_wrapper.h"
-#include "form_status_print.h"
+#include "util/form_status_print.h"
 
 namespace OHOS {
 namespace AppExecFwk {

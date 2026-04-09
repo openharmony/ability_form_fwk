@@ -26,11 +26,11 @@
 #include "event_handler.h"
 #include "form_supply_proxy.h"
 #include "form_render_record.h"
-#include "form_render_serial_queue.h"
+#include "queue/form_base_serial_queue.h"
 #include "js_runtime.h"
 #include "runtime.h"
 #include "want.h"
-#include "status_mgr_center/form_status_common.h"
+#include "util/form_status_common.h"
 
 namespace OHOS {
 namespace AppExecFwk {
@@ -153,7 +153,7 @@ private:
     // The configuration items have already been applied to ArkUI.
     std::shared_ptr<OHOS::AppExecFwk::Configuration> appliedConfig_;
     std::chrono::steady_clock::time_point configUpdateTime_ = std::chrono::steady_clock::now();
-    std::shared_ptr<FormRenderSerialQueue> serialQueue_ = nullptr;
+    std::shared_ptr<Common::FormBaseSerialQueue> serialQueue_ = nullptr;
     std::mutex formSupplyMutex_;
     sptr<IFormSupply> formSupplyClient_;
     bool isVerified_ = false;
