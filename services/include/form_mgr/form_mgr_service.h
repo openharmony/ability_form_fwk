@@ -153,7 +153,7 @@ public:
     * @param formId Return the form id to be published.
     * @return Returns ERR_OK on success, others on failure.
     */
-    ErrCode RequestPublishFormCrossUser(Want &want, int32_t userId, int64_t &formId);
+    ErrCode RequestPublishFormCrossUser(Want &want, int32_t userId, int64_t &formId) override;
 
     ErrCode SetPublishFormResult(const int64_t formId, Constants::PublishFormResult &errorCodeInfo) override;
 
