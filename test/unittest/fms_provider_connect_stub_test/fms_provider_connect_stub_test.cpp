@@ -27,6 +27,19 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace AppExecFwk {
+// Mock implementation of FormAbilityConnection for testing
+class MockFormAbilityConnection : public FormAbilityConnection {
+public:
+    MockFormAbilityConnection() : FormAbilityConnection() {}
+    virtual ~MockFormAbilityConnection() = default;
+
+protected:
+    void OnExecuteConnectTask(const Want &want, const sptr<IRemoteObject> &remoteObject) override
+    {
+        // Mock implementation for testing - do nothing
+    }
+};
+
 class ProviderConnectStubTest : public testing::Test {
 public:
     static void SetUpTestCase();
@@ -54,7 +67,7 @@ void ProviderConnectStubTest::TearDown() {}
 HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_001, TestSize.Level0)
 {
     GTEST_LOG_(INFO) << "ProviderConnectStubTest_001 start";
-    FormAbilityConnection formAbility;
+    MockFormAbilityConnection formAbility;
     uint32_t code = 1;
     MessageParcel data;
     MessageParcel reply;
@@ -75,7 +88,7 @@ HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_001, TestSize.Level0)
 HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_002, TestSize.Level0)
 {
     GTEST_LOG_(INFO) << "ProviderConnectStubTest_002 start";
-    FormAbilityConnection formAbility;
+    MockFormAbilityConnection formAbility;
     uint32_t code = 1;
     MessageParcel data;
     MessageParcel reply;
@@ -96,7 +109,7 @@ HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_002, TestSize.Level0)
 HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_003, TestSize.Level0)
 {
     GTEST_LOG_(INFO) << "ProviderConnectStubTest_003 start";
-    FormAbilityConnection formAbility;
+    MockFormAbilityConnection formAbility;
     uint32_t code = 2;
     MessageParcel data;
     MessageParcel reply;
@@ -117,7 +130,7 @@ HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_003, TestSize.Level0)
 HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_004, TestSize.Level0)
 {
     GTEST_LOG_(INFO) << "ProviderConnectStubTest_004 start";
-    FormAbilityConnection formAbility;
+    MockFormAbilityConnection formAbility;
     uint32_t code = 3;
     MessageParcel data;
     MessageParcel reply;
@@ -138,7 +151,7 @@ HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_004, TestSize.Level0)
 HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_005, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "ProviderConnectStubTest_005 start";
-    FormAbilityConnection formAbility;
+    MockFormAbilityConnection formAbility;
     FormInfoFilter filter;
     uint32_t code = IAbilityConnection::ON_ABILITY_CONNECT_DONE;
     MessageParcel data;
@@ -160,7 +173,7 @@ HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_005, TestSize.Level1)
 HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_006, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "ProviderConnectStubTest_006 start";
-    FormAbilityConnection formAbility;
+    MockFormAbilityConnection formAbility;
     FormInfoFilter filter;
     uint32_t code = IAbilityConnection::ON_ABILITY_DISCONNECT_DONE;
     MessageParcel data;
@@ -182,7 +195,7 @@ HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_006, TestSize.Level1)
 HWTEST_F(ProviderConnectStubTest, ProviderConnectStubTest_007, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "ProviderConnectStubTest_007 start";
-    FormAbilityConnection formAbility;
+    MockFormAbilityConnection formAbility;
     FormInfoFilter filter;
     uint32_t code = 3;
     MessageParcel data;

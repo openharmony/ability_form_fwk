@@ -28,6 +28,7 @@ ohos_fuzztest("FormRenderStatusTaskMgrFuzzTest") {
     "${form_fwk_path}/interfaces/inner_api/include",
     "${form_fwk_path}/services/include",
     "${form_fwk_path}/services/form_render_service/include",
+    "${form_fwk_path}/services/common/include",
   ]
   cflags = [
     "-g",
@@ -40,6 +41,9 @@ ohos_fuzztest("FormRenderStatusTaskMgrFuzzTest") {
     "${form_fwk_path}/services/form_render_service/src/status_mgr_center/form_render_status_mgr.cpp",
     "${form_fwk_path}/services/form_render_service/src/status_mgr_center/form_render_status_table.cpp",
     "${form_fwk_path}/services/form_render_service/src/status_mgr_center/form_render_status_task_mgr.cpp",
+    "${form_fwk_path}/services/common/src/util/form_status_print.cpp",
+    "${form_fwk_path}/services/common/src/queue/form_base_serial_queue.cpp",
+    "${form_fwk_path}/services/common/src/queue/form_singleton_queue_base.cpp",
     "formrenderstatustaskmgr_fuzzer.cpp"
   ]
 
@@ -62,6 +66,7 @@ ohos_fuzztest("FormRenderStatusTaskMgrFuzzTest") {
     "bundle_framework:appexecfwk_core",
     "c_utils:utils",
     "ffrt:libffrt",
+    "hicollie:libhicollie",
     "hilog:libhilog",
     "ipc:ipc_core",
     "samgr:samgr_proxy",

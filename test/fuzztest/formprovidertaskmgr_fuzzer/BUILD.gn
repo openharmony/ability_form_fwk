@@ -26,6 +26,7 @@ ohos_fuzztest("FormProviderTaskMgrFuzzTest") {
   include_dirs = [
     "${form_fwk_path}/interfaces/kits/native/include",
     "${form_fwk_path}/services/include",
+    "${form_fwk_path}/services/common/include",
   ]
   cflags = [
     "-g",
@@ -35,9 +36,10 @@ ohos_fuzztest("FormProviderTaskMgrFuzzTest") {
   ]
   sources = [
     "formprovidertaskmgr_fuzzer.cpp",
-    "${form_fwk_path}/services/src/form_provider/form_provider_queue.cpp",
     "${form_fwk_path}/services/src/form_provider/form_provider_task_mgr.cpp",
-    "${form_fwk_path}/services/src/common/util/form_report.cpp"
+    "${form_fwk_path}/services/src/common/util/form_report.cpp",
+    "${form_fwk_path}/services/common/src/queue/form_base_serial_queue.cpp",
+    "${form_fwk_path}/services/common/src/queue/form_singleton_queue_base.cpp",
   ]
 
   deps = [

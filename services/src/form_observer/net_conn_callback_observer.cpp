@@ -18,7 +18,6 @@
 #include "fms_log_wrapper.h"
 #include "form_mgr/form_mgr_adapter_facade.h"
 #include "common/util/form_util.h"
-#include "common/util/form_task_common.h"
 #include "form_mgr/form_mgr_queue.h"
 #include "net_conn_client.h"
 

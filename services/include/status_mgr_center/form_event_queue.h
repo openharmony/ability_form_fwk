@@ -20,7 +20,7 @@
 #include <mutex>
 #include <queue>
 
-#include "status_mgr_center/form_status_common.h"
+#include "util/form_status_common.h"
 
 namespace OHOS {
 namespace AppExecFwk {

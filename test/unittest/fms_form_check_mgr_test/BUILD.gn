@@ -43,6 +43,8 @@ ohos_unittest("FmsFormCheckMgrTest") {
     "${form_fwk_path}/services/src/form_refresh/refresh_impl/form_timer_refresh_impl.cpp",
     "${form_fwk_path}/services/src/form_refresh/refresh_impl/form_app_upgrade_refresh_impl.cpp",
     "${form_fwk_path}/services/src/form_refresh/strategy/refresh_cache_mgr.cpp",
+    "${form_fwk_path}/services/common/src/queue/form_base_serial_queue.cpp",
+    "${form_fwk_path}/services/common/src/queue/form_singleton_queue_base.cpp",
     "${form_fwk_path}/test/unittest/fms_form_check_mgr_test/fms_form_check_mgr_test.cpp",
     "${form_fwk_path}/test/unittest/fms_form_check_mgr_test/mock_form_provider_mgr.cpp",
     "${form_fwk_path}/test/unittest/fms_form_check_mgr_test/mock_refresh_check_mgr.cpp",
@@ -54,6 +56,7 @@ ohos_unittest("FmsFormCheckMgrTest") {
 
   include_dirs = [
     "${form_fwk_path}/services/include",
+    "${form_fwk_path}/services/common/include",
     "${form_fwk_path}/test/mock/include",
   ]
 
@@ -85,6 +88,7 @@ ohos_unittest("FmsFormCheckMgrTest") {
     "data_share:datashare_provider",
     "ffrt:libffrt",
     "form_fwk:form_manager",
+    "hicollie:libhicollie",
     "hilog:libhilog",
     "ipc:ipc_core",
     "relational_store:native_rdb",
@@ -98,7 +102,6 @@ ohos_unittest("FmsFormCheckMgrTest2") {
   module_out_path = module_output_path
 
   sources = [
-    "${form_fwk_path}/services/src/form_mgr/form_mgr_queue.cpp",
     "${form_fwk_path}/services/src/form_refresh/check_mgr/active_user_checker.cpp",
     "${form_fwk_path}/services/src/form_refresh/check_mgr/add_finish_checker.cpp",
     "${form_fwk_path}/services/src/form_refresh/check_mgr/system_app_checker.cpp",
@@ -130,12 +133,15 @@ ohos_unittest("FmsFormCheckMgrTest2") {
     "${form_fwk_path}/services/src/form_refresh/batch_refresh/strategy/delay_stagger_strategy.cpp",
     "${form_fwk_path}/services/src/form_refresh/batch_refresh/strategy/visible_delay_stagger_strategy.cpp",
     "${form_fwk_path}/services/src/feature/param_update/param_control.cpp",
+    "${form_fwk_path}/services/common/src/queue/form_base_serial_queue.cpp",
+    "${form_fwk_path}/services/common/src/queue/form_singleton_queue_base.cpp",
     "${form_fwk_path}/test/unittest/fms_form_check_mgr_test/fms_form_check_mgr_test2.cpp",
     "${form_fwk_path}/test/unittest/fms_form_check_mgr_test/mock_accesstoken_kit.cpp",
   ]
 
   include_dirs = [
     "${form_fwk_path}/services/include",
+    "${form_fwk_path}/services/common/include",
     "${form_fwk_path}/test/mock/include",
   ]
 

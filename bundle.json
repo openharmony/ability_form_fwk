@@ -178,7 +178,6 @@
                   "header_files": [
                     "form_event_report.h",
                     "form_file_util.h",
-                    "form_status_print.h",
                     "form_constants.h"
                   ]
                 },

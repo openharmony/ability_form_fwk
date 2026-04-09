@@ -26,6 +26,7 @@ ohos_fuzztest("FormMgrQueueFuzzTest") {
   include_dirs = [
     "${form_fwk_path}/interfaces/kits/native/include",
     "${form_fwk_path}/services/include",
+    "${form_fwk_path}/services/common/include",
   ]
   cflags = [
     "-g",
@@ -36,7 +37,8 @@ ohos_fuzztest("FormMgrQueueFuzzTest") {
 
   sources = [
     "${form_fwk_path}/services/src/common/util/form_serial_queue.cpp",
-    "${form_fwk_path}/services/src/form_mgr/form_mgr_queue.cpp",
+    "${form_fwk_path}/services/common/src/queue/form_base_serial_queue.cpp",
+    "${form_fwk_path}/services/common/src/queue/form_singleton_queue_base.cpp",
     "formmgrqueue_fuzzer.cpp"
   ]
 
