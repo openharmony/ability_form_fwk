@@ -810,7 +810,7 @@ ani_object CreateFormInstances(ani_env *env, const std::vector<AppExecFwk::FormI
             HILOG_WARN("null aniInfo");
             break;
         }
-        status = env->Object_CallMethodByName_Void(arrayObj, "$_set", "iY:", index, aniInfo);
+        status = env->Object_CallMethodByName_Void(arrayObj, ANI_SETTER_MARKER, ANI_SET_SIGNATURE, index, aniInfo);
         if (status != ANI_OK) {
             HILOG_WARN("Object_CallMethodByName_Void failed status: %{public}d", status);
             break;
@@ -907,7 +907,7 @@ ani_object CreateRunningFormInfos(ani_env *env, const std::vector<AppExecFwk::Ru
             HILOG_WARN("null aniInfo");
             break;
         }
-        status = env->Object_CallMethodByName_Void(arrayObj, "$_set", "iY:", index, aniInfo);
+        status = env->Object_CallMethodByName_Void(arrayObj, ANI_SETTER_MARKER, ANI_SET_SIGNATURE, index, aniInfo);
         if (status != ANI_OK) {
             HILOG_WARN("Object_CallMethodByName_Void failed status: %{public}d", status);
             break;

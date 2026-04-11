@@ -44,6 +44,7 @@ using namespace OHOS::AppExecFwk;
 constexpr int64_t INVALID_FORMID = -1;
 constexpr const char *ANI_SETTER_MARKER = "$_set";
 constexpr const char *ANI_GETTER_MARKER = "$_get";
+constexpr const char *ANI_SET_SIGNATURE = "iY:";
 
 // ============================================================================
 // Type Conversion Functions
