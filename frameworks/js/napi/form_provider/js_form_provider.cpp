@@ -1426,7 +1426,7 @@ ErrCode JsFormProviderProxyMgr::PublishFormCrossBundleControl(
     dataParam->bundleInfo = bundleInfo;
     dataParam->isCanOpen = isCanOpen;
     std::shared_ptr<EventHandler> mainHandler = std::make_shared<EventHandler>(EventRunner::GetMainEventRunner());
-    std::function<void()> executeCrossBundleControlFunc = [client = sptr<JsFormProviderProxyMgr>(this), dataParam]() {
+    std::function<void()> executeCrossBundleControlFunc = [dataParam]() {
         JsFormProviderProxyMgr::GetInstance()->PublishFormCrossBundleControlInner(dataParam);
     };
     mainHandler->PostSyncTask(executeCrossBundleControlFunc, "JsFormProviderProxyMgr::PublishFormCrossBundleControl");

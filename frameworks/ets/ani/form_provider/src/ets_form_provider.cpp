@@ -919,7 +919,7 @@ ErrCode EtsFormProviderProxyMgr::PublishFormCrossBundleControl(
     dataParam->bundleInfo = bundleInfo;
     dataParam->isCanOpen = isCanOpen;
     std::shared_ptr<EventHandler> mainHandler = std::make_shared<EventHandler>(EventRunner::GetMainEventRunner());
-    std::function<void()> executeCrossBundleControlFunc = [client = sptr<EtsFormProviderProxyMgr>(this), dataParam]() {
+    std::function<void()> executeCrossBundleControlFunc = [dataParam]() {
         EtsFormProviderProxyMgr::GetInstance()->PublishFormCrossBundleControlInner(dataParam);
     };
     mainHandler->PostSyncTask(executeCrossBundleControlFunc, "EtsFormProviderProxyMgr::PublishFormCrossBundleControl");
