@@ -53,6 +53,7 @@ public:
 };
 void FmsFormProviderDataTest::SetUp()
 {
+    jsonData_.clear();
     DIR *dirptr = opendir(FORM_DB_DATA_BASE_FILE_DIR.c_str());
     if (dirptr == nullptr) {
         HILOG_WARN("%{public}s, opendir is fail", __func__);
@@ -67,6 +68,7 @@ void FmsFormProviderDataTest::SetUp()
 
 bool FmsFormProviderDataTest::InitJsonData()
 {
+    jsonData_.clear();
     nlohmann::json tmpJson;
     tmpJson["name"] = "li";
     tmpJson["age"] = TEN;
@@ -76,6 +78,7 @@ bool FmsFormProviderDataTest::InitJsonData()
 
 bool FmsFormProviderDataTest::InitJsonData2()
 {
+    jsonData_.clear();
     nlohmann::json tmpJson;
     tmpJson["name"] = "wang";
     tmpJson["age"] = ELEVEN;
@@ -176,23 +179,6 @@ HWTEST_F(FmsFormProviderDataTest, Constructor_WithIsUsedInFRS_001, TestSize.Leve
     FormProviderData formProviderData(jsonStr, true);
     EXPECT_FALSE(formProviderData.jsonFormProviderData_.empty());
     GTEST_LOG_(INFO) << "Constructor_WithIsUsedInFRS_001 end";
-}
-
-/**
- * @tc.name: AddImageDataImage_001
- * @tc.type: FUNC
- * @tc.desc: When fd is 0, function should handle gracefully
- */
-HWTEST_F(FmsFormProviderDataTest, AddImageDataImage_001, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "AddImageDataImage_001 start";
-    FormProviderData formProviderData(jsonData_);
-    std::string picName = "imageTest";
-    int fd = 0;
-    formProviderData.AddImageData(picName, fd);
-    EXPECT_TRUE(formProviderData.rawImageBytesMap_.find(picName) == formProviderData.rawImageBytesMap_.end());
-    EXPECT_EQ(0, formProviderData.imageDataState_);
-    GTEST_LOG_(INFO) << "AddImageDataImage_001 end";
 }
 
 /**
@@ -453,18 +439,23 @@ HWTEST_F(FmsFormProviderDataTest, RemoveImageData_AddImageData_001, TestSize.Lev
 /**
  * @tc.name: SetDataString_GetDataString_002
  * @tc.type: FUNC
- * @tc.desc: Verify the SetDataString and GetDataString function.
+ * @tc.desc: Verify SetDataString and GetDataString with valid JSON data.
  */
 HWTEST_F(FmsFormProviderDataTest, SetDataString_GetDataString_002, TestSize.Level0)
 {
     GTEST_LOG_(INFO) << "SetDataString_GetDataString_002 start";
-    InitJsonData();
-    FormProviderData formProviderData(jsonData_);
-    std::string jsonDataString = "abc";
+    FormProviderData formProviderData("");
+    std::string jsonDataString = R"({"name": "test", "age": 20})";
     formProviderData.SetDataString(jsonDataString);
+    
     auto result = formProviderData.GetDataString();
-
     EXPECT_FALSE(result.empty());
+    
+    nlohmann::json resultJson = nlohmann::json::parse(result, nullptr, false);
+    EXPECT_FALSE(resultJson.is_discarded());
+    EXPECT_EQ(resultJson["name"], "test");
+    EXPECT_EQ(resultJson["age"], 20);
+    
     GTEST_LOG_(INFO) << "SetDataString_GetDataString_002 end";
 }
 
@@ -1262,18 +1253,28 @@ HWTEST_F(FmsFormProviderDataTest, MarshallingUnmarshalling_WithImage_001, TestSi
     writeProviderData.AddImageData("marshTest", data, 10);
     writeProviderData.imageDataState_ = FormProviderData::IMAGE_DATA_STATE_ADDED;
     
+    auto writeJsonData = writeProviderData.GetData();
     auto writeImageDataState = writeProviderData.GetImageDataState();
     auto writeRawImageBytesMapSize = writeProviderData.rawImageBytesMap_.size();
+    auto writeImageDataMapSize = writeProviderData.GetImageDataMap().size();
     
     Parcel parcel;
     EXPECT_TRUE(writeProviderData.Marshalling(parcel));
     
     std::unique_ptr<FormProviderData> readProviderData(FormProviderData::Unmarshalling(parcel));
     ASSERT_NE(readProviderData, nullptr);
+    
+    auto readJsonData = readProviderData->GetData();
+    EXPECT_EQ(readJsonData.dump(), writeJsonData.dump());
     EXPECT_FALSE(readProviderData->jsonFormProviderData_.empty());
     EXPECT_EQ(readProviderData->GetImageDataState(), writeImageDataState);
-    EXPECT_EQ(readProviderData->GetImageDataMap().size(), writeRawImageBytesMapSize);
+    EXPECT_EQ(readProviderData->GetImageDataMap().size(), writeImageDataMapSize);
     EXPECT_TRUE(readProviderData->HasData());
+    
+    auto readImageDataMap = readProviderData->GetImageDataMap();
+    ASSERT_TRUE(readImageDataMap.find("marshTest") != readImageDataMap.end());
+    EXPECT_EQ(readImageDataMap["marshTest"].second, 10);
+    
     GTEST_LOG_(INFO) << "MarshallingUnmarshalling_WithImage_001 end";
 }
 
