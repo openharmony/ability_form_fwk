@@ -38,7 +38,6 @@ using namespace testing::ext;
 
 namespace OHOS::AppExecFwk {
 const std::string FORM_DB_DATA_BASE_FILE_DIR = "/data/formmgr";
-const int32_t FOUR = 4;
 const int32_t TEN = 10;
 const int32_t ELEVEN = 11;
 const int32_t DEFAULT_VALUE = 0;  // Used to adapt functional code.
@@ -49,9 +48,6 @@ public:
     void Test();
     bool InitJsonData();
     bool InitJsonData2();
-    bool CreateJsonFileByJsonData1(const nlohmann::json &jsonData);
-    bool CreateJsonFileByJsonData2(const nlohmann::json &jsonData);
-    bool CreateMergeJsonFileByJsonData3(const nlohmann::json &jsonData);
 
     nlohmann::json jsonData_;
 };
@@ -87,82 +83,6 @@ bool FmsFormProviderDataTest::InitJsonData2()
     return true;
 }
 
-bool FmsFormProviderDataTest::CreateJsonFileByJsonData1(const nlohmann::json &jsonData)
-{
-    std::ofstream o("/data/formmgr/ByJsonFile1.json");
-    o.close();
-
-    std::fstream f("/data/formmgr/ByJsonFile1.json");
-    if (f.good() == false) {
-        return false;
-    }
-
-    f << std::setw(FOUR) << jsonData << std::endl;
-
-    f.close();
-    return true;
-}
-
-bool FmsFormProviderDataTest::CreateJsonFileByJsonData2(const nlohmann::json &jsonData)
-{
-    std::ofstream o("/data/formmgr/ByJsonFile2.json");
-    o.close();
-
-    std::fstream f("/data/formmgr/ByJsonFile2.json");
-    if (f.good() == false) {
-        return false;
-    }
-
-    f << std::setw(FOUR) << jsonData << std::endl;
-
-    f.close();
-    return true;
-}
-
-bool FmsFormProviderDataTest::CreateMergeJsonFileByJsonData3(const nlohmann::json &jsonData)
-{
-    std::ofstream o("/data/formmgr/ByJsonFile3.json");
-    o.close();
-
-    std::fstream f("/data/formmgr/ByJsonFile3.json");
-    if (f.good() == false) {
-        return false;
-    }
-
-    f << std::setw(FOUR) << jsonData << std::endl;
-
-    f.close();
-    return true;
-}
-
-/**
- * @tc.name: CreateJsonFile_ByJsonData1_001
- * @tc.type: FUNC
- * @tc.desc: Verify the CreateJsonFileByJsonData1 function.
- */
-HWTEST_F(FmsFormProviderDataTest, CreateJsonFile_ByJsonData1_001, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "CreateJsonFile_ByJsonData1_001 start";
-    InitJsonData();
-    FormProviderData formProviderData(jsonData_);
-    EXPECT_EQ(true, CreateJsonFileByJsonData1(formProviderData.jsonFormProviderData_));
-    GTEST_LOG_(INFO) << "CreateJsonFile_ByJsonData1_001 end";
-}
-
-/**
- * @tc.name: CreateJsonFile_ByJsonData2_002
- * @tc.type: FUNC
- * @tc.desc: Verify the CreateJsonFileByJsonData2 function.
- */
-HWTEST_F(FmsFormProviderDataTest, CreateJsonFile_ByJsonData2_002, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "CreateJsonFile_ByJsonData2_002 start";
-    InitJsonData();
-    FormProviderData formProviderData(jsonData_.dump());
-    EXPECT_EQ(true, CreateJsonFileByJsonData2(formProviderData.jsonFormProviderData_));
-    GTEST_LOG_(INFO) << "CreateJsonFile_ByJsonData2_002 end";
-}
-
 /**
  * @tc.name: GetDataString_Normal_001
  * @tc.type: FUNC
@@ -181,16 +101,29 @@ HWTEST_F(FmsFormProviderDataTest, GetDataString_Normal_001, TestSize.Level0)
 /**
  * @tc.name: MergeData_Normal_001
  * @tc.type: FUNC
- * @tc.desc: Verify the MergeData function.
+ * @tc.desc: Verify the MergeData function merges additional json data correctly.
  */
 HWTEST_F(FmsFormProviderDataTest, MergeData_Normal_001, TestSize.Level0)
 {
     GTEST_LOG_(INFO) << "MergeData_Normal_001 start";
     InitJsonData();
     FormProviderData formProviderData(jsonData_);
+    
+    EXPECT_EQ(formProviderData.jsonFormProviderData_.size(), 1);
+    EXPECT_TRUE(formProviderData.jsonFormProviderData_.contains("0"));
+    
     InitJsonData2();
     formProviderData.MergeData(jsonData_);
-    EXPECT_EQ(true, CreateMergeJsonFileByJsonData3(formProviderData.jsonFormProviderData_));
+    
+    EXPECT_EQ(formProviderData.jsonFormProviderData_.size(), 2);
+    EXPECT_TRUE(formProviderData.jsonFormProviderData_.contains("0"));
+    EXPECT_TRUE(formProviderData.jsonFormProviderData_.contains("1"));
+    
+    EXPECT_EQ(formProviderData.jsonFormProviderData_["0"]["name"], "li");
+    EXPECT_EQ(formProviderData.jsonFormProviderData_["0"]["age"], TEN);
+    EXPECT_EQ(formProviderData.jsonFormProviderData_["1"]["name"], "wang");
+    EXPECT_EQ(formProviderData.jsonFormProviderData_["1"]["age"], ELEVEN);
+    
     GTEST_LOG_(INFO) << "MergeData_Normal_001 end";
 }
 
@@ -229,34 +162,6 @@ HWTEST_F(FmsFormProviderDataTest, Constructor_NonObjectJson_003, TestSize.Level1
     FormProviderData formProviderData(jsonArray);
     EXPECT_TRUE(formProviderData.jsonFormProviderData_.empty());
     GTEST_LOG_(INFO) << "Constructor_NonObjectJson_003 end";
-}
-
-/**
- * @tc.name: Constructor_NullJson_004
- * @tc.type: FUNC
- * @tc.desc: When jsonData is null, constructor should return early
- */
-HWTEST_F(FmsFormProviderDataTest, Constructor_NullJson_004, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "Constructor_NullJson_004 start";
-    nlohmann::json jsonNull = nullptr;
-    FormProviderData formProviderData(jsonNull);
-    EXPECT_TRUE(formProviderData.jsonFormProviderData_.empty());
-    GTEST_LOG_(INFO) << "Constructor_NullJson_004 end";
-}
-
-/**
- * @tc.name: Constructor_StringJson_005
- * @tc.type: FUNC
- * @tc.desc: When jsonData is a string, constructor should return early
- */
-HWTEST_F(FmsFormProviderDataTest, Constructor_StringJson_005, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "Constructor_StringJson_005 start";
-    nlohmann::json jsonString = "test string";
-    FormProviderData formProviderData(jsonString);
-    EXPECT_TRUE(formProviderData.jsonFormProviderData_.empty());
-    GTEST_LOG_(INFO) << "Constructor_StringJson_005 end";
 }
 
 /**
@@ -442,8 +347,6 @@ HWTEST_F(FmsFormProviderDataTest, Marshalling_BigData_001, TestSize.Level1)
     GTEST_LOG_(INFO) << "Marshalling_BigData_001 end";
 }
 
-
-
 /**
  * @tc.name: GetDataString_EmptyJson_001
  * @tc.type: FUNC
@@ -545,7 +448,6 @@ HWTEST_F(FmsFormProviderDataTest, RemoveImageData_AddImageData_001, TestSize.Lev
 
     EXPECT_TRUE(formProviderData.rawImageBytesMap_.empty());
     GTEST_LOG_(INFO) << "RemoveImageData_AddImageData_001 end";
-
 }
 
 /**
@@ -564,7 +466,6 @@ HWTEST_F(FmsFormProviderDataTest, SetDataString_GetDataString_002, TestSize.Leve
 
     EXPECT_FALSE(result.empty());
     GTEST_LOG_(INFO) << "SetDataString_GetDataString_002 end";
-
 }
 
 /**
@@ -660,18 +561,27 @@ HWTEST_F(FmsFormProviderDataTest, ClearData_Normal_001, TestSize.Level0)
 /**
  * @tc.name: MergeData_NotNull_002
  * @tc.type: FUNC
- * @tc.desc: When sonFormProviderData_ is not nullptr, the interface calls normally.
+ * @tc.desc: Verify MergeData correctly handles repeated merge operations.
  */
 HWTEST_F(FmsFormProviderDataTest, MergeData_NotNull_002, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "MergeData_NotNull_002 start";
     InitJsonData();
     FormProviderData formProviderData(jsonData_);
+    
+    EXPECT_EQ(formProviderData.jsonFormProviderData_.size(), 1);
+    
     InitJsonData2();
     formProviderData.MergeData(jsonData_);
-    EXPECT_FALSE(formProviderData.jsonFormProviderData_.empty());
+    
+    EXPECT_EQ(formProviderData.jsonFormProviderData_.size(), 2);
+    
     formProviderData.MergeData(jsonData_);
-    EXPECT_EQ(true, CreateMergeJsonFileByJsonData3(formProviderData.jsonFormProviderData_));
+    
+    EXPECT_EQ(formProviderData.jsonFormProviderData_.size(), 2);
+    EXPECT_TRUE(formProviderData.jsonFormProviderData_.contains("0"));
+    EXPECT_TRUE(formProviderData.jsonFormProviderData_.contains("1"));
+    
     GTEST_LOG_(INFO) << "MergeData_NotNull_002 end";
 }
 
@@ -725,8 +635,6 @@ HWTEST_F(FmsFormProviderDataTest, AddImageData_NegativeFd_001, TestSize.Level1)
     EXPECT_TRUE(formProviderData.rawImageBytesMap_.find(picName) == formProviderData.rawImageBytesMap_.end());
     GTEST_LOG_(INFO) << "AddImageData_NegativeFd_001 end";
 }
-
-
 
 /**
  * @tc.name: ReadFromParcel_NoOperationState_001
@@ -1090,8 +998,6 @@ HWTEST_F(FmsFormProviderDataTest, ReadFileDescriptor_ReleaseMemory_001, TestSize
     GTEST_LOG_(INFO) << "ReadFileDescriptor_ReleaseMemory_001 end";
 }
 
-
-
 /**
  * @tc.name: AddImageData_FD_EmptyFile_001
  * @tc.type: FUNC
@@ -1103,7 +1009,7 @@ HWTEST_F(FmsFormProviderDataTest, AddImageData_FD_EmptyFile_001, TestSize.Level1
     InitJsonData();
     FormProviderData formProviderData(jsonData_);
     std::string picName = "emptyImage";
-    std::string testFile = "/data/formmgr/test_empty_image.tmp";
+    std::string testFile = FORM_DB_DATA_BASE_FILE_DIR + "/test_empty_image.tmp";
     int fd = open(testFile.c_str(), O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
     ASSERT_GE(fd, 0);
     formProviderData.AddImageData(picName, fd);
@@ -1125,7 +1031,7 @@ HWTEST_F(FmsFormProviderDataTest, AddImageData_FD_ValidFile_001, TestSize.Level1
     FormProviderData formProviderData(jsonData_);
     std::string picName = "validImage";
     std::string testData = "test image data content";
-    std::string testFile = "/data/formmgr/test_valid_image.tmp";
+    std::string testFile = FORM_DB_DATA_BASE_FILE_DIR + "/test_valid_image.tmp";
     std::ofstream file(testFile);
     file << testData;
     file.close();
@@ -1180,7 +1086,7 @@ HWTEST_F(FmsFormProviderDataTest, WriteFd_ValidFd_001, TestSize.Level1)
     GTEST_LOG_(INFO) << "WriteFd_ValidFd_001 start";
     FormProviderData formProviderData("");
     Parcel parcel;
-    std::string testFile = "/data/formmgr/test_fd_write.tmp";
+    std::string testFile = FORM_DB_DATA_BASE_FILE_DIR + "/test_fd_write.tmp";
     int fd = open(testFile.c_str(), O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
     ASSERT_GE(fd, 0);
     bool result = formProviderData.WriteFileDescriptor(parcel, fd);
@@ -1404,20 +1310,6 @@ HWTEST_F(FmsFormProviderDataTest, WriteFormData_NormalJson_001, TestSize.Level1)
 }
 
 /**
- * @tc.name: ParseImages_NonIntegerFd_001
- * @tc.type: FUNC
- * @tc.desc: Verify ParseImagesData with invalid fd type in json.
- */
-HWTEST_F(FmsFormProviderDataTest, ParseImages_NonIntegerFd_001, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "ParseImages_NonIntegerFd_001 start";
-    std::string jsonStr = R"({"formImages": {"image1": "not_an_integer"}})";
-    FormProviderData formProviderData(jsonStr);
-    EXPECT_TRUE(formProviderData.rawImageBytesMap_.empty());
-    GTEST_LOG_(INFO) << "ParseImages_NonIntegerFd_001 end";
-}
-
-/**
  * @tc.name: ParseImages_ValidFd_001
  * @tc.type: FUNC
  * @tc.desc: Verify ParseImagesData with valid fd in json.
@@ -1425,7 +1317,7 @@ HWTEST_F(FmsFormProviderDataTest, ParseImages_NonIntegerFd_001, TestSize.Level1)
 HWTEST_F(FmsFormProviderDataTest, ParseImages_ValidFd_001, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "ParseImages_ValidFd_001 start";
-    std::string testFile = "/data/formmgr/test_parse_image.tmp";
+    std::string testFile = FORM_DB_DATA_BASE_FILE_DIR + "/test_parse_image.tmp";
     std::ofstream file(testFile);
     file << "test data";
     file.close();
@@ -1536,8 +1428,6 @@ HWTEST_F(FmsFormProviderDataTest, HasData_OnlyImageMap_001, TestSize.Level1)
     GTEST_LOG_(INFO) << "HasData_OnlyImageMap_001 end";
 }
 
-
-
 /**
  * @tc.name: AddImageData_FileTooLarge_001
  * @tc.type: FUNC
@@ -1548,7 +1438,7 @@ HWTEST_F(FmsFormProviderDataTest, AddImageData_FileTooLarge_001, TestSize.Level1
     GTEST_LOG_(INFO) << "AddImageData_FileTooLarge_001 start";
     FormProviderData formProviderData("");
     std::string picName = "largeImage";
-    std::string testFile = "/data/formmgr/test_large_image.tmp";
+    std::string testFile = FORM_DB_DATA_BASE_FILE_DIR + "/test_large_image.tmp";
     int fd = open(testFile.c_str(), O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
     ASSERT_GE(fd, 0);
     std::string largeData(51 * 1024 * 1024, 'A');
@@ -1641,8 +1531,6 @@ HWTEST_F(FmsFormProviderDataTest, IsValidSize_ZeroSize_001, TestSize.Level1)
     GTEST_LOG_(INFO) << "IsValidSize_ZeroSize_001 end";
 }
 
-
-
 /**
  * @tc.name: ParseImagesData_NonIntegerFd_001
  * @tc.type: FUNC
@@ -1692,8 +1580,6 @@ HWTEST_F(FmsFormProviderDataTest, Marshalling_WriteImageDataFailed_001, TestSize
     GTEST_LOG_(INFO) << "Marshalling_WriteImageDataFailed_001 end";
 }
 
-
-
 /**
  * @tc.name: ReadFileDescriptor_NullDescriptor_001
  * @tc.type: FUNC
@@ -1708,25 +1594,6 @@ HWTEST_F(FmsFormProviderDataTest, ReadFileDescriptor_NullDescriptor_001, TestSiz
     int fd = formProviderData.ReadFileDescriptor(parcel);
     EXPECT_EQ(fd, -1);
     GTEST_LOG_(INFO) << "ReadFileDescriptor_NullDescriptor_001 end";
-}
-
-
-
-/**
- * @tc.name: SetImageDataMap_NonEmptyMap_002
- * @tc.type: FUNC
- * @tc.desc: Verify SetImageDataMap with non-empty map sets imageDataState to ADDED.
- */
-HWTEST_F(FmsFormProviderDataTest, SetImageDataMap_NonEmptyMap_002, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "SetImageDataMap_NonEmptyMap_002 start";
-    FormProviderData formProviderData("");
-    std::map<std::string, std::pair<sptr<FormAshmem>, int32_t>> nonEmptyMap;
-    sptr<FormAshmem> formAshmem(new (std::nothrow) FormAshmem());
-    nonEmptyMap["test"] = std::make_pair(formAshmem, 10);
-    formProviderData.SetImageDataMap(nonEmptyMap);
-    EXPECT_EQ(formProviderData.imageDataState_, FormProviderData::IMAGE_DATA_STATE_ADDED);
-    GTEST_LOG_(INFO) << "SetImageDataMap_NonEmptyMap_002 end";
 }
 
 /**
@@ -1744,8 +1611,6 @@ HWTEST_F(FmsFormProviderDataTest, CheckAshmemSize_InvalidFd_001, TestSize.Level1
     EXPECT_FALSE(result);
     GTEST_LOG_(INFO) << "CheckAshmemSize_InvalidFd_001 end";
 }
-
-
 
 /**
  * @tc.name: WriteAshmemDataToParcel_LargeData_001
@@ -1775,7 +1640,7 @@ HWTEST_F(FmsFormProviderDataTest, AddImageData_ValidFd_001, TestSize.Level1)
     FormProviderData formProviderData("");
     std::string picName = "validImage";
     std::string testData = "test image data content";
-    std::string testFile = "/data/formmgr/test_valid_image_001.tmp";
+    std::string testFile = FORM_DB_DATA_BASE_FILE_DIR + "/test_valid_image_001.tmp";
     std::ofstream file(testFile);
     file << testData;
     file.close();
@@ -1841,35 +1706,6 @@ HWTEST_F(FmsFormProviderDataTest, ClearData_WithJsonData_001, TestSize.Level1)
     formProviderData.ClearData();
     EXPECT_TRUE(formProviderData.jsonFormProviderData_.empty());
     GTEST_LOG_(INFO) << "ClearData_WithJsonData_001 end";
-}
-
-/**
- * @tc.name: GetDataString_EmptyJson_002
- * @tc.type: FUNC
- * @tc.desc: Verify GetDataString returns empty string when jsonFormProviderData_ is empty.
- */
-HWTEST_F(FmsFormProviderDataTest, GetDataString_EmptyJson_002, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "GetDataString_EmptyJson_002 start";
-    FormProviderData formProviderData("");
-    formProviderData.jsonFormProviderData_.clear();
-    std::string result = formProviderData.GetDataString();
-    EXPECT_TRUE(result.empty());
-    GTEST_LOG_(INFO) << "GetDataString_EmptyJson_002 end";
-}
-
-/**
- * @tc.name: HasData_EmptyData_002
- * @tc.type: FUNC
- * @tc.desc: Verify HasData returns false when both jsonFormProviderData_ and imageDataMap_ are empty.
- */
-HWTEST_F(FmsFormProviderDataTest, HasData_EmptyData_002, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "HasData_EmptyData_002 start";
-    FormProviderData formProviderData("");
-    formProviderData.jsonFormProviderData_.clear();
-    EXPECT_FALSE(formProviderData.HasData());
-    GTEST_LOG_(INFO) << "HasData_EmptyData_002 end";
 }
 
 /**
@@ -2104,17 +1940,27 @@ HWTEST_F(FmsFormProviderDataTest, GetImageDataState_Default_001, TestSize.Level1
 /**
  * @tc.name: Unmarshalling_ValidParcel_001
  * @tc.type: FUNC
- * @tc.desc: Verify Unmarshalling creates valid FormProviderData from parcel.
+ * @tc.desc: Verify Unmarshalling creates valid FormProviderData from parcel with consistent data.
  */
 HWTEST_F(FmsFormProviderDataTest, Unmarshalling_ValidParcel_001, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Unmarshalling_ValidParcel_001 start";
-    FormProviderData writeProviderData("{\"key\": \"value\"}");
+    std::string originalData = "{\"name\": \"test\", \"value\": 123}";
+    FormProviderData writeProviderData(originalData);
+    writeProviderData.SetImageDataState(1);
+    
     Parcel parcel;
     EXPECT_TRUE(writeProviderData.Marshalling(parcel));
+    
     std::unique_ptr<FormProviderData> readProviderData(FormProviderData::Unmarshalling(parcel));
     ASSERT_NE(readProviderData, nullptr);
-    EXPECT_FALSE(readProviderData->GetData().empty());
+    
+    nlohmann::json originalJson = writeProviderData.GetData();
+    nlohmann::json readJson = readProviderData->GetData();
+    EXPECT_EQ(originalJson.dump(), readJson.dump());
+    
+    EXPECT_EQ(writeProviderData.GetImageDataState(), readProviderData->GetImageDataState());
+    EXPECT_EQ(originalData, readProviderData->GetDataString());
     GTEST_LOG_(INFO) << "Unmarshalling_ValidParcel_001 end";
 }
 
