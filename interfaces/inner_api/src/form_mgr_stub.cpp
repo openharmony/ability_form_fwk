@@ -152,6 +152,8 @@ int FormMgrStub::OnRemoteRequestSecond(uint32_t code, MessageParcel &data, Messa
             return HandleBackgroundEvent(data, reply);
         case static_cast<uint32_t>(IFormMgr::Message::FORM_MGR_REQUEST_PUBLISH_FORM):
             return HandleRequestPublishForm(data, reply);
+        case static_cast<uint32_t>(IFormMgr::Message::FORM_MGR_REQUEST_PUBLISH_FORM_CROSS_USER):
+            return HandleRequestPublishFormCrossUser(data, reply);
         case static_cast<uint32_t>(IFormMgr::Message::FORM_MGR_SHARE_FORM):
             return HandleShareForm(data, reply);
         case static_cast<uint32_t>(IFormMgr::Message::FORM_MGR_RECV_FORM_SHARE_INFO_FROM_REMOTE):
@@ -520,6 +522,35 @@ int32_t FormMgrStub::HandleReleaseRenderer(MessageParcel &data, MessageParcel &r
     std::string compId = data.ReadString();
     int32_t result = ReleaseRenderer(formId, compId);
     reply.WriteInt32(result);
+    return result;
+}
+
+/**
+ * @brief handle RequestPublishFormCrossUser message.
+ * @param data input param.
+ * @param reply output param.
+ * @return Returns ERR_OK on success, others on failure.
+ */
+ErrCode FormMgrStub::HandleRequestPublishFormCrossUser(MessageParcel &data, MessageParcel &reply)
+{
+    std::unique_ptr<Want> want(data.ReadParcelable<Want>());
+    if (want == nullptr) {
+        HILOG_ERROR("get want failed");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+
+    int32_t userId;
+    if (!data.ReadInt32(userId)) {
+        HILOG_ERROR("get userId failed");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+
+    int64_t formId = 0;
+    ErrCode result = RequestPublishFormCrossUser(*want, userId, formId);
+    reply.WriteInt32(result);
+    if (result == ERR_OK) {
+        reply.WriteInt64(formId);
+    }
     return result;
 }
 
@@ -2289,7 +2320,7 @@ ErrCode FormMgrStub::HandleRegisterTemplateFormDetailInfoChange(MessageParcel &d
     }
     return ERR_OK;
 }
- 
+
 ErrCode FormMgrStub::HandleUnregisterTemplateFormDetailInfoChange(MessageParcel &data, MessageParcel &reply)
 {
     HILOG_INFO("call");
@@ -2343,7 +2374,7 @@ ErrCode FormMgrStub::HandleGetFormIdsByFormLocation(MessageParcel &data, Message
             return ERR_APPEXECFWK_PARCEL_ERROR;
         }
     }
- 
+
     return ERR_OK;
 }
 }  // namespace AppExecFwk

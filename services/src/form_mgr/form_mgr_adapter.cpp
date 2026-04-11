@@ -2404,12 +2404,15 @@ ErrCode FormMgrAdapter::CheckPublishForm(Want &want, bool needCheckFormPermissio
 
 ErrCode FormMgrAdapter::QueryPublishFormToHost(Want &wantToHost)
 {
-    AppExecFwk::AbilityInfo formAbilityInfo;
-    AppExecFwk::ExtensionAbilityInfo formExtensionAbilityInfo;
-
     int callingUid = IPCSkeleton::GetCallingUid();
     int32_t userId = FormUtil::GetCallerUserId(callingUid);
+    return QueryPublishFormToHost(wantToHost, userId);
+}
 
+ErrCode FormMgrAdapter::QueryPublishFormToHost(Want &wantToHost, int32_t userId)
+{
+    AppExecFwk::AbilityInfo formAbilityInfo;
+    AppExecFwk::ExtensionAbilityInfo formExtensionAbilityInfo;
     std::string action = Constants::FORM_PUBLISH_ACTION;
     if (!wantToHost.GetAction().empty()) {
         action = wantToHost.GetAction();
@@ -2486,6 +2489,13 @@ bool FormMgrAdapter::CheckSnapshotWant(const Want &want)
 
 ErrCode FormMgrAdapter::RequestPublishFormToHost(Want &want)
 {
+    int callingUid = IPCSkeleton::GetCallingUid();
+    int32_t userId = FormUtil::GetCallerUserId(callingUid);
+    return RequestPublishFormToHost(want, userId);
+}
+
+ErrCode FormMgrAdapter::RequestPublishFormToHost(Want &want, int32_t userId)
+{
     Want wantToHost(want);
     ElementName elementName = want.GetElement();
     wantToHost.SetParam(Constants::PARAM_BUNDLE_NAME_KEY, elementName.GetBundleName());
@@ -2496,7 +2506,7 @@ ErrCode FormMgrAdapter::RequestPublishFormToHost(Want &want)
     wantToHost.SetAction(Constants::FORM_PUBLISH_ACTION);
     CheckSnapshotWant(wantToHost);
 
-    ErrCode errCode = QueryPublishFormToHost(wantToHost);
+    ErrCode errCode = QueryPublishFormToHost(wantToHost, userId);
     if (errCode == ERR_OK) {
         int32_t userId = want.GetIntParam(Constants::PARAM_FORM_USER_ID, -1);
         int ret = FormAmsHelper::GetInstance().StartAbility(wantToHost, userId);
@@ -2528,17 +2538,8 @@ ErrCode FormMgrAdapter::RequestPublishFormToHost(Want &want)
     return ret;
 }
 
-ErrCode FormMgrAdapter::RequestPublishForm(Want &want, bool withFormBindingData,
-    std::unique_ptr<FormProviderData> &formBindingData, int64_t &formId,
-    const std::vector<FormDataProxy> &formDataProxies, bool needCheckFormPermission)
+ErrCode FormMgrAdapter::RequestPublishFormCommon(Want &want, int32_t userId, int64_t &formId)
 {
-    HILOG_DEBUG("call");
-    ErrCode errCode = CheckPublishForm(want, needCheckFormPermission);
-    if (errCode != ERR_OK) {
-        return errCode;
-    }
-
-    int32_t userId = GetCallingUserId();
     want.SetParam(Constants::PARAM_FORM_USER_ID, userId);
     want.SetAction(Constants::FORM_PUBLISH_ACTION);
 
@@ -2560,7 +2561,23 @@ ErrCode FormMgrAdapter::RequestPublishForm(Want &want, bool withFormBindingData,
     HILOG_DEBUG("formId:%{public}" PRId64 "", formId);
     std::string strFormId = std::to_string(formId);
     want.SetParam(Constants::PARAM_FORM_IDENTITY_KEY, strFormId);
+    return ERR_OK;
+}
 
+ErrCode FormMgrAdapter::RequestPublishForm(Want &want, bool withFormBindingData,
+    std::unique_ptr<FormProviderData> &formBindingData, int64_t &formId,
+    const std::vector<FormDataProxy> &formDataProxies, bool needCheckFormPermission)
+{
+    HILOG_DEBUG("call");
+    ErrCode errCode = CheckPublishForm(want, needCheckFormPermission);
+    if (errCode != ERR_OK) {
+        return errCode;
+    }
+    int32_t userId = GetCallingUserId();
+    errCode = RequestPublishFormCommon(want, userId, formId);
+    if (errCode != ERR_OK) {
+        return errCode;
+    }
     if (withFormBindingData) {
         errCode = FormDataMgr::GetInstance().AddRequestPublishFormInfo(formId, want, formBindingData);
     } else {
@@ -2578,11 +2595,33 @@ ErrCode FormMgrAdapter::RequestPublishForm(Want &want, bool withFormBindingData,
         FormEventReport::SendFourthFormEvent(FormEventName::INVALID_PUBLISH_FORM_TO_HOST,
             HiSysEventType::STATISTIC, eventInfo, want);
     }
-
     IncreaseAddFormRequestTimeOutTask(formId);
     if (!formDataProxies.empty()) {
         FormDataProxyMgr::GetInstance().ProduceFormDataProxies(formId, formDataProxies);
     }
+    return errCode;
+}
+
+ErrCode FormMgrAdapter::RequestPublishFormCrossUser(Want &want, int32_t userId, int64_t &formId)
+{
+    ErrCode errCode = RequestPublishFormCommon(want, userId, formId);
+    if (errCode != ERR_OK) {
+        return errCode;
+    }
+    std::unique_ptr<FormProviderData> noFormBindingData = nullptr;
+    errCode = FormDataMgr::GetInstance().AddRequestPublishFormInfo(formId, want, noFormBindingData);
+    if (errCode != ERR_OK) {
+        HILOG_ERROR("add form info error");
+        return errCode;
+    }
+    errCode = RequestPublishFormToHost(want, userId);
+    if (errCode != ERR_OK) {
+        FormDataMgr::GetInstance().RemoveRequestPublishFormInfo(formId);
+        NewFormEventInfo eventInfo;
+        FormEventReport::SendFourthFormEvent(FormEventName::INVALID_PUBLISH_FORM_TO_HOST,
+            HiSysEventType::STATISTIC, eventInfo, want);
+    }
+    IncreaseAddFormRequestTimeOutTask(formId);
     return errCode;
 }
 
