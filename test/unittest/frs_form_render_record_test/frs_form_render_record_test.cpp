@@ -94,11 +94,7 @@ void FormRenderRecordTest::SetUp()
 {}
 
 void FormRenderRecordTest::TearDown()
-{
-    if (formRenderRecordPtr_ != nullptr && formRenderRecordPtr_->eventRunner_ != nullptr) {
-        formRenderRecordPtr_->eventRunner_->Stop();
-    }
-}
+{}
 
 class MockFormSupplyStub : public FormSupplyStub {
 public:
