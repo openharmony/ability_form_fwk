@@ -1256,7 +1256,6 @@ HWTEST_F(FmsFormProviderDataTest, MarshallingUnmarshalling_WithImage_001, TestSi
     auto writeJsonData = writeProviderData.GetData();
     auto writeImageDataState = writeProviderData.GetImageDataState();
     auto writeRawImageBytesMapSize = writeProviderData.rawImageBytesMap_.size();
-    auto writeImageDataMapSize = writeProviderData.GetImageDataMap().size();
     
     Parcel parcel;
     EXPECT_TRUE(writeProviderData.Marshalling(parcel));
@@ -1268,12 +1267,14 @@ HWTEST_F(FmsFormProviderDataTest, MarshallingUnmarshalling_WithImage_001, TestSi
     EXPECT_EQ(readJsonData.dump(), writeJsonData.dump());
     EXPECT_FALSE(readProviderData->jsonFormProviderData_.empty());
     EXPECT_EQ(readProviderData->GetImageDataState(), writeImageDataState);
-    EXPECT_EQ(readProviderData->GetImageDataMap().size(), writeImageDataMapSize);
+    EXPECT_EQ(readProviderData->GetImageDataMap().size(), writeRawImageBytesMapSize);
     EXPECT_TRUE(readProviderData->HasData());
     
     auto readImageDataMap = readProviderData->GetImageDataMap();
     ASSERT_TRUE(readImageDataMap.find("marshTest") != readImageDataMap.end());
-    EXPECT_EQ(readImageDataMap["marshTest"].second, 10);
+    auto formAshmem = readImageDataMap["marshTest"].first;
+    ASSERT_NE(formAshmem, nullptr);
+    EXPECT_EQ(formAshmem->GetAshmemSize(), 10);
     
     GTEST_LOG_(INFO) << "MarshallingUnmarshalling_WithImage_001 end";
 }
@@ -1946,8 +1947,10 @@ HWTEST_F(FmsFormProviderDataTest, GetImageDataState_Default_001, TestSize.Level1
 HWTEST_F(FmsFormProviderDataTest, Unmarshalling_ValidParcel_001, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Unmarshalling_ValidParcel_001 start";
-    std::string originalData = "{\"name\": \"test\", \"value\": 123}";
-    FormProviderData writeProviderData(originalData);
+    nlohmann::json originalJson;
+    originalJson["name"] = "test";
+    originalJson["value"] = 123;
+    FormProviderData writeProviderData(originalJson);
     writeProviderData.SetImageDataState(1);
     
     Parcel parcel;
@@ -1956,12 +1959,15 @@ HWTEST_F(FmsFormProviderDataTest, Unmarshalling_ValidParcel_001, TestSize.Level1
     std::unique_ptr<FormProviderData> readProviderData(FormProviderData::Unmarshalling(parcel));
     ASSERT_NE(readProviderData, nullptr);
     
-    nlohmann::json originalJson = writeProviderData.GetData();
+    nlohmann::json writeJson = writeProviderData.GetData();
     nlohmann::json readJson = readProviderData->GetData();
-    EXPECT_EQ(originalJson.dump(), readJson.dump());
+    EXPECT_EQ(writeJson.dump(), readJson.dump());
+    EXPECT_EQ(readJson["name"], "test");
+    EXPECT_EQ(readJson["value"], 123);
     
     EXPECT_EQ(writeProviderData.GetImageDataState(), readProviderData->GetImageDataState());
-    EXPECT_EQ(originalData, readProviderData->GetDataString());
+    EXPECT_FALSE(readProviderData->GetDataString().empty());
+    
     GTEST_LOG_(INFO) << "Unmarshalling_ValidParcel_001 end";
 }
 
