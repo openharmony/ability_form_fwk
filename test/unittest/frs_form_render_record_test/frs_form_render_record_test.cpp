@@ -3074,3 +3074,227 @@ HWTEST_F(FormRenderRecordTest, FormRenderRecordTest_SetRenderGroupParams_002, Te
     EXPECT_EQ(formRenderRecordPtr_->SetRenderGroupParams(formId, want), 0);
     GTEST_LOG_(INFO) << "FormRenderRecordTest_SetRenderGroupParams_002 end";
 }
+
+/**
+ * @tc.name: FormRenderRecordTest_UpdateFormRequestsApiVersionInner_001
+ * @tc.desc: Verify UpdateFormRequestsApiVersionInner with valid apiVersion.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormRenderRecordTest, FormRenderRecordTest_UpdateFormRequestsApiVersionInner_001, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersionInner_001 start";
+    std::shared_ptr<FormRenderRecord> renderRecord = FormRenderRecord::Create("bundleName", "uid");
+    ASSERT_NE(renderRecord, nullptr);
+
+    // Setup formRequests_ with test data
+    int64_t formId = 100;
+    FormRequest request;
+    request.compId = "comp1";
+    std::unordered_map<std::string, FormRequest> innerMap;
+    innerMap.emplace("comp1", request);
+    renderRecord->formRequests_.emplace(formId, innerMap);
+
+    // Execute with valid apiVersion
+    Want want;
+    want.SetParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 12);
+    want.SetParam(Constants::FORM_TARGET_VERSION_KEY, 14);
+    renderRecord->UpdateFormRequestsApiVersionInner(want);
+
+    // Verify apiVersion updated in formRequest.want
+    auto &updatedRequest = renderRecord->formRequests_[formId]["comp1"];
+    EXPECT_EQ(updatedRequest.want.GetIntParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 0), 12);
+    EXPECT_EQ(updatedRequest.want.GetIntParam(Constants::FORM_TARGET_VERSION_KEY, 0), 14);
+
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersionInner_001 end";
+}
+
+/**
+ * @tc.name: FormRenderRecordTest_UpdateFormRequestsApiVersionInner_002
+ * @tc.desc: Verify UpdateFormRequestsApiVersionInner with zero apiVersion, should skip update.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormRenderRecordTest, FormRenderRecordTest_UpdateFormRequestsApiVersionInner_002, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersionInner_002 start";
+    std::shared_ptr<FormRenderRecord> renderRecord = FormRenderRecord::Create("bundleName", "uid");
+    ASSERT_NE(renderRecord, nullptr);
+
+    // Setup formRequests_ with test data containing old apiVersion
+    int64_t formId = 100;
+    FormRequest request;
+    request.compId = "comp1";
+    request.want.SetParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 10);
+    request.want.SetParam(Constants::FORM_TARGET_VERSION_KEY, 12);
+    std::unordered_map<std::string, FormRequest> innerMap;
+    innerMap.emplace("comp1", request);
+    renderRecord->formRequests_.emplace(formId, innerMap);
+
+    // Execute with zero apiVersion (should skip)
+    Want want;
+    renderRecord->UpdateFormRequestsApiVersionInner(want);
+
+    // Verify apiVersion not changed
+    auto &updatedRequest = renderRecord->formRequests_[formId]["comp1"];
+    EXPECT_EQ(updatedRequest.want.GetIntParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 0), 10);
+    EXPECT_EQ(updatedRequest.want.GetIntParam(Constants::FORM_TARGET_VERSION_KEY, 0), 12);
+
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersionInner_002 end";
+}
+
+/**
+ * @tc.name: FormRenderRecordTest_UpdateFormRequestsApiVersionInner_003
+ * @tc.desc: Verify UpdateFormRequestsApiVersionInner with only compatibleVersion set, targetVersion should not update.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormRenderRecordTest, FormRenderRecordTest_UpdateFormRequestsApiVersionInner_003, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersionInner_003 start";
+    std::shared_ptr<FormRenderRecord> renderRecord = FormRenderRecord::Create("bundleName", "uid");
+    ASSERT_NE(renderRecord, nullptr);
+
+    // Setup formRequests_ with old targetVersion
+    int64_t formId = 100;
+    FormRequest request;
+    request.compId = "comp1";
+    request.want.SetParam(Constants::FORM_TARGET_VERSION_KEY, 10);
+    std::unordered_map<std::string, FormRequest> innerMap;
+    innerMap.emplace("comp1", request);
+    renderRecord->formRequests_.emplace(formId, innerMap);
+
+    // Execute with only compatibleVersion set
+    Want want;
+    want.SetParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 12);
+    renderRecord->UpdateFormRequestsApiVersionInner(want);
+
+    // Verify compatibleVersion updated, targetVersion unchanged
+    auto &updatedRequest = renderRecord->formRequests_[formId]["comp1"];
+    EXPECT_EQ(updatedRequest.want.GetIntParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 0), 12);
+    EXPECT_EQ(updatedRequest.want.GetIntParam(Constants::FORM_TARGET_VERSION_KEY, 0), 10);
+
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersionInner_003 end";
+}
+
+/**
+ * @tc.name: FormRenderRecordTest_UpdateFormRequestsApiVersionInner_004
+ * @tc.desc: Verify UpdateFormRequestsApiVersionInner with only targetVersion set, compatibleVersion should not update.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormRenderRecordTest, FormRenderRecordTest_UpdateFormRequestsApiVersionInner_004, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersionInner_004 start";
+    std::shared_ptr<FormRenderRecord> renderRecord = FormRenderRecord::Create("bundleName", "uid");
+    ASSERT_NE(renderRecord, nullptr);
+
+    // Setup formRequests_ with old compatibleVersion
+    int64_t formId = 100;
+    FormRequest request;
+    request.compId = "comp1";
+    request.want.SetParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 10);
+    std::unordered_map<std::string, FormRequest> innerMap;
+    innerMap.emplace("comp1", request);
+    renderRecord->formRequests_.emplace(formId, innerMap);
+
+    // Execute with only targetVersion set
+    Want want;
+    want.SetParam(Constants::FORM_TARGET_VERSION_KEY, 14);
+    renderRecord->UpdateFormRequestsApiVersionInner(want);
+
+    // Verify targetVersion updated, compatibleVersion unchanged
+    auto &updatedRequest = renderRecord->formRequests_[formId]["comp1"];
+    EXPECT_EQ(updatedRequest.want.GetIntParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 0), 10);
+    EXPECT_EQ(updatedRequest.want.GetIntParam(Constants::FORM_TARGET_VERSION_KEY, 0), 14);
+
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersionInner_004 end";
+}
+
+/**
+ * @tc.name: FormRenderRecordTest_UpdateFormRequestsApiVersionInner_005
+ * @tc.desc: Verify UpdateFormRequestsApiVersionInner with empty formRequests_.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormRenderRecordTest, FormRenderRecordTest_UpdateFormRequestsApiVersionInner_005, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersionInner_005 start";
+    std::shared_ptr<FormRenderRecord> renderRecord = FormRenderRecord::Create("bundleName", "uid");
+    ASSERT_NE(renderRecord, nullptr);
+
+    // formRequests_ is empty, should not crash
+    renderRecord->formRequests_.clear();
+    Want want;
+    want.SetParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 12);
+    renderRecord->UpdateFormRequestsApiVersionInner(want);
+    EXPECT_EQ(static_cast<int>(renderRecord->formRequests_.size()), 0);
+
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersionInner_005 end";
+}
+
+/**
+ * @tc.name: FormRenderRecordTest_UpdateFormRequestsApiVersion_001
+ * @tc.desc: Verify UpdateFormRequestsApiVersion with eventHandler null, execute directly.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormRenderRecordTest, FormRenderRecordTest_UpdateFormRequestsApiVersion_001, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersion_001 start";
+    std::shared_ptr<FormRenderRecord> renderRecord = FormRenderRecord::Create("bundleName", "uid");
+    ASSERT_NE(renderRecord, nullptr);
+
+    // Setup formRequests_
+    int64_t formId = 100;
+    FormRequest request;
+    request.compId = "comp1";
+    std::unordered_map<std::string, FormRequest> innerMap;
+    innerMap.emplace("comp1", request);
+    renderRecord->formRequests_.emplace(formId, innerMap);
+
+    // eventHandler is null by default after Create, execute directly
+    renderRecord->eventHandler_ = nullptr;
+    Want want;
+    want.SetParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 12);
+    want.SetParam(Constants::FORM_TARGET_VERSION_KEY, 14);
+    renderRecord->UpdateFormRequestsApiVersion(want);
+
+    // Verify apiVersion updated
+    auto &updatedRequest = renderRecord->formRequests_[formId]["comp1"];
+    EXPECT_EQ(updatedRequest.want.GetIntParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 0), 12);
+    EXPECT_EQ(updatedRequest.want.GetIntParam(Constants::FORM_TARGET_VERSION_KEY, 0), 14);
+
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersion_001 end";
+}
+
+/**
+ * @tc.name: FormRenderRecordTest_UpdateFormRequestsApiVersion_002
+ * @tc.desc: Verify UpdateFormRequestsApiVersion with eventHandler, post to JS thread.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormRenderRecordTest, FormRenderRecordTest_UpdateFormRequestsApiVersion_002, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersion_002 start";
+    std::shared_ptr<FormRenderRecord> renderRecord = FormRenderRecord::Create("bundleName", "uid");
+    ASSERT_NE(renderRecord, nullptr);
+
+    // Setup formRequests_
+    int64_t formId = 100;
+    FormRequest request;
+    request.compId = "comp1";
+    std::unordered_map<std::string, FormRequest> innerMap;
+    innerMap.emplace("comp1", request);
+    renderRecord->formRequests_.emplace(formId, innerMap);
+
+    // Setup eventHandler
+    std::string bundleName = "<bundleName>";
+    auto eventRunner = EventRunner::Create(bundleName);
+    renderRecord->eventHandler_ = std::make_shared<EventHandler>(eventRunner);
+
+    Want want;
+    want.SetParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 12);
+    want.SetParam(Constants::FORM_TARGET_VERSION_KEY, 14);
+    renderRecord->UpdateFormRequestsApiVersion(want);
+
+    // PostSyncTask executes synchronously, verify apiVersion updated
+    auto &updatedRequest = renderRecord->formRequests_[formId]["comp1"];
+    EXPECT_EQ(updatedRequest.want.GetIntParam(Constants::FORM_COMPATIBLE_VERSION_KEY, 0), 12);
+    EXPECT_EQ(updatedRequest.want.GetIntParam(Constants::FORM_TARGET_VERSION_KEY, 0), 14);
+
+    GTEST_LOG_(INFO) << "FormRenderRecordTest_UpdateFormRequestsApiVersion_002 end";
+}
