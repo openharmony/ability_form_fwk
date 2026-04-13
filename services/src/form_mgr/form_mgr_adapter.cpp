@@ -1891,8 +1891,9 @@ ErrCode FormMgrAdapter::AddFormTimer(const FormRecord &formRecord)
             formRecord.isEnableUpdate, formRecord.formTempFlag);
         return ERR_OK;
     }
-    HILOG_WARN("start, formId:%{public}" PRId64, formRecord.formId);
-    if (formRecord.updateDuration > 0 && !formRecord.isDataProxy) {
+    HILOG_WARN("start, formId:%{public}" PRId64 ", isDataProxy:%{public}d, isSystemApp:%{public}d",
+        formRecord.formId, formRecord.isDataProxy, formRecord.isSystemApp);
+    if (formRecord.updateDuration > 0 && (!formRecord.isDataProxy || !formRecord.isSystemApp)) {
         if (!FormDataMgr::GetInstance().HasFormCloudUpdateDuration(formRecord.bundleName)) {
             UpdateFormCloudUpdateDuration(formRecord.bundleName);
         }
