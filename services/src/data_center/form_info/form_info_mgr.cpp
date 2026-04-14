@@ -345,7 +345,7 @@ ErrCode FormInfoMgr::GetFormsInfoByRecord(const FormRecord &formRecord, FormInfo
             return ERR_APPEXECFWK_FORM_GET_BUNDLE_FAILED;
         }
 
-        bundleFormInfoIter->second->GetFormsInfoByModule(formRecord.moduleName, formInfos);
+        bundleFormInfoIter->second->GetFormsInfoByModule(formRecord.moduleName, formInfos, formRecord.userId);
     }
     for (const FormInfo &info : formInfos) {
         if (info.name == formRecord.formName) {
