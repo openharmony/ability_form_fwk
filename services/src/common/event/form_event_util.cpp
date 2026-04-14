@@ -510,7 +510,7 @@ void FormEventUtil::HandleTimerUpdate(const int64_t formId,
     if (!record.isEnableUpdate && timerCfg.enableUpdate) {
         FormDataMgr::GetInstance().SetUpdateInfo(formId, true,
             timerCfg.updateDuration, timerCfg.updateAtHour, timerCfg.updateAtMin, timerCfg.updateAtTimes);
-        if (timerCfg.updateDuration > 0) {
+        if (timerCfg.updateDuration > 0 && (!record.isDataProxy || !record.isSystemApp)) {
             HILOG_INFO("add interval timer:%{public}" PRId64, timerCfg.updateDuration);
             int64_t updateDuration = timerCfg.updateDuration;
             if (!FormMgrAdapter::GetInstance().GetValidFormUpdateDuration(formId, updateDuration)) {
@@ -718,6 +718,7 @@ void FormEventUtil::UpdateFormRecord(const FormInfo &formInfo, FormRecord &formR
     formRecord.privacyLevel = formInfo.privacyLevel;
     formRecord.isEnableUpdate = formInfo.updateEnabled;
     formRecord.updateDuration = formInfo.updateDuration * Constants::TIME_CONVERSION;
+    formRecord.isDataProxy = formInfo.dataProxyEnabled;
     std::vector<std::string> time = FormUtil::StringSplit(formInfo.scheduledUpdateTime, Constants::TIME_DELIMETER);
     if (time.size() == Constants::UPDATE_AT_CONFIG_COUNT) {
         formRecord.updateAtHour = FormUtil::ConvertStringToInt(time[0]);
