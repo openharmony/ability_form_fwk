@@ -53,7 +53,6 @@
 #include "form_render/form_render_mgr.h"
 #include "form_event_report.h"
 #include "form_refresh/strategy/refresh_cache_mgr.h"
-#include "form_constants.h"
 #include "common/util/form_task_common.h"
 #include "form_provider/connection/form_cast_temp_connection.h"
 #include "bundle_mgr_interface.h"
@@ -62,9 +61,7 @@
 #include "feature/bundle_lock/form_bundle_lock_mgr.h"
 #include "feature/bundle_lock/form_exempt_lock_mgr.h"
 #include "configuration.h"
-#ifdef THEME_MGR_ENABLE
-#include "feature/theme_form/form_theme_form_client.h"
-#endif
+#include "feature/theme_form/theme_form_client.h"
 
 namespace OHOS {
 namespace AppExecFwk {
@@ -158,6 +155,7 @@ private:
     FormProviderMgr* formProviderMgr_;
     FormRenderMgr* formRenderMgr_;
     FormCommonAdapter* commonAdapter_;
+    FormPublishAdapter* publishAdapter_;
 };
 
 } // namespace AppExecFwk

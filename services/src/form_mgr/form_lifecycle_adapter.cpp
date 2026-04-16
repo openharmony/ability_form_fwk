@@ -45,8 +45,8 @@
 #include "feature/bundle_forbidden/form_bundle_forbid_mgr.h"
 #include "feature/bundle_lock/form_bundle_lock_mgr.h"
 #include "feature/bundle_lock/form_exempt_lock_mgr.h"
+#include "feature/form_share/form_share_mgr.h"
 #include "feature/param_update/param_control.h"
-#include "form_constants.h"
 #include "form_event_report.h"
 #include "form_host/form_host_record.h"
 #include "form_mgr/form_common_adapter.h"
@@ -60,9 +60,6 @@
 #include "form_refresh/strategy/refresh_control_mgr.h"
 #include "form_render/form_render_mgr.h"
 #include "status_mgr_center/form_status.h"
-#ifdef THEME_MGR_ENABLE
-#include "feature/theme_form/form_theme_form_client.h"
-#endif
 
 namespace OHOS {
 namespace AppExecFwk {
@@ -75,12 +72,14 @@ FormLifecycleAdapter::FormLifecycleAdapter(
     FormInfoMgr* formInfoMgr,
     FormProviderMgr* formProviderMgr,
     FormRenderMgr* formRenderMgr,
-    FormCommonAdapter* commonAdapter)
+    FormCommonAdapter* commonAdapter,
+    FormPublishAdapter* publishAdapter)
     : formDataMgr_(formDataMgr),
       formInfoMgr_(formInfoMgr),
       formProviderMgr_(formProviderMgr),
       formRenderMgr_(formRenderMgr),
       commonAdapter_(commonAdapter),
+      publishAdapter_(publishAdapter)
 {
 }
 
@@ -124,7 +123,10 @@ ErrCode FormLifecycleAdapter::AllotForm(const int64_t formId, const Want &want,
 
     WantParams wantParams = newWant.GetParams();
 
-    // share form - placeholder for form share logic
+    // share form
+    if (formId == 0 && DelayedSingleton<FormShareMgr>::GetInstance()->IsShareForm(newWant)) {
+        DelayedSingleton<FormShareMgr>::GetInstance()->AddProviderData(newWant, wantParams);
+    }
 
     // Specify the form Id
     bool specificFormFlag = false;
@@ -147,6 +149,13 @@ ErrCode FormLifecycleAdapter::AllotForm(const int64_t formId, const Want &want,
         }
     } else {
         ret = AllotFormByInfo(formItemInfo, callerToken, wantParams, formJsInfo);
+        bool tempFormFlag = want.GetBoolParam(Constants::PARAM_FORM_TEMPORARY_KEY, false);
+        if (!tempFormFlag && (ret == ERR_OK)) {
+            HILOG_DEBUG("Checks if there is a listener listening for adding form");
+            if (commonAdapter_ != nullptr) {
+                commonAdapter_->HandleFormAddObserver(formJsInfo.formId);
+            }
+        }
     }
 
     formDataMgr_->UpdateFormHostParams(formJsInfo.formId, want);
@@ -283,8 +292,18 @@ ErrCode FormLifecycleAdapter::AllotFormBySpecificId(const FormItemInfo &info,
     const sptr<IRemoteObject> &callerToken, const WantParams &wantParams, FormJsInfo &formInfo)
 {
     HILOG_DEBUG("call");
-    // Placeholder implementation
-    return AllotFormById(info, callerToken, wantParams, formInfo);
+    int64_t formId = info.GetFormId();
+    FormRecord record;
+    bool hasRecord = formDataMgr_->GetFormRecord(formId, record);
+    // find in db but not in cache
+    FormRecord dbRecord;
+    ErrCode getDbRet = FormDbCache::GetInstance().GetDBRecord(formId, dbRecord);
+    if (getDbRet == ERR_OK || hasRecord) {
+        HILOG_DEBUG("The specified ID already exists in the cache or db");
+        return AllotFormByInfo(info, callerToken, wantParams, formInfo);
+    }
+    HILOG_DEBUG("Creates the form with the specified ID");
+    return AddNewFormRecord(info, formId, callerToken, wantParams, formInfo);
 }
 
 ErrCode FormLifecycleAdapter::AllotFormByInfo(const FormItemInfo &info,

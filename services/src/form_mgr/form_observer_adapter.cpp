@@ -61,35 +61,6 @@ int FormObserverAdapter::RegisterRemoveObserver(const std::string &bundleName,
     return commonAdapter_->RegisterRemoveObserver(bundleName, callerToken);
 }
 
-ErrCode FormObserverAdapter::HandleFormAddObserver(const int64_t formId)
-{
-    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
-    std::string hostBundleName;
-    auto ret = FormBmsHelper::GetInstance().GetCallerBundleName(hostBundleName);
-    if (ret != ERR_OK) {
-        HILOG_ERROR("get BundleName failed");
-        return ERR_APPEXECFWK_FORM_GET_BUNDLE_FAILED;
-    }
-
-    // Checks if there is a observer on the current host.
-    return FormDataMgr::GetInstance().HandleFormAddObserver(hostBundleName, formId,
-        FormUtil::GetCallerUserId(IPCSkeleton::GetCallingUid()));
-}
-
-ErrCode FormObserverAdapter::HandleFormRemoveObserver(const RunningFormInfo runningFormInfo)
-{
-    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
-    std::string hostBundleName;
-    auto ret = FormBmsHelper::GetInstance().GetCallerBundleName(hostBundleName);
-    if (ret != ERR_OK) {
-        HILOG_ERROR("get BundleName failed");
-        return ERR_APPEXECFWK_FORM_GET_BUNDLE_FAILED;
-    }
-
-    // Checks if there is a observer on the current host.
-    return FormDataMgr::GetInstance().HandleFormRemoveObserver(hostBundleName, runningFormInfo);
-}
-
 void FormObserverAdapter::CleanResource(const wptr<IRemoteObject> &remote)
 {
     commonAdapter_->CleanResource(remote);
