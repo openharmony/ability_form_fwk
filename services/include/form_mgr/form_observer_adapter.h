@@ -50,10 +50,6 @@ public:
     int RegisterRemoveObserver(const std::string &bundleName,
         const sptr<IRemoteObject> &callerToken);
 
-    ErrCode HandleFormAddObserver(const int64_t formId);
-
-    ErrCode HandleFormRemoveObserver(const RunningFormInfo runningFormInfo);
-
     void CleanResource(const wptr<IRemoteObject> &remote);
 
     ErrCode RegisterClickEventObserver(const std::string &bundleName,

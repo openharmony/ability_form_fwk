@@ -246,8 +246,6 @@ public:
 
     ErrCode HandleFormAddObserver(const int64_t formId);
 
-    ErrCode HandleFormRemoveObserver(const RunningFormInfo runningFormInfo);
-
     ErrCode RegisterFormAddObserverByBundle(const std::string bundleName,
         const sptr<IRemoteObject> &callerToken);
 
