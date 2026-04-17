@@ -490,7 +490,7 @@ ErrCode EtsFormRouterProxyMgr::ChangeSceneAnimationState(int64_t formId, int32_t
     dataParam->state = state;
     std::shared_ptr<AppExecFwk::EventHandler> mainHandler =
         std::make_shared<AppExecFwk::EventHandler>(AppExecFwk::EventRunner::GetMainEventRunner());
-    std::function<void()> executeFunc = [dataParam]() {
+    std::function<void()> executeFunc = [client = sptr<EtsFormRouterProxyMgr>(this), dataParam]() {
         EtsFormRouterProxyMgr::GetInstance()->ChangeSceneAnimationStateInner(dataParam);
     };
     mainHandler->PostSyncTask(executeFunc, "EtsFormRouterProxyMgr::ChangeSceneAnimationState");
@@ -542,7 +542,7 @@ ErrCode EtsFormRouterProxyMgr::GetFormRect(int64_t formId, AppExecFwk::Rect &rec
     }
     std::shared_ptr<AppExecFwk::EventHandler> mainHandler =
         std::make_shared<AppExecFwk::EventHandler>(AppExecFwk::EventRunner::GetMainEventRunner());
-    std::function<void()> executeFunc = [dataParam]() {
+    std::function<void()> executeFunc = [client = sptr<EtsFormRouterProxyMgr>(this), dataParam]() {
         EtsFormRouterProxyMgr::GetInstance()->GetFormRectInner(dataParam);
     };
     mainHandler->PostSyncTask(executeFunc, "EtsFormRouterProxyMgr::GetFormRect");
@@ -779,7 +779,7 @@ ErrCode EtsFormRouterProxyMgr::RequestOverflow(const int64_t formId, const AppEx
     }
     std::shared_ptr<AppExecFwk::EventHandler> mainHandler =
         std::make_shared<AppExecFwk::EventHandler>(AppExecFwk::EventRunner::GetMainEventRunner());
-    std::function<void()> executeFunc = [dataParam]() {
+    std::function<void()> executeFunc = [client = sptr<EtsFormRouterProxyMgr>(this), dataParam]() {
         EtsFormRouterProxyMgr::GetInstance()->RequestOverflowInner(dataParam);
     };
     mainHandler->PostSyncTask(executeFunc, "EtsFormRouterProxyMgr::RequestOverflow");
@@ -1066,7 +1066,7 @@ ErrCode EtsFormRouterProxyMgr::TemplateFormDetailInfoChange(
     std::shared_ptr<AppExecFwk::EventHandler> mainHandler =
         std::make_shared<AppExecFwk::EventHandler>(AppExecFwk::EventRunner::GetMainEventRunner());
     bool result = false;
-    std::function<void()> executeFunc = [templateFormInfo, &result]() {
+    std::function<void()> executeFunc = [client = sptr<EtsFormRouterProxyMgr>(this), templateFormInfo, &result]() {
         EtsFormRouterProxyMgr::GetInstance()->TemplateFormDetailInfoChangeInner(templateFormInfo);
     };
     mainHandler->PostSyncTask(executeFunc, "EtsFormRouterProxyMgr::TemplateFormDetailInfoChange");

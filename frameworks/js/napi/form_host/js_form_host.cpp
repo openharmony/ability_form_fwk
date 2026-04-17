@@ -2631,7 +2631,7 @@ ErrCode JsFormRouterProxyMgr::RequestOverflow(const int64_t formId, const AppExe
     dataParam->overflowInfo = overflowInfo;
     dataParam->isOverflow = isOverflow;
     std::shared_ptr<EventHandler> mainHandler = std::make_shared<EventHandler>(EventRunner::GetMainEventRunner());
-    std::function<void()> executeFunc = [dataParam]() {
+    std::function<void()> executeFunc = [client = sptr<JsFormRouterProxyMgr>(this), dataParam]() {
         JsFormRouterProxyMgr::GetInstance()->RequestOverflowInner(dataParam);
     };
     mainHandler->PostSyncTask(executeFunc, "JsFormRouterProxyMgr::RequestOverflow");
@@ -2770,7 +2770,7 @@ ErrCode JsFormRouterProxyMgr::ChangeSceneAnimationState(const int64_t formId, in
     dataParam->formId = std::to_string(formId);
     dataParam->state = state;
     std::shared_ptr<EventHandler> mainHandler = std::make_shared<EventHandler>(EventRunner::GetMainEventRunner());
-    std::function<void()> executeFunc = [dataParam]() {
+    std::function<void()> executeFunc = [client = sptr<JsFormRouterProxyMgr>(this), dataParam]() {
         JsFormRouterProxyMgr::GetInstance()->ChangeSceneAnimationStateInner(dataParam);
     };
     mainHandler->PostSyncTask(executeFunc, "JsFormRouterProxyMgr::ChangeSceneAnimationState");
@@ -2878,7 +2878,7 @@ ErrCode JsFormRouterProxyMgr::GetFormRect(const int64_t formId, AppExecFwk::Rect
     dataParam->formId = std::to_string(formId);
 
     std::shared_ptr<EventHandler> mainHandler = std::make_shared<EventHandler>(EventRunner::GetMainEventRunner());
-    std::function<void()> executeGetFormRectFunc = [dataParam]() {
+    std::function<void()> executeGetFormRectFunc = [client = sptr<JsFormRouterProxyMgr>(this), dataParam]() {
         JsFormRouterProxyMgr::GetInstance()->GetFormRectInner(dataParam);
     };
     mainHandler->PostSyncTask(executeGetFormRectFunc, "JsFormRouterProxyMgr::GetFormRect");
