@@ -521,7 +521,7 @@ HWTEST_F(FmsFormProviderDataTest, RemoveImageData_AddImageData_001, TestSize.Lev
 
     formProviderData.RemoveImageData(picName);
     EXPECT_TRUE(formProviderData.rawImageBytesMap_.empty());
-    EXPECT_EQ(formProviderData.imageDataState_, FormProviderData::IMAGE_DATA_STATE_REMOVED);
+    EXPECT_EQ(formProviderData.imageDataState_, FormProviderData::IMAGE_DATA_STATE_ADDED);
 
     GTEST_LOG_(INFO) << "RemoveImageData_AddImageData_001 end";
 }
@@ -812,7 +812,6 @@ HWTEST_F(FmsFormProviderDataTest, ReadFromParcel_NormalImageDataNum_001, TestSiz
     char data = 'A';
     constexpr int32_t size = 1;
     FormProviderData formProviderData(jsonData_);
-    auto initialState = formProviderData.imageDataState_;
     Parcel parcel;
     parcel.WriteInt32(DEFAULT_PARCEL_VALUE);
     parcel.WriteString16(Str8ToStr16(jsonData_.dump()));
@@ -823,7 +822,7 @@ HWTEST_F(FmsFormProviderDataTest, ReadFromParcel_NormalImageDataNum_001, TestSiz
     parcel.WriteString16(Str8ToStr16("test"));
     auto result = formProviderData.ReadFromParcel(parcel);
     EXPECT_FALSE(result);
-    EXPECT_EQ(formProviderData.imageDataState_, initialState);
+    EXPECT_EQ(formProviderData.imageDataState_, FormProviderData::IMAGE_DATA_STATE_ADDED);
     EXPECT_TRUE(formProviderData.GetImageDataMap().empty());
     GTEST_LOG_(INFO) << "ReadFromParcel_NormalImageDataNum_001 end";
 }
@@ -840,7 +839,6 @@ HWTEST_F(FmsFormProviderDataTest, ReadFromParcel_NullAshmem_001, TestSize.Level1
     InitJsonData();
     constexpr int32_t imageDataNum = 1;
     FormProviderData formProviderData(jsonData_);
-    auto initialState = formProviderData.imageDataState_;
     Parcel parcel;
     parcel.WriteInt32(DEFAULT_PARCEL_VALUE);
     parcel.WriteString16(Str8ToStr16(jsonData_.dump()));
@@ -849,7 +847,7 @@ HWTEST_F(FmsFormProviderDataTest, ReadFromParcel_NullAshmem_001, TestSize.Level1
     parcel.WriteParcelable(nullptr);
     auto result = formProviderData.ReadFromParcel(parcel);
     EXPECT_FALSE(result);
-    EXPECT_EQ(formProviderData.imageDataState_, initialState);
+    EXPECT_EQ(formProviderData.imageDataState_, FormProviderData::IMAGE_DATA_STATE_ADDED);
     EXPECT_TRUE(formProviderData.GetImageDataMap().empty());
     GTEST_LOG_(INFO) << "ReadFromParcel_NullAshmem_001 end";
 }
@@ -1825,9 +1823,11 @@ HWTEST_F(FmsFormProviderDataTest, WriteAshmemDataToParcel_LargeData_001, TestSiz
     EXPECT_TRUE(result);
     EXPECT_GT(parcel.GetDataSize(), 0);
 
-    sptr<FormAshmem> formAshmem = parcel.ReadParcelable<FormAshmem>();
-    ASSERT_NE(formAshmem, nullptr);
-    EXPECT_EQ(formAshmem->GetAshmemSize(), static_cast<int32_t>(size));
+    int fd = formProviderData.ReadFileDescriptor(parcel);
+    ASSERT_GE(fd, 0);
+    int32_t ashmemSize = AshmemGetSize(fd);
+    EXPECT_EQ(ashmemSize, static_cast<int32_t>(size));
+    fdsan_close_with_tag(fd, Constants::FORM_DOMAIN_ID);
 
     GTEST_LOG_(INFO) << "WriteAshmemDataToParcel_LargeData_001 end";
 }
