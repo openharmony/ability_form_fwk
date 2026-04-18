@@ -104,7 +104,7 @@ ErrCode FormProxyRegistry::GetByUserId(int32_t userId, std::vector<sptr<IRemoteO
     std::shared_lock<std::shared_mutex> lock(mutex_);
     for (auto &pair : proxies_) {
         int32_t uidUserId = FormUtil::GetCallerUserId(pair.first);
-        if (uidUserId == userId || pair.first < Constants::CALLING_UID_TRANSFORM_DIVISOR) {
+        if (uidUserId == userId || uidUserId == Constants::DEFAULT_USER_ID) {
             proxies.push_back(pair.second);
         }
     }
