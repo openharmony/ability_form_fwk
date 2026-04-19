@@ -20,6 +20,7 @@
 #include <memory>
 #include "gmock/gmock.h"
 #include "data_center/form_record/form_record.h"
+#include "want.h"
 
 namespace OHOS {
 namespace AppExecFwk {
@@ -28,6 +29,7 @@ public:
     virtual ~AbstractMockFormDataMgr() = default;
     virtual bool GetFormRecord(const int64_t formId, FormRecord &formRecord) = 0;
     virtual void CheckForms(const std::vector<int64_t> &formIds) = 0;
+    virtual void MergeFormWant(const Want &newWant, Want &oldWant) = 0;
 };
 
 class MockFormDataMgr : public AbstractMockFormDataMgr {
@@ -37,6 +39,7 @@ public:
     ~MockFormDataMgr() override = default;
     MOCK_METHOD2(GetFormRecord, bool(const int64_t formId, FormRecord &formRecord));
     MOCK_METHOD1(CheckForms, void(const std::vector<int64_t> &formIds));
+    MOCK_METHOD2(MergeFormWant, void(const Want &newWant, Want &oldWant));
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS
