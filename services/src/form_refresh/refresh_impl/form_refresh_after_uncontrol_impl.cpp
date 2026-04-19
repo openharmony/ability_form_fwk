@@ -31,11 +31,6 @@ FormRefreshAfterUncontrolImpl::~FormRefreshAfterUncontrolImpl() {}
 int FormRefreshAfterUncontrolImpl::RefreshFormRequest(RefreshData &data)
 {
     std::vector<int32_t> checkTypes = { TYPE_UNTRUST_APP, TYPE_ACTIVE_USER, TYPE_ADD_FINISH };
-    int32_t cachedRefreshType = Constants::REFRESHTYPE_DEFAULT;
-    FormDataMgr::GetInstance().GetRefreshType(data.formId, cachedRefreshType);
-    if (cachedRefreshType == Constants::REFRESHTYPE_NETWORKCHANGED) {
-        checkTypes.push_back(TYPE_NETWORK_PERMISSION);
-    }
     CheckValidFactor factor;
     factor.formId = data.formId;
     factor.record = data.record;
