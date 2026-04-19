@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2026 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -97,7 +97,7 @@ void FmsFormRdbDataMgrTest::TearDown()
  * @tc.desc: Test init
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_001, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_001, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_001 start";
     FormRdbTableConfig formRdbTableConfig;
@@ -113,7 +113,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_001, Function | SmallTest 
  * @tc.desc: Test InsertData
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_002, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_002, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_002 start";
     std::string key = "testKey";
@@ -129,7 +129,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_002, Function | SmallTest 
  * @tc.desc: Test QueryData
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_003, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_003, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_003 start";
     std::string key = "testKey";
@@ -147,7 +147,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_003, Function | SmallTest 
  * @tc.desc: Test QueryAllData
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_004, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_004, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_004 start";
     std::unordered_map<std::string, std::string> datas;
@@ -161,7 +161,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_004, Function | SmallTest 
  * @tc.desc: Test DeleteData
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_005, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_005, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_005 start";
     std::string key = "testKey";
@@ -176,7 +176,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_005, Function | SmallTest 
  * @tc.details: The function OnCreate runs normally and the return value meets expectations.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_006, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_006, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_006 start";
     if (rdbDataCallBack_ == nullptr) {
@@ -194,7 +194,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_006, Function | SmallTest 
  * @tc.details: The function OnUpgrade runs normally and the return value meets expectations.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_007, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_007, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_007 start";
     int currentVersion = 1;
@@ -215,7 +215,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_007, Function | SmallTest 
  * @tc.details: The function OnDowngrade runs normally and the return value meets expectations.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_008, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_008, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_008 start";
 
@@ -237,7 +237,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_008, Function | SmallTest 
  * @tc.details: The function onCorruption runs normally and the return value meets expectations.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_009, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_009, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_009 start";
     std::string data = "testKey";
@@ -256,7 +256,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_009, Function | SmallTest 
  * @tc.details: The function InsertData runs normally and the return value meets expectations.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_010, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_010, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_010 start";
     std::string data = "testKey";
@@ -271,7 +271,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_010, Function | SmallTest 
  * @tc.details: The function QueryData runs normally and the return value meets expectations.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_011, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_011, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_011 start";
     std::string key = "testKey";
@@ -297,7 +297,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_011, Function | SmallTest 
  * @tc.details: The functions runs normally and the return value meets expectations.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_012, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_012, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_012 start";
 
@@ -330,7 +330,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_012, Function | SmallTest 
  * @tc.details: The function QueryAllData runs normally and the return value meets expectations.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_013, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_013, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_013 start";
 
@@ -347,7 +347,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_013, Function | SmallTest 
  * @tc.details: The function QuerySql runs normally and the return value meets expectations.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_014, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_014, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_014 start";
 
@@ -363,7 +363,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_014, Function | SmallTest 
  * @tc.desc: Test onCorruption
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_015, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_015, TestSize.Level1)
 {
     RdbStoreDataCallBackFormInfoStorage rdbDataCallBack_(Constants::FORM_MANAGER_SERVICE_PATH +
         Constants::FORM_RDB_NAME);
@@ -376,7 +376,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_015, Function | SmallTest 
  * @tc.desc: Test OnOpen
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_016, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_016, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_016 start";
     if (rdbDataCallBack_ == nullptr) {
@@ -394,7 +394,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_016, Function | SmallTest 
  * @tc.desc: Test InitFormRdbTable
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_017, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_017, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_017 start";
     FormRdbTableConfig formRdbTableConfig;
@@ -409,7 +409,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_017, Function | SmallTest 
  * @tc.desc: Test DeleteData
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_018, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_018, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_018 start";
     std::string key = "testKey";
@@ -424,7 +424,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_018, Function | SmallTest 
  * @tc.desc: Test CheckAndRebuildRdbStore
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_019, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_019, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_019 start";
     auto result = FormRdbDataMgr::GetInstance().CheckAndRebuildRdbStore(NativeRdb::E_SQLITE_ERROR);
@@ -437,7 +437,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_019, Function | SmallTest 
  * @tc.desc: Test CheckAndRebuildRdbStore
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_020, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_020, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_020 start";
     auto result = FormRdbDataMgr::GetInstance().CheckAndRebuildRdbStore(NativeRdb::E_SQLITE_ERROR);
@@ -456,7 +456,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_020, Function | SmallTest 
  * @tc.desc: Test ExecuteSql
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_021, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_021, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_021 start";
 
@@ -493,7 +493,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_021, Function | SmallTest 
  * @tc.desc: Test InsertData
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_022, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_022, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_022 start";
 
@@ -539,7 +539,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_022, Function | SmallTest 
  * @tc.desc: Test InsertData
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_023, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_023, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_023 start";
 
@@ -578,7 +578,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_023, Function | SmallTest 
  * @tc.desc: Test DeleteData
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_024, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_024, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_024 start";
 
@@ -615,7 +615,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_024, Function | SmallTest 
  * @tc.desc: Test InsertData
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_025, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_025, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_025 start";
 
@@ -659,7 +659,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_025, Function | SmallTest 
  * @tc.desc: Test DeleteData
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_026, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_026, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_026 start";
 
@@ -699,7 +699,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_026, Function | SmallTest 
  * @tc.desc: Test QueryDataByStep
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_027, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_027, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_027 start";
 
@@ -730,7 +730,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_027, Function | SmallTest 
  * @tc.desc: Test UpdateReadCount increments read count correctly.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_028, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_028, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_028 start";
 
@@ -755,7 +755,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_028, Function | SmallTest 
  * @tc.desc: Test UpdateWriteCount increments write count and write size correctly.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_029, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_029, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_029 start";
 
@@ -786,7 +786,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_029, Function | SmallTest 
  * @tc.desc: Test PrintStatistics resets counters after printing.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_030, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_030, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_030 start";
 
@@ -821,7 +821,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_030, Function | SmallTest 
  * @tc.desc: Test RemoveStatisticsTimer removes periodic task.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_031, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_031, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_031 start";
 
@@ -837,7 +837,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_031, Function | SmallTest 
  * @tc.desc: Test statistics counters are thread-safe with concurrent operations.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_032, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_032, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_032 start";
 
@@ -874,7 +874,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_032, Function | SmallTest 
  * @tc.desc: Test UpdateWriteCount with zero data size.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_033, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_033, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_033 start";
 
@@ -896,7 +896,7 @@ HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_033, Function | SmallTest 
  * @tc.desc: Test PrintStatistics with zero counters.
  * @tc.type: FUNC
  */
-HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_034, Function | SmallTest | Level1)
+HWTEST_F(FmsFormRdbDataMgrTest, FmsFormRdbDataMgrTest_034, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FmsFormRdbDataMgrTest_034 start";
 

@@ -53,7 +53,7 @@ void FmsFormTimerMgrTest::TearDown() {}
  * @tc.name: IsLimiterEnableRefresh.
  * @tc.desc: Verify that the IsLimiterEnableRefresh interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0091, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0091, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0091 start";
     std::shared_ptr<FormTimerMgr> formTimerMgr = std::make_shared<FormTimerMgr>();
@@ -68,7 +68,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0091, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0092, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0092, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0092 start";
     EventFwk::CommonEventData eventData;
@@ -87,7 +87,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0092, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0093, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0093, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0093 start";
     EventFwk::CommonEventData eventData;
@@ -106,7 +106,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0093, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0094, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0094, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0094 start";
     EventFwk::CommonEventData eventData;
@@ -125,7 +125,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0094, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0095, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0095, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0095 start";
     EventFwk::CommonEventData eventData;
@@ -144,7 +144,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0095, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0096, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0096, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0096 start";
     EventFwk::CommonEventData eventData;
@@ -163,7 +163,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0096, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0097, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0097, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0097 start";
     EventFwk::CommonEventData eventData;
@@ -183,7 +183,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0097, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0098, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0098, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0098 start";
     EventFwk::CommonEventData eventData;
@@ -203,7 +203,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0098, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0099, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0099, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0099 start";
     EventFwk::CommonEventData eventData;
@@ -224,7 +224,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0099, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0100, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0100, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0100 start";
     EventFwk::CommonEventData eventData;
@@ -245,7 +245,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0100, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0101, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0101, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0101 start";
     EventFwk::CommonEventData eventData;
@@ -266,7 +266,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0101, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0102, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0102, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0102 start";
     EventFwk::CommonEventData eventData;
@@ -287,7 +287,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0102, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0103, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0103, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0103 start";
     EventFwk::CommonEventData eventData;
@@ -308,7 +308,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0103, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0104, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0104, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0104 start";
     EventFwk::CommonEventData eventData;
@@ -329,7 +329,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0104, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0105, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0105, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0105 start";
     EventFwk::CommonEventData eventData;
@@ -350,7 +350,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0105, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0106, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0106, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0106 start";
     EventFwk::CommonEventData eventData;
@@ -371,7 +371,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0106, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0107, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0107, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0107 start";
     EventFwk::CommonEventData eventData;
@@ -392,7 +392,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0107, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0108, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0108, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0108 start";
     EventFwk::CommonEventData eventData;
@@ -413,7 +413,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0108, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0109, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0109, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0109 start";
     EventFwk::CommonEventData eventData;
@@ -434,7 +434,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0109, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0110, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0110, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0110 start";
     EventFwk::CommonEventData eventData;
@@ -455,7 +455,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0110, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0111, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0111, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0111 start";
     EventFwk::CommonEventData eventData;
@@ -476,7 +476,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0111, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0112, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0112, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0112 start";
     EventFwk::CommonEventData eventData;
@@ -497,7 +497,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0112, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0113, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0113, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0113 start";
     EventFwk::CommonEventData eventData;
@@ -518,7 +518,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0113, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0114, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0114, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0114 start";
     EventFwk::CommonEventData eventData;
@@ -539,7 +539,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0114, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0115, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0115, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0115 start";
     EventFwk::CommonEventData eventData;
@@ -560,7 +560,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0115, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0116, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0116, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0116 start";
     EventFwk::CommonEventData eventData;
@@ -581,7 +581,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0116, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0117, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0117, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0117 start";
     EventFwk::CommonEventData eventData;
@@ -602,7 +602,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0117, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0118, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0118, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0118 start";
     EventFwk::CommonEventData eventData;
@@ -623,7 +623,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0118, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0119, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0119, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0119 start";
     EventFwk::CommonEventData eventData;
@@ -644,7 +644,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0119, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0120, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0120, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0120 start";
     EventFwk::CommonEventData eventData;
@@ -665,7 +665,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0120, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0121, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0121, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0121 start";
     EventFwk::CommonEventData eventData;
@@ -686,7 +686,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0121, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0122, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0122, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0122 start";
     EventFwk::CommonEventData eventData;
@@ -707,7 +707,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0122, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0123, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0123, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0123 start";
     EventFwk::CommonEventData eventData;
@@ -728,7 +728,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0123, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0124, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0124, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0124 start";
     EventFwk::CommonEventData eventData;
@@ -749,7 +749,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0124, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0125, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0125, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0125 start";
     EventFwk::CommonEventData eventData;
@@ -770,7 +770,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0125, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0126, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0126, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0126 start";
     EventFwk::CommonEventData eventData;
@@ -791,7 +791,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0126, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0127, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0127, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0127 start";
     EventFwk::CommonEventData eventData;
@@ -812,7 +812,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0127, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0128, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0128, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0128 start";
     EventFwk::CommonEventData eventData;
@@ -833,7 +833,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0128, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0129, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0129, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0129 start";
     EventFwk::CommonEventData eventData;
@@ -854,7 +854,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0129, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0130, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0130, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0130 start";
     EventFwk::CommonEventData eventData;
@@ -875,7 +875,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0130, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0131, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0131, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0131 start";
     EventFwk::CommonEventData eventData;
@@ -896,7 +896,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0131, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0132, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0132, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0132 start";
     EventFwk::CommonEventData eventData;
@@ -917,7 +917,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0132, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0133, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0133, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0133 start";
     EventFwk::CommonEventData eventData;
@@ -938,7 +938,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0133, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0134, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0134, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0134 start";
     EventFwk::CommonEventData eventData;
@@ -959,7 +959,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0134, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0135, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0135, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0135 start";
     EventFwk::CommonEventData eventData;
@@ -980,7 +980,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0135, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0136, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0136, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0136 start";
     EventFwk::CommonEventData eventData;
@@ -1001,7 +1001,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0136, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0137, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0137, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0137 start";
     EventFwk::CommonEventData eventData;
@@ -1022,7 +1022,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0137, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0138, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0138, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0138 start";
     EventFwk::CommonEventData eventData;
@@ -1043,7 +1043,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0138, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0139, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0139, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0139 start";
     EventFwk::CommonEventData eventData;
@@ -1064,7 +1064,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0139, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0140, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0140, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0140 start";
     EventFwk::CommonEventData eventData;
@@ -1085,7 +1085,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0140, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0141, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0141, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0141 start";
     EventFwk::CommonEventData eventData;
@@ -1106,7 +1106,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0141, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0142, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0142, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0142 start";
     EventFwk::CommonEventData eventData;
@@ -1127,7 +1127,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0142, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0143, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0143, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0143 start";
     EventFwk::CommonEventData eventData;
@@ -1148,7 +1148,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0143, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0144, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0144, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0144 start";
     EventFwk::CommonEventData eventData;
@@ -1169,7 +1169,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0144, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0145, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0145, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0145 start";
     EventFwk::CommonEventData eventData;
@@ -1190,7 +1190,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0145, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0146, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0146, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0146 start";
     EventFwk::CommonEventData eventData;
@@ -1211,7 +1211,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0146, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0147, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0147, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0147 start";
     EventFwk::CommonEventData eventData;
@@ -1232,7 +1232,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0147, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0148, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0148, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0148 start";
     EventFwk::CommonEventData eventData;
@@ -1253,7 +1253,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0148, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0149, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0149, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0149 start";
     EventFwk::CommonEventData eventData;
@@ -1274,7 +1274,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0149, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0150, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0150, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0150 start";
     EventFwk::CommonEventData eventData;
@@ -1295,7 +1295,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0150, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0151, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0151, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0151 start";
     EventFwk::CommonEventData eventData;
@@ -1316,7 +1316,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0151, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0152, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0152, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0152 start";
     EventFwk::CommonEventData eventData;
@@ -1337,7 +1337,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0152, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0153, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0153, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0153 start";
     EventFwk::CommonEventData eventData;
@@ -1358,7 +1358,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0153, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0154, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0154, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0154 start";
     EventFwk::CommonEventData eventData;
@@ -1379,7 +1379,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0154, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0155, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0155, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0155 start";
     EventFwk::CommonEventData eventData;
@@ -1400,7 +1400,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0155, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0156, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0156, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0156 start";
     EventFwk::CommonEventData eventData;
@@ -1421,7 +1421,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0156, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0157, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0157, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0157 start";
     EventFwk::CommonEventData eventData;
@@ -1442,7 +1442,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0157, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0158, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0158, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0158 start";
     EventFwk::CommonEventData eventData;
@@ -1463,7 +1463,7 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0158, Function | MediumTest | Lev
  * @tc.name: TimerReceiver::OnReceiveEvent.
  * @tc.desc: Verify that the OnReceiveEvent interface executes normally and exits without exception.
  */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0159, Function | MediumTest | Level1)
+HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0159, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0159 start";
     EventFwk::CommonEventData eventData;
