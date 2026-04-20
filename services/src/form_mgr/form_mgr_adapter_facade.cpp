@@ -280,8 +280,8 @@ void FormMgrAdapterFacade::HandlerNotifyWhetherVisibleForms(const std::vector<in
 {
     HILOG_INFO("FormMgrAdapterFacade::HandlerNotifyWhetherVisibleForms called, "
         "formIds size:%{public}zu", formIds.size());
-    FormVisibilityAdapter::GetInstance().HandlerNotifyWhetherVisibleForms(formIds, formInstanceMaps, eventMaps, formVisibleType,
-        callerToken);
+    FormVisibilityAdapter::GetInstance().HandlerNotifyWhetherVisibleForms(formIds, formInstanceMaps,
+        eventMaps, formVisibleType, callerToken);
 }
 
 void FormMgrAdapterFacade::PaddingNotifyVisibleFormsMap(const int32_t formVisibleType, int64_t formId,
@@ -411,7 +411,8 @@ ErrCode FormMgrAdapterFacade::GetRunningFormInfosByBundleName(const std::string 
 {
     HILOG_INFO("FormMgrAdapterFacade::GetRunningFormInfosByBundleName called, bundleName:%{public}s",
         bundleName.c_str());
-    return FormQueryAdapter::GetInstance().GetRunningFormInfosByBundleName(bundleName, isUnusedIncluded, runningFormInfos);
+    return FormQueryAdapter::GetInstance().GetRunningFormInfosByBundleName(
+        bundleName, isUnusedIncluded, runningFormInfos);
 }
 
 ErrCode FormMgrAdapterFacade::GetFormInstancesByFilter(const FormInstancesFilter &formInstancesFilter,
