@@ -19,7 +19,9 @@
 #include <set>
 
 #include "app_log_wrapper.h"
+#ifdef DEVICE_USAGE_STATISTICS_ENABLE
 #include "bundle_active_client.h"
+#endif
 #include "bundle_info.h"
 #include "configuration.h"
 #include "form_constants.h"
