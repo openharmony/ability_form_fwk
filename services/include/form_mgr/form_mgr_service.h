@@ -989,7 +989,7 @@ private:
     ErrCode Init();
 
     ErrCode CheckFormPermission(
-        const std::string &permission = AppExecFwk::Constants::PERMISSION_REQUIRE_FORM);
+        const std::string &permission = AppExecFwk::Constants::PERMISSION_REQUIRE_FORM, bool checkSA = false);
 
     bool CheckAcrossLocalAccountsPermission() const;
 

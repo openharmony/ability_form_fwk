@@ -103,13 +103,6 @@ void FormMgrTest::TearDown(void)
     GTEST_LOG_(INFO) << "FormMgrTest_TearDown end";
 }
 
-void makewant(Want &want, const std::string widget, const std::string model, const int32_t dimension)
-{
-    want.SetParam(AppExecFwk::Constants::PARAM_FORM_NAME_KEY, widget);
-    want.SetParam(Constants::PARAM_MODULE_NAME_KEY, model);
-    want.SetParam(Constants::PARAM_FORM_DIMENSION_KEY, dimension);
-}
-
 /**
  * @tc.name: FormMgrTest_0001
  * @tc.desc: Verify GetFormsInfo
@@ -551,7 +544,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0021, TestSize.Level1) {
 
 /**
  * @tc.name: FormMgrTest_0022
- * @tc.desc: Verify  GetAllFormsInfo
+ * @tc.desc: Verify GetAllFormsInfo
  * @tc.type: FUNC
  */
 HWTEST_F(FormMgrTest, FormMgrTest_0022, TestSize.Level1) {
@@ -3726,7 +3719,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0200, TestSize.Level1)
 
 /**
  * @tc.name: FormMgrTest_0201
- * @tc.desc: Verify  GetAllFormsInfo
+ * @tc.desc: Verify GetAllFormsInfo
  * @tc.type: FUNC
  */
 HWTEST_F(FormMgrTest, FormMgrTest_0201, TestSize.Level1)
@@ -3793,7 +3786,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0203, TestSize.Level1)
 
 /**
  * @tc.name: FormMgrTest_0204
- * @tc.desc: Verify  GetAllFormsInfo
+ * @tc.desc: Verify GetAllFormsInfo
  * @tc.type: FUNC
  */
 HWTEST_F(FormMgrTest, FormMgrTest_0204, TestSize.Level1)
@@ -5065,10 +5058,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0287, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FormMgrTest_0287 starts";
     Want want;
-    want.SetElementName("bundleName", "abilityName");
-    const std::string widget = "widget";
-    const std::string model = "entry";
-    makewant(want, widget, model, 3);
+    makeWant(want, MakeWantFlag::DEFAULT);
     int64_t formId;
     int32_t userId = Constants::INVALID_USER_ID;
     int32_t result = FormMgr::GetInstance().RequestPublishFormCrossUser(want, userId, formId);
@@ -5085,10 +5075,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0288, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FormMgrTest_0288 starts";
     Want want;
-    want.SetElementName("", "abilityName");
-    const std::string widget = "widget";
-    const std::string model = "entry";
-    makewant(want, widget, model, 3);
+    makeWant(want, MakeWantFlag::NO_BUNDLE_NAME);
     int64_t formId;
     int32_t userId = 100;
     int32_t result = FormMgr::GetInstance().RequestPublishFormCrossUser(want, userId, formId);
@@ -5105,10 +5092,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0289, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FormMgrTest_0289 starts";
     Want want;
-    want.SetElementName("bundleName", "");
-    const std::string widget = "widget";
-    const std::string model = "entry";
-    makewant(want, widget, model, 3);
+    makeWant(want, MakeWantFlag::NO_ABILITY_NAME);
     int64_t formId;
     int32_t userId = 100;
     int32_t result = FormMgr::GetInstance().RequestPublishFormCrossUser(want, userId, formId);
@@ -5125,10 +5109,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0290, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FormMgrTest_0290 starts";
     Want want;
-    want.SetElementName("bundleName", "abilityName");
-    const std::string widget = "widget";
-    const std::string model = "";
-    makewant(want, widget, model, 3);
+    makeWant(want, MakeWantFlag::NO_MODEL_NAME);
     int64_t formId;
     int32_t userId = 100;
     int32_t result = FormMgr::GetInstance().RequestPublishFormCrossUser(want, userId, formId);
@@ -5145,10 +5126,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0291, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FormMgrTest_0291 starts";
     Want want;
-    want.SetElementName("bundleName", "abilityName");
-    const std::string widget = "widget";
-    const std::string model = "entry";
-    makewant(want, widget, model, 0);
+    makeWant(want, MakeWantFlag::NO_FORM_DIMENSION);
     int64_t formId;
     int32_t userId = 100;
     int32_t result = FormMgr::GetInstance().RequestPublishFormCrossUser(want, userId, formId);
@@ -5165,10 +5143,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0292, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "FormMgrTest_0292 starts";
     Want want;
-    want.SetElementName("bundleName", "abilityName");
-    const std::string widget = "widget";
-    const std::string model = "entry";
-    makewant(want, widget, model, 3);
+    makeWant(want, MakeWantFlag::DEFAULT);
     int64_t formId;
     int32_t userId = 100;
     FormMgr::GetInstance().SetFormMgrService(nullptr);
@@ -5177,10 +5152,65 @@ HWTEST_F(FormMgrTest, FormMgrTest_0292, TestSize.Level1)
     FormMgr::GetInstance().SetFormMgrService(mockProxy);
     GTEST_LOG_(INFO) << "FormMgrTest_0292 test ends";
 }
+ 
+/**
+ * @tc.name: FormMgrTest_0293
+ * @tc.desc: invalid userid
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormMgrTest, FormMgrTest_0293, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "FormMgrTest_0293 starts";
+    Want want;
+    makeWant(want, MakeWantFlag::NO_FORM_NAME);
+    int64_t formId;
+    int32_t userId = Constants::INVALID_USER_ID;
+    int32_t result = FormMgr::GetInstance().RequestPublishFormCrossUser(want, userId, formId);
+    EXPECT_EQ(result, ERR_APPEXECFWK_FORM_INVALID_PARAM);
+    GTEST_LOG_(INFO) << "FormMgrTest_0293 test ends";
+}
+
+/**
+ * @tc.name: FormMgrTest_0294
+ * @tc.desc: Connect failed
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormMgrTest, FormMgrTest_0294, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "FormMgrTest_0294 starts";
+    Want want;
+    makeWant(want, MakeWantFlag::DEFAULT);
+    int64_t formId;
+    int32_t userId = 100;
+    FormMgr::GetInstance().SetFormMgrService(nullptr);
+    int32_t result = FormMgr::GetInstance().RequestPublishFormCrossUser(want, userId, formId);
+    EXPECT_EQ(result, ERR_APPEXECFWK_FORM_COMMON_CODE);
+    FormMgr::GetInstance().SetFormMgrService(mockProxy);
+    GTEST_LOG_(INFO) << "FormMgrTest_0294 test ends";
+}
+ 
+/**
+ * @tc.name: FormMgrTest_0295
+ * @tc.desc: Connect failed
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormMgrTest, FormMgrTest_0295, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "FormMgrTest_0295 starts";
+    Want want;
+    makeWant(want, MakeWantFlag::DEFAULT);
+    int64_t formId;
+    int32_t userId = 100;
+    FormMgr::GetInstance().SetFormMgrService(nullptr);
+    int32_t result = FormMgr::GetInstance().RequestPublishFormCrossUser(want, userId, formId);
+    EXPECT_EQ(result, ERR_APPEXECFWK_FORM_COMMON_CODE);
+    FormMgr::GetInstance().SetFormMgrService(mockProxy);
+    GTEST_LOG_(INFO) << "FormMgrTest_0295 test ends";
+}
 
 /**
  * @tc.name: FormMgrTest_GetAllTemplateFormsInfo_001
- * @tc.desc: Verify  GetAllTemplateFormsInfo
+ * @tc.desc: Verify GetAllTemplateFormsInfo
  * @tc.type: FUNC
  */
 HWTEST_F(FormMgrTest, FormMgrTest_GetAllTemplateFormsInfo_001, TestSize.Level1) {
