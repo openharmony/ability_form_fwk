@@ -16,6 +16,7 @@
 #include "common/util/form_proxy_registry.h"
 
 #include "fms_log_wrapper.h"
+#include "form_constants.h"
 #include "common/util/form_util.h"
 
 namespace OHOS {
@@ -103,7 +104,7 @@ ErrCode FormProxyRegistry::GetByUserId(int32_t userId, std::vector<sptr<IRemoteO
     std::shared_lock<std::shared_mutex> lock(mutex_);
     for (auto &pair : proxies_) {
         int32_t uidUserId = FormUtil::GetCallerUserId(pair.first);
-        if (uidUserId == userId) {
+        if (uidUserId == userId || uidUserId == Constants::DEFAULT_USER_ID) {
             proxies.push_back(pair.second);
         }
     }
