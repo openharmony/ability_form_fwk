@@ -544,7 +544,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0021, TestSize.Level1) {
 
 /**
  * @tc.name: FormMgrTest_0022
- * @tc.desc: Verify  GetAllFormsInfo
+ * @tc.desc: Verify GetAllFormsInfo
  * @tc.type: FUNC
  */
 HWTEST_F(FormMgrTest, FormMgrTest_0022, TestSize.Level1) {
@@ -3719,7 +3719,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0200, TestSize.Level1)
 
 /**
  * @tc.name: FormMgrTest_0201
- * @tc.desc: Verify  GetAllFormsInfo
+ * @tc.desc: Verify GetAllFormsInfo
  * @tc.type: FUNC
  */
 HWTEST_F(FormMgrTest, FormMgrTest_0201, TestSize.Level1)
@@ -3786,7 +3786,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0203, TestSize.Level1)
 
 /**
  * @tc.name: FormMgrTest_0204
- * @tc.desc: Verify  GetAllFormsInfo
+ * @tc.desc: Verify GetAllFormsInfo
  * @tc.type: FUNC
  */
 HWTEST_F(FormMgrTest, FormMgrTest_0204, TestSize.Level1)
@@ -5210,7 +5210,7 @@ HWTEST_F(FormMgrTest, FormMgrTest_0295, TestSize.Level1)
 
 /**
  * @tc.name: FormMgrTest_GetAllTemplateFormsInfo_001
- * @tc.desc: Verify  GetAllTemplateFormsInfo
+ * @tc.desc: Verify GetAllTemplateFormsInfo
  * @tc.type: FUNC
  */
 HWTEST_F(FormMgrTest, FormMgrTest_GetAllTemplateFormsInfo_001, TestSize.Level1) {
