@@ -22,6 +22,7 @@
 #include "mock_form_mgr_service.h"
 #include "mock_form_token.h"
 #include "form_mgr_errors.h"
+#include "mock_form_provider_client.h"
 
 using namespace testing::ext;
 using namespace OHOS;
@@ -3661,5 +3662,87 @@ HWTEST_F(FormMgrStubTest, FormMgrStubTest_GetFormIdsByFormLocation_009, TestSize
     EXPECT_EQ(resultFormIds.size(), formIds.size());
     EXPECT_THAT(resultFormIds, ContainerEq(formIds));
     GTEST_LOG_(INFO) << "FormMgrStubTest_GetFormIdsByFormLocation_009 ends";
+}
+ 
+/**
+ * @tc.number: FormMgrStubTest_RequestPublishFormCrossUser_001
+ * @tc.name: Verify OnRemoteRequest and HandleRequestPublishFormCrossUser
+ * @tc.desc: When the parameter code is FORM_MGR_REQUEST_PUBLISH_FORM_CROSS_USER, the interface return value is ERR_OK.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormMgrStubTest, FormMgrStubTest_RequestPublishFormCrossUser_001, TestSize.Level1) {
+    GTEST_LOG_(INFO) << "FormMgrStubTest_RequestPublishFormCrossUser_001 starts";
+    EXPECT_TRUE(mockFormMgrService != nullptr);
+    Want want;
+    makeWant(want, MakeWantFlag::DEFAULT);
+    int32_t userId = 100;
+    int64_t formId = 123456;
+    constexpr uint32_t code = static_cast<uint32_t>(IFormMgr::Message::FORM_MGR_REQUEST_PUBLISH_FORM_CROSS_USER);
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option{MessageOption::TF_ASYNC};
+    data.WriteInterfaceToken(MockFormMgrService::GetDescriptor());
+    data.WriteParcelable(&want);
+    data.WriteInt32(userId);
+    EXPECT_CALL(*mockFormMgrService, RequestPublishFormCrossUser(_, userId, _))
+        .Times(1)
+        .WillOnce(DoAll(SetArgReferee<2>(formId), Return(ERR_OK)));
+    auto result = mockFormMgrService->OnRemoteRequest(code, data, reply, option);
+    EXPECT_EQ(result, ERR_OK);
+    int32_t errCode = reply.ReadInt32();
+    EXPECT_EQ(errCode, ERR_OK);
+    int64_t resultFormId = reply.ReadInt64();
+    EXPECT_EQ(resultFormId, formId);
+    GTEST_LOG_(INFO) << "FormMgrStubTest_RequestPublishFormCrossUser_001 ends";
+}
+
+/**
+ * @tc.number: FormMgrStubTest_RequestPublishFormCrossUser_002
+ * @tc.name: Verify OnRemoteRequest and HandleRequestPublishFormCrossUser
+ * @tc.desc: When the parameter code is FORM_MGR_REQUEST_PUBLISH_FORM_CROSS_USER, the interface return value is
+             ERR_OK + 1.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormMgrStubTest, FormMgrStubTest_RequestPublishFormCrossUser_002, TestSize.Level1) {
+    GTEST_LOG_(INFO) << "FormMgrStubTest_RequestPublishFormCrossUser_002 starts";
+    EXPECT_TRUE(mockFormMgrService != nullptr);
+    Want want;
+    makeWant(want, MakeWantFlag::DEFAULT);
+    int32_t userId = 100;
+    constexpr uint32_t code = static_cast<uint32_t>(IFormMgr::Message::FORM_MGR_REQUEST_PUBLISH_FORM_CROSS_USER);
+    constexpr int32_t errorCode = ERR_OK + 1;
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option{MessageOption::TF_ASYNC};
+    data.WriteInterfaceToken(MockFormMgrService::GetDescriptor());
+    data.WriteParcelable(&want);
+    data.WriteInt32(userId);
+    EXPECT_CALL(*mockFormMgrService, RequestPublishFormCrossUser(_, userId, _))
+        .Times(1)
+        .WillOnce(Return(errorCode));
+    mockFormMgrService->OnRemoteRequest(code, data, reply, option);
+    int32_t result = reply.ReadInt32();
+    EXPECT_EQ(result, errorCode);
+    GTEST_LOG_(INFO) << "FormMgrStubTest_RequestPublishFormCrossUser_002 ends";
+}
+ 
+/**
+ * @tc.number: FormMgrStubTest_RequestPublishFormCrossUser_003
+ * @tc.name: Verify OnRemoteRequest and HandleRequestPublishFormCrossUser
+ * @tc.desc: When the parameter code is FORM_MGR_REQUEST_PUBLISH_FORM_CROSS_USER, the interface return value is
+ *           ERR_APPEXECFWK_PARCEL_ERROR.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormMgrStubTest, FormMgrStubTest_RequestPublishFormCrossUser_003, TestSize.Level1) {
+    GTEST_LOG_(INFO) << "FormMgrStubTest_RequestPublishFormCrossUser_003 starts";
+    EXPECT_TRUE(mockFormMgrService != nullptr);
+    constexpr uint32_t code = static_cast<uint32_t>(IFormMgr::Message::FORM_MGR_REQUEST_PUBLISH_FORM_CROSS_USER);
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option{MessageOption::TF_ASYNC};
+    data.WriteInterfaceToken(MockFormMgrService::GetDescriptor());
+    auto result = mockFormMgrService->OnRemoteRequest(code, data, reply, option);
+    EXPECT_EQ(result, ERR_APPEXECFWK_PARCEL_ERROR);
+    GTEST_LOG_(INFO) << "FormMgrStubTest_RequestPublishFormCrossUser_003 ends";
 }
 }

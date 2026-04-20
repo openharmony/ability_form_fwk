@@ -486,7 +486,7 @@ ErrCode FormMgrService::RequestPublishFormCrossUser(Want &want, int32_t userId, 
     if (userId == Constants::INVALID_USER_ID) {
         return ERR_APPEXECFWK_FORM_INVALID_PARAM;
     }
-    ErrCode ret = CheckFormPermission(AppExecFwk::Constants::PERMISSION_AGENT_REQUIRE_FORM);
+    ErrCode ret = CheckFormPermission(AppExecFwk::Constants::PERMISSION_AGENT_REQUIRE_FORM, true);
     if (ret != ERR_OK) {
         HILOG_ERROR("request form permission denied");
         return ret;
@@ -918,11 +918,11 @@ ErrCode FormMgrService::Init()
     return ERR_OK;
 }
 
-ErrCode FormMgrService::CheckFormPermission(const std::string &permission)
+ErrCode FormMgrService::CheckFormPermission(const std::string &permission, bool checkSA)
 {
     HILOG_DEBUG("call");
 
-    if (FormUtil::IsSACall()) {
+    if (!checkSA && FormUtil::IsSACall()) {
         return ERR_OK;
     }
 
