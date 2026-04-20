@@ -26,7 +26,7 @@ FormProxyDeathRecipient::FormProxyDeathRecipient(int32_t uid, CleanupCallback ca
     : uid_(uid), callback_(std::move(callback))
 {}
 
-void FormProxyDeathRecipient::OnRemoteDied(const wptr<IRemoteObject> &remote)
+void FormProxyDeathRecipient::OnRemoteDied([[maybe_unused]] const wptr<IRemoteObject> &remote)
 {
     HILOG_WARN("Proxy died for uid=%{public}d, auto cleaning", uid_);
     if (callback_) {
@@ -145,6 +145,10 @@ bool FormProxyRegistry::AddDeathRecipient(int32_t uid, const sptr<IRemoteObject>
         HILOG_ERROR("%{public}s: failed to create DeathRecipient for uid=%{public}d", tag_.c_str(), uid);
         return false;
     }
+    if (proxy == nullptr) {
+        HILOG_ERROR("%{public}s: proxy is null for uid=%{public}d", tag_.c_str(), uid);
+        return false;
+    }
     proxy->AddDeathRecipient(recipient);
     deathRecipients_[uid] = recipient;
     return true;
@@ -154,7 +158,9 @@ void FormProxyRegistry::RemoveDeathRecipient(int32_t uid, const sptr<IRemoteObje
 {
     auto it = deathRecipients_.find(uid);
     if (it != deathRecipients_.end()) {
-        proxy->RemoveDeathRecipient(it->second);
+        if (proxy != nullptr) {
+            proxy->RemoveDeathRecipient(it->second);
+        }
         deathRecipients_.erase(it);
     }
 }

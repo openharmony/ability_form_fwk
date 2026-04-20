@@ -78,7 +78,7 @@ int32_t DelayStaggerStrategy::ExecuteRefresh(std::vector<RefreshData> &batch, in
         ]() mutable {
             RefreshBatch(0, batch.size(), batch, refreshType);
         };
-        FormMgrQueue::GetInstance().ScheduleTask(delayMs_, std::move(refreshBatch));
+        FormMgrQueue::GetInstance().ScheduleTask(delayMs_ * static_cast<int32_t>(i), std::move(refreshBatch));
     }
 
     return ERR_OK;

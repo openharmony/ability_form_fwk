@@ -33,6 +33,7 @@ group("unittest") {
   testonly = true
 
   deps = [
+    "unittest/fms_batch_refresh_test:unittest",
     "unittest/fms_form_ability_connection_reporter_test:unittest",
     "unittest/fms_form_ams_helper_test:unittest",
     "unittest/fms_form_ashmem_test:unittest",
@@ -119,7 +120,9 @@ group("unittest") {
     "unittest/fms_param_manager_test:unittest",
     "unittest/fms_provider_connect_proxy_test:unittest",
     "unittest/fms_provider_connect_stub_test:unittest",
+    "unittest/fms_refresh_cache_mgr_test:unittest",
     "unittest/fms_running_form_info_test:unittest",
+    "unittest/fms_stagger_strategy_test:unittest",
     "unittest/form_basic_info_mgr_test:unittest",
     "unittest/form_bundle_distributed_mgr_test:unittest",
     "unittest/form_bundle_forbid_mgr_test:unittest",
