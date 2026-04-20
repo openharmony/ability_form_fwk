@@ -656,7 +656,6 @@ ErrCode FormDataAdapter::UpdateFormByCondition(int32_t type)
     }
 
     std::string reportStr = "";
-    std::set<std::string> reportList;
 
     std::vector<RefreshData> batch;
     for (FormRecord& formRecord : formInfos) {
@@ -664,14 +663,10 @@ ErrCode FormDataAdapter::UpdateFormByCondition(int32_t type)
         data.formId = formRecord.formId;
         data.record = formRecord;
         batch.push_back(data);
+        std::string str = formRecord.bundleName + "_" + formRecord.formName;
+        reportStr += str;
     }
     FormRefreshMgr::GetInstance().BatchRequestRefresh(TYPE_NETWORK, StaggerStrategyType::VISIBLE_DELAY, batch);
-
-    if (reportList.size() > 0) {
-        for (const auto& item : reportList) {
-            reportStr = reportStr + item;
-        }
-    }
     std::string subStr = reportStr.substr(0, std::min((int)reportStr.size(), 30));
     HILOG_INFO("UpdateFormByCondition reportStr:%{public}s", subStr.c_str());
     NewFormEventInfo eventInfo;
