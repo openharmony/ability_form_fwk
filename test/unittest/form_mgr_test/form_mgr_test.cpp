@@ -103,32 +103,6 @@ void FormMgrTest::TearDown(void)
     GTEST_LOG_(INFO) << "FormMgrTest_TearDown end";
 }
 
-enum class MakeWantFlag : int {
-    NO_FORM_NAME = 1,
-    NO_MODEL_NAME = 2,
-    NO_FORM_DIMENSION = 3,
-    NO_BUNDLE_NAME = 4,
-    NO_ABILITY_NAME = 5,
-    DEFAULT = 6
-};
- 
-void makeWant(Want &want, MakeWantFlag flag)
-{
-    const std::string widget = "widget";
-    const std::string model = "entry";
-    const int32_t dimension = 3;
-    if (flag != MakeWantFlag::NO_FORM_NAME) want.SetParam(AppExecFwk::Constants::PARAM_FORM_NAME_KEY, widget);
-    if (flag != MakeWantFlag::NO_MODEL_NAME) want.SetParam(Constants::PARAM_MODULE_NAME_KEY, model);
-    if (flag != MakeWantFlag::NO_FORM_DIMENSION) want.SetParam(Constants::PARAM_FORM_DIMENSION_KEY, dimension);
-    if (flag == MakeWantFlag::NO_BUNDLE_NAME) {
-        want.SetElementName("", "abilityName");
-    } else if (flag == MakeWantFlag::NO_ABILITY_NAME) {
-        want.SetElementName("bundleName", "");
-    } else {
-        want.SetElementName("bundleName", "abilityName");
-    }
-}
-
 /**
  * @tc.name: FormMgrTest_0001
  * @tc.desc: Verify GetFormsInfo
@@ -5213,6 +5187,25 @@ HWTEST_F(FormMgrTest, FormMgrTest_0294, TestSize.Level1)
     EXPECT_EQ(result, ERR_APPEXECFWK_FORM_COMMON_CODE);
     FormMgr::GetInstance().SetFormMgrService(mockProxy);
     GTEST_LOG_(INFO) << "FormMgrTest_0294 test ends";
+}
+ 
+/**
+ * @tc.name: FormMgrTest_0295
+ * @tc.desc: Connect failed
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormMgrTest, FormMgrTest_0295, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "FormMgrTest_0295 starts";
+    Want want;
+    makeWant(want, MakeWantFlag::DEFAULT);
+    int64_t formId;
+    int32_t userId = 100;
+    FormMgr::GetInstance().SetFormMgrService(nullptr);
+    int32_t result = FormMgr::GetInstance().RequestPublishFormCrossUser(want, userId, formId);
+    EXPECT_EQ(result, ERR_APPEXECFWK_FORM_COMMON_CODE);
+    FormMgr::GetInstance().SetFormMgrService(mockProxy);
+    GTEST_LOG_(INFO) << "FormMgrTest_0295 test ends";
 }
 
 /**

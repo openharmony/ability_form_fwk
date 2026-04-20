@@ -22,6 +22,7 @@
 #include "mock_form_mgr_service.h"
 #include "mock_form_token.h"
 #include "form_mgr_errors.h"
+#include "mock_form_provider_client.h"
 
 using namespace testing::ext;
 using namespace OHOS;
@@ -3663,32 +3664,6 @@ HWTEST_F(FormMgrStubTest, FormMgrStubTest_GetFormIdsByFormLocation_009, TestSize
     GTEST_LOG_(INFO) << "FormMgrStubTest_GetFormIdsByFormLocation_009 ends";
 }
  
-enum class MakeWantFlag : int {
-    NO_FORM_NAME = 1,
-    NO_MODEL_NAME = 2,
-    NO_FORM_DIMENSION = 3,
-    NO_BUNDLE_NAME = 4,
-    NO_ABILITY_NAME = 5,
-    DEFAULT = 6
-};
- 
-void makeWant(Want &want, MakeWantFlag flag)
-{
-    const std::string widget = "widget";
-    const std::string model = "entry";
-    const int32_t dimension = 3;
-    if (flag != MakeWantFlag::NO_FORM_NAME) want.SetParam(AppExecFwk::Constants::PARAM_FORM_NAME_KEY, widget);
-    if (flag != MakeWantFlag::NO_MODEL_NAME) want.SetParam(Constants::PARAM_MODULE_NAME_KEY, model);
-    if (flag != MakeWantFlag::NO_FORM_DIMENSION) want.SetParam(Constants::PARAM_FORM_DIMENSION_KEY, dimension);
-    if (flag == MakeWantFlag::NO_BUNDLE_NAME) {
-        want.SetElementName("", "abilityName");
-    } else if (flag == MakeWantFlag::NO_ABILITY_NAME) {
-        want.SetElementName("bundleName", "");
-    } else {
-        want.SetElementName("bundleName", "abilityName");
-    }
-}
- 
 /**
  * @tc.number: FormMgrStubTest_RequestPublishFormCrossUser_001
  * @tc.name: Verify OnRemoteRequest and HandleRequestPublishFormCrossUser
@@ -3720,11 +3695,12 @@ HWTEST_F(FormMgrStubTest, FormMgrStubTest_RequestPublishFormCrossUser_001, TestS
     EXPECT_EQ(resultFormId, formId);
     GTEST_LOG_(INFO) << "FormMgrStubTest_RequestPublishFormCrossUser_001 ends";
 }
- 
+
 /**
  * @tc.number: FormMgrStubTest_RequestPublishFormCrossUser_002
  * @tc.name: Verify OnRemoteRequest and HandleRequestPublishFormCrossUser
- * @tc.desc: When the parameter code is FORM_MGR_REQUEST_PUBLISH_FORM_CROSS_USER, the interface return value is ERR_OK + 1.
+ * @tc.desc: When the parameter code is FORM_MGR_REQUEST_PUBLISH_FORM_CROSS_USER, the interface return value is
+             ERR_OK + 1.
  * @tc.type: FUNC
  */
 HWTEST_F(FormMgrStubTest, FormMgrStubTest_RequestPublishFormCrossUser_002, TestSize.Level1) {
@@ -3744,7 +3720,8 @@ HWTEST_F(FormMgrStubTest, FormMgrStubTest_RequestPublishFormCrossUser_002, TestS
     EXPECT_CALL(*mockFormMgrService, RequestPublishFormCrossUser(_, userId, _))
         .Times(1)
         .WillOnce(Return(errorCode));
-    auto result = mockFormMgrService->OnRemoteRequest(code, data, reply, option);
+    mockFormMgrService->OnRemoteRequest(code, data, reply, option);
+    int32_t result = reply.ReadInt32();
     EXPECT_EQ(result, errorCode);
     GTEST_LOG_(INFO) << "FormMgrStubTest_RequestPublishFormCrossUser_002 ends";
 }
