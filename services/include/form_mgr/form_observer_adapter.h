@@ -55,7 +55,6 @@ public:
 
     ErrCode UnregisterClickEventObserver(const std::string &bundleName,
         const std::string &formEventType, const sptr<IRemoteObject> &observer);
-
 };
 
 } // namespace AppExecFwk

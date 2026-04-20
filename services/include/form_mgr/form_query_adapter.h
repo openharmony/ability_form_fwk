@@ -110,8 +110,6 @@ private:
      */
     ErrCode AcquireFormStateCheck(const std::string &bundleName,
         const std::string &abilityName, const Want &want, std::string &provider);
-
-
 };
 
 } // namespace AppExecFwk
