@@ -70,8 +70,6 @@ private:
      */
     bool CheckKeepBackgroundRunningPermission(const sptr<IBundleMgr> &iBundleMgr,
         const std::string &bundleName);
-
-
 };
 
 } // namespace AppExecFwk
