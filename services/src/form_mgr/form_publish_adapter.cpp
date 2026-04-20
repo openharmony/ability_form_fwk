@@ -254,7 +254,8 @@ ErrCode FormPublishAdapter::CheckPublishForm(Want &want, bool needCheckFormPermi
     std::string abilityName = want.GetElement().GetAbilityName();
     std::string formName = want.GetStringParam(AppExecFwk::Constants::PARAM_FORM_NAME_KEY);
     std::vector<FormInfo> formInfos {};
-    errCode = FormInfoMgr::GetInstance().GetFormsInfoByModuleWithoutCheck(want.GetElement().GetBundleName(), moduleName, formInfos);
+    errCode = FormInfoMgr::GetInstance().GetFormsInfoByModuleWithoutCheck(
+        want.GetElement().GetBundleName(), moduleName, formInfos);
     if (errCode != ERR_OK) {
         HILOG_ERROR("fail get forms info");
         return errCode;

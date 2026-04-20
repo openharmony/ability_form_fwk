@@ -164,7 +164,8 @@ void FormDumpMgr::DumpHasFormVisible(
     formInfos += "    bundleName [" + bundleName + "]\n";
     formInfos += "    userId [" + std::to_string(userId) + "]\n";
     formInfos += "    instIndex [" + std::to_string(instIndex) + "]\n";
-    formInfos += "    hasFormVisible [" + std::to_string(FormMgrAdapterFacade::GetInstance().HasFormVisible(tokenId)) + "]\n";
+    formInfos += "    hasFormVisible [" +
+        std::to_string(FormMgrAdapterFacade::GetInstance().HasFormVisible(tokenId)) + "]\n";
 }
 
 /**

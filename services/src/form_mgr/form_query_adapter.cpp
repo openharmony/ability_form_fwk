@@ -142,7 +142,8 @@ ErrCode FormQueryAdapter::GetRunningFormInfosByBundleName(
 {
     HILOG_DEBUG("call, bundleName:%{public}s", bundleName.c_str());
     int32_t userId = FormUtil::GetCallerUserId(IPCSkeleton::GetCallingUid());
-    return FormDataMgr::GetInstance().GetRunningFormInfosByBundleName(bundleName, isUnusedIncluded, runningFormInfos, userId);
+    return FormDataMgr::GetInstance().GetRunningFormInfosByBundleName(
+        bundleName, isUnusedIncluded, runningFormInfos, userId);
 }
 
 ErrCode FormQueryAdapter::GetFormInstancesByFilter(const FormInstancesFilter &formInstancesFilter,

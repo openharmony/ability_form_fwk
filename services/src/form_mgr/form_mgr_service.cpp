@@ -1934,7 +1934,8 @@ ErrCode FormMgrService::UpdateFormLocation(const int64_t &formId, const int32_t 
     }
     bool isRequestPublishFormWithSnapshot =
         requestPublishFormWithSnapshotSet_.find(formId) != requestPublishFormWithSnapshotSet_.end();
-    return FormMgrAdapterFacade::GetInstance().UpdateFormLocation(formId, formLocation, isRequestPublishFormWithSnapshot);
+    return FormMgrAdapterFacade::GetInstance().UpdateFormLocation(
+        formId, formLocation, isRequestPublishFormWithSnapshot);
 }
 
 ErrCode FormMgrService::BatchRefreshForms(const int32_t formRefreshType)
