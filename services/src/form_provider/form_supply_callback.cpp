@@ -34,7 +34,7 @@
 #include "form_host_interface.h"
 #include "common/util/form_report.h"
 #include "data_center/form_record/form_record_report.h"
-#include "form_mgr/form_mgr_adapter.h"
+#include "form_mgr/form_mgr_adapter_facade.h"
 #include "form_refresh/strategy/refresh_cache_mgr.h"
 #include "status_mgr_center/form_status_task_mgr.h"
 #include "int_wrapper.h"
@@ -375,7 +375,7 @@ int32_t FormSupplyCallback::OnRecoverFormsByConfigUpdate(std::vector<int64_t> &f
 
 int32_t FormSupplyCallback::OnNotifyRefreshForm(const int64_t formId)
 {
-    FormMgrAdapter::GetInstance().OnNotifyRefreshForm(formId);
+    FormMgrAdapterFacade::GetInstance().OnNotifyRefreshForm(formId);
     return ERR_OK;
 }
 
@@ -405,7 +405,7 @@ int32_t FormSupplyCallback::HandleRenderForm(const int64_t formId, const FormPro
     FormRecord formRecord;
     FormProviderData formProviderData = formProviderInfo.GetFormData();
     bool hasRecord = FormDataMgr::GetInstance().GetFormRecord(formId, formRecord);
-    if (hasRecord && !FormMgrAdapter::GetInstance().IsDeleteCacheInUpgradeScene(formRecord)) {
+    if (hasRecord && !FormMgrAdapterFacade::GetInstance().IsDeleteCacheInUpgradeScene(formRecord)) {
         HILOG_INFO("To use the DB cahed data when formProviderData is empty, formId: %{public}" PRId64, formId);
         formProviderData.EnableDbCache(true);
     }

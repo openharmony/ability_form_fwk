@@ -23,6 +23,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include <singleton.h>
+
 #include "app_mgr_interface.h"
 #include "form_constants.h"
 #include "form_info.h"
@@ -54,21 +56,17 @@ namespace AppExecFwk {
 class FormCallbackAdapter;
 class FormCommonAdapter;
 
-class FormPublishAdapter {
+class FormPublishAdapter final : public DelayedRefSingleton<FormPublishAdapter> {
+    DECLARE_DELAYED_REF_SINGLETON(FormPublishAdapter)
 public:
-    FormPublishAdapter(
-        FormDataMgr* formDataMgr,
-        FormInfoMgr* formInfoMgr,
-        FormCommonAdapter* commonAdapter,
-        FormCallbackAdapter* callbackAdapter);
-
-    virtual ~FormPublishAdapter() = default;
 
     ErrCode RequestPublishForm(Want &want, bool withFormBindingData,
         std::unique_ptr<FormProviderData> &formBindingData, int64_t &formId,
         const std::vector<FormDataProxy> &formDataProxies = {}, bool needCheckFormPermission = true);
 
     ErrCode QueryPublishFormToHost(Want &wantToHost);
+
+    ErrCode QueryPublishFormToHost(Want &wantToHost, int32_t userId);
 
     ErrCode CheckPublishForm(Want &want, bool needCheckFormPermission);
 
@@ -77,6 +75,10 @@ public:
     ErrCode AcquireAddFormResult(const int64_t formId);
 
     bool IsRequestPublishFormSupported();
+
+    ErrCode RequestPublishFormCommon(Want &want, int32_t userId, int64_t &formId);
+
+    ErrCode RequestPublishFormCrossUser(Want &want, int32_t userId, int64_t &formId);
 
     // Functions moved from FormLifecycleAdapter
     ErrCode CheckAddFormTaskTimeoutOrFailed(const int64_t formId, AddFormResultErrorCodes &formStates);
@@ -94,17 +96,14 @@ private:
     bool CheckSnapshotWant(const Want &want);
     void IncreaseAddFormRequestTimeOutTask(const int64_t formId);
     ErrCode RequestPublishFormToHost(Want &want);
+    ErrCode RequestPublishFormToHost(Want &want, int32_t userId);
     int32_t GetCallerType(std::string bundleName);
     bool GetBundleName(std::string &bundleName, bool needCheckFormPermission = true);
 
-    FormDataMgr* formDataMgr_;
-    FormInfoMgr* formInfoMgr_;
-    FormCommonAdapter* commonAdapter_;
     std::unique_ptr<FormSerialQueue> serialQueue_;
     std::map<int64_t, AddFormResultErrorCodes> formIdMap_;
     mutable std::mutex formResultMutex_;
     std::condition_variable condition_;
-    FormCallbackAdapter* callbackAdapter_;
 };
 
 } // namespace AppExecFwk

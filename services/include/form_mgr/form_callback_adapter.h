@@ -21,6 +21,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include <singleton.h>
+
 #include "form_info.h"
 #include "form_provider_data.h"
 #include "iremote_object.h"
@@ -32,6 +34,7 @@
 #include "form_mgr_errors.h"
 #include "form_publish_interceptor_interface.h"
 #include "fms_log_wrapper.h"
+#include "common/util/form_proxy_registry.h"
 #include "common/util/form_util.h"
 #include "data_center/form_cust_config_mgr.h"
 #include "data_center/form_data_mgr.h"
@@ -46,11 +49,9 @@ using Want = OHOS::AAFwk::Want;
 
 class FormCommonAdapter;
 
-class FormCallbackAdapter {
+class FormCallbackAdapter final : public DelayedRefSingleton<FormCallbackAdapter> {
+    DECLARE_DELAYED_REF_SINGLETON(FormCallbackAdapter)
 public:
-    FormCallbackAdapter(FormCommonAdapter* commonAdapter);
-
-    virtual ~FormCallbackAdapter() = default;
 
     ErrCode RegisterFormRouterProxy(const std::vector<int64_t> &formIds, const sptr<IRemoteObject> &callerToken);
 
@@ -99,24 +100,6 @@ public:
 
     ErrCode UpdateTemplateFormDetailInfo(const std::vector<TemplateFormDetailInfo> &templateFormInfo);
 
-    void SetFormRectCallerToken(const sptr<IRemoteObject> formRectCallerToken);
-
-    void ClearFormRectCallerToken();
-
-    sptr<IRemoteObject> GetFormRectCallerToken();
-
-    void SetLiveFormStatusCallerToken(const sptr<IRemoteObject> liveFormStatusCallerToken);
-
-    void ClearLiveFormStatusCallerToken();
-
-    sptr<IRemoteObject> GetLiveFormStatusCallerToken();
-
-    void SetTemplateFormDetailInfoCallerToken(const sptr<IRemoteObject> templateFormDetailInfoCallerToken);
-
-    void ClearTemplateFormDetailInfoCallerToken();
-
-    sptr<IRemoteObject> GetTemplateFormDetailInfoCallerToken();
-
     void SetFormPublishInterceptor(const sptr<IFormPublishInterceptor> &interceptor);
 
     sptr<IFormPublishInterceptor> GetFormPublishInterceptor();
@@ -128,21 +111,14 @@ private:
 
     bool IsForegroundApp();
 
-    sptr<IRemoteObject> overflowCallerToken_ = nullptr;
-    sptr<IRemoteObject> sceneanimationCallerToken_ = nullptr;
-    sptr<IRemoteObject> formRectCallerToken_ = nullptr;
-    sptr<IRemoteObject> liveFormStatusCallerToken_ = nullptr;
-    sptr<IRemoteObject> crossBundleControlCallerToken_ = nullptr;
-    sptr<IRemoteObject> templateFormDetailInfoCallerToken_ = nullptr;
+    FormProxyRegistry overflowRegistry_{"Overflow"};
+    FormProxyRegistry sceneAnimationRegistry_{"SceneAnimation"};
+    FormProxyRegistry formRectRegistry_{"FormRect"};
+    FormProxyRegistry liveFormStatusRegistry_{"LiveFormStatus"};
+    FormProxyRegistry crossBundleControlRegistry_{"CrossBundleControl"};
+    FormProxyRegistry templateFormDetailInfoRegistry_{"TemplateFormDetailInfo"};
     sptr<IFormPublishInterceptor> formPublishInterceptor_ = nullptr;
-    FormCommonAdapter* commonAdapter_;
 
-    mutable std::mutex overflowCallerTokenMutex_;
-    mutable std::mutex sceneanimationCallerTokenMutex_;
-    mutable std::mutex formRectCallerTokenMutex_;
-    mutable std::mutex liveFormStatusCallerTokenMutex_;
-    mutable std::mutex crossBundleControlCallerTokenMutex_;
-    mutable std::mutex templateFormDetailInfoCallerTokenMutex_;
     mutable std::mutex formPublishInterceptorMutex_;
 };
 

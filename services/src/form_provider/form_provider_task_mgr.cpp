@@ -15,7 +15,7 @@
 
 #include "form_provider/form_provider_task_mgr.h"
 #include "form_provider_interface.h"
-#include "form_mgr/form_mgr_adapter.h"
+#include "form_mgr/form_mgr_adapter_facade.h"
 #include "form_provider/form_supply_callback.h"
 #include "form_provider/form_provider_queue.h"
 #include "data_center/form_data_mgr.h"
@@ -534,7 +534,7 @@ void FormProviderTaskMgr::PostBatchConfigurationUpdateForms(const AppExecFwk::Co
 {
     HILOG_INFO("Call.");
     auto batchConfigurationUpdate = [configuration]() {
-        return FormMgrAdapter::GetInstance().BatchNotifyFormsConfigurationUpdate(configuration);
+        return FormMgrAdapterFacade::GetInstance().BatchNotifyFormsConfigurationUpdate(configuration);
     };
     HILOG_INFO("end");
 }

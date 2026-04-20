@@ -58,8 +58,12 @@ constexpr int64_t MAX_NUMBER_OF_JS = 100000000000000L;
 constexpr const char* PARAM_FREE_INSTALL_CALLING_UID = "ohos.extra.param.key.free_install_calling_uid";
 } // namespace
 
-FormEventAdapter::FormEventAdapter(FormCommonAdapter* commonAdapter)
-    : commonAdapter_(commonAdapter)
+FormEventAdapter::FormEventAdapter()
+{
+    HILOG_DEBUG("FormEventAdapter created");
+}
+
+FormEventAdapter::~FormEventAdapter()
 {
 }
 
@@ -103,7 +107,7 @@ int FormEventAdapter::MessageEvent(const int64_t formId, const Want &want,
     }
     HILOG_INFO("find target client formId: %{public}" PRId64, formId);
 
-    int32_t callerUserId = commonAdapter_->GetCallingUserId();
+    int32_t callerUserId = FormCommonAdapter::GetInstance().GetCallingUserId();
     NotifyFormClickEvent(formId, FORM_CLICK_MESSAGE, callerUserId);
 #ifdef DEVICE_USAGE_STATISTICS_ENABLE
     if (!FormDataMgr::GetInstance().ExistTempForm(matchedFormId)) {
@@ -161,7 +165,7 @@ int FormEventAdapter::RouterEvent(const int64_t formId, Want &want,
     }
     ApplicationInfo appInfo;
     int32_t result;
-    int32_t callerUserId = commonAdapter_->GetCallingUserId();
+    int32_t callerUserId = FormCommonAdapter::GetInstance().GetCallingUserId();
     if (FormBmsHelper::GetInstance().GetApplicationInfo(record.bundleName, callerUserId, appInfo) != ERR_OK) {
         HILOG_ERROR("Get app info failed");
         return ERR_APPEXECFWK_FORM_GET_BMS_FAILED;
@@ -181,7 +185,8 @@ int FormEventAdapter::RouterEvent(const int64_t formId, Want &want,
 
     if (!want.GetUriString().empty()) {
         HILOG_INFO("Router by uri");
-        int32_t result = FormAmsHelper::GetInstance().StartAbilityOnlyUIAbility(want, callerToken, callerUserId);
+        int32_t result = FormAmsHelper::GetInstance().StartAbilityOnlyUIAbility(want, callerToken,
+            appInfo.accessTokenId, callerUserId);
         if (result != ERR_OK && result != START_ABILITY_WAITING) {
             HILOG_ERROR("fail StartAbility, result:%{public}d", result);
             return result;
@@ -189,7 +194,8 @@ int FormEventAdapter::RouterEvent(const int64_t formId, Want &want,
         NotifyFormClickEvent(formId, FORM_CLICK_ROUTER, callerUserId);
         return ERR_OK;
     }
-    result = FormAmsHelper::GetInstance().StartAbilityOnlyUIAbility(want, callerToken, callerUserId);
+    result = FormAmsHelper::GetInstance().StartAbilityOnlyUIAbility(want, callerToken, appInfo.accessTokenId,
+        callerUserId);
     if (result != ERR_OK && result != START_ABILITY_WAITING) {
         HILOG_ERROR("fail StartAbility, result:%{public}d", result);
         return result;
@@ -266,7 +272,7 @@ int FormEventAdapter::BackgroundEvent(const int64_t formId, Want &want,
         HILOG_ERROR("fail StartAbilityByCall, result:%{public}d", result);
         return result;
     }
-    NotifyFormClickEvent(formId, FORM_CLICK_CALL, commonAdapter_->GetCallingUserId());
+    NotifyFormClickEvent(formId, FORM_CLICK_CALL, FormCommonAdapter::GetInstance().GetCallingUserId());
     return ERR_OK;
 }
 
@@ -311,7 +317,7 @@ bool FormEventAdapter::OpenByOpenType(const int32_t openType, const FormRecord &
             return true;
         }
         openResult = ERR_OK;
-        NotifyFormClickEvent(record.formId, FORM_CLICK_ROUTER, commonAdapter_->GetCallingUserId());
+        NotifyFormClickEvent(record.formId, FORM_CLICK_ROUTER, FormCommonAdapter::GetInstance().GetCallingUserId());
         return true;
     }
     if (openType == static_cast<int32_t>(Constants::CardActionParamOpenType::OPEN_ATOMIC_SERVICE)) {
@@ -325,7 +331,7 @@ bool FormEventAdapter::OpenByOpenType(const int32_t openType, const FormRecord &
             return true;
         }
         openResult = ERR_OK;
-        NotifyFormClickEvent(record.formId, FORM_CLICK_ROUTER, commonAdapter_->GetCallingUserId());
+        NotifyFormClickEvent(record.formId, FORM_CLICK_ROUTER, FormCommonAdapter::GetInstance().GetCallingUserId());
         return true;
     }
     if (openType == static_cast<int32_t>(Constants::CardActionParamOpenType::START_ABILITY)) {
@@ -359,7 +365,7 @@ bool FormEventAdapter::CheckKeepBackgroundRunningPermission(const sptr<IBundleMg
 {
     BundleInfo bundleInfo;
     if (FormBmsHelper::GetInstance().GetBundleInfoWithPermission(bundleName,
-        commonAdapter_->GetCallingUserId(), bundleInfo)) {
+        FormCommonAdapter::GetInstance().GetCallingUserId(), bundleInfo)) {
         HILOG_DEBUG("get bundleInfo success");
         auto item = std::find(bundleInfo.reqPermissions.begin(), bundleInfo.reqPermissions.end(),
             Constants::PERMISSION_KEEP_BACKGROUND_RUNNING);
