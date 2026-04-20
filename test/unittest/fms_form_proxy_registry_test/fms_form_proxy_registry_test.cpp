@@ -27,6 +27,7 @@ namespace {
 constexpr int32_t UID_A = 20000001;
 constexpr int32_t UID_B = 20000002;
 constexpr int32_t UID_C = 20000003;
+constexpr int32_t UID_SYSTEM = 20008; // UID < CALLING_UID_TRANSFORM_DIVISOR, user-agnostic
 }
 
 class FmsFormProxyRegistryTest : public testing::Test {
@@ -338,4 +339,24 @@ HWTEST_F(FmsFormProxyRegistryTest, FmsFormProxyRegistryTest_GetByUserId_0003, Te
     EXPECT_EQ(ERR_APPEXECFWK_FORM_GET_HOST_FAILED, registry_.GetByUserId(999, proxies));
     EXPECT_TRUE(proxies.empty());
     GTEST_LOG_(INFO) << "FmsFormProxyRegistryTest_GetByUserId_0003 end";
+}
+
+/**
+ * @tc.name: FmsFormProxyRegistryTest_GetByUserId_0004
+ * @tc.desc: test GetByUserId with user-agnostic UID.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FmsFormProxyRegistryTest, FmsFormProxyRegistryTest_GetByUserId_0004, TestSize.Level0)
+{
+    GTEST_LOG_(INFO) << "FmsFormProxyRegistryTest_GetByUserId_0004 start";
+    sptr<IRemoteObject> proxyA = new (std::nothrow) MockIRemoteObject();
+    sptr<IRemoteObject> proxySystem = new (std::nothrow) MockIRemoteObject();
+    ASSERT_EQ(ERR_OK, registry_.Register(UID_A, proxyA));
+    ASSERT_EQ(ERR_OK, registry_.Register(UID_SYSTEM, proxySystem));
+
+    std::vector<sptr<IRemoteObject>> proxies;
+    EXPECT_EQ(ERR_OK, registry_.GetByUserId(999, proxies));
+    EXPECT_EQ(1u, proxies.size());
+    EXPECT_EQ(proxySystem.GetRefPtr(), proxies[0].GetRefPtr());
+    GTEST_LOG_(INFO) << "FmsFormProxyRegistryTest_GetByUserId_0004 end";
 }
