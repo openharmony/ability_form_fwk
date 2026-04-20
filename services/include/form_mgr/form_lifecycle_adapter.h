@@ -21,6 +21,8 @@
 #include <memory>
 #include <mutex>
 
+#include <singleton.h>
+
 #include "form_major_info.h"
 #include "form_mgr_errors.h"
 #include "form_provider_data.h"
@@ -66,20 +68,9 @@
 namespace OHOS {
 namespace AppExecFwk {
 
-class FormCommonAdapter;
-class FormPublishAdapter;
-
-class FormLifecycleAdapter {
+class FormLifecycleAdapter final : public DelayedRefSingleton<FormLifecycleAdapter> {
+    DECLARE_DELAYED_REF_SINGLETON(FormLifecycleAdapter)
 public:
-    FormLifecycleAdapter(
-        FormDataMgr* formDataMgr,
-        FormInfoMgr* formInfoMgr,
-        FormProviderMgr* formProviderMgr,
-        FormRenderMgr* formRenderMgr,
-        FormCommonAdapter* commonAdapter,
-        FormPublishAdapter* publishAdapter);
-
-    virtual ~FormLifecycleAdapter() = default;
 
     int AddForm(const int64_t formId, const Want &want,
         const sptr<IRemoteObject> &callerToken, FormJsInfo &formInfo);
@@ -117,6 +108,12 @@ public:
     void SetTimerTaskNeeded(bool isTimerTaskNeeded);
 #endif // RES_SCHEDULE_ENABLE
 
+    /**
+     * @brief Handle form remove observer.
+     * @param runningFormInfo the running form infos of the specify application name.
+     */
+    void HandleFormRemoveObserver(const RunningFormInfo runningFormInfo);
+
 private:
     // Private helper methods
     ErrCode CheckFormCountLimit(const int64_t formId, const Want &want);
@@ -134,7 +131,6 @@ private:
         const FormRecord &record, const int64_t formId, const WantParams &wantParams, FormJsInfo &formInfo);
     ErrCode AddNewFormRecord(const FormItemInfo &info, const int64_t formId,
         const sptr<IRemoteObject> &callerToken, const WantParams &wantParams, FormJsInfo &formJsInfo);
-    void HandleFormRemoveObserver(const RunningFormInfo runningFormInfo);
     ErrCode HandleDeleteTempForm(const int64_t formId, const sptr<IRemoteObject> &callerToken);
     ErrCode HandleDeleteForm(const int64_t formId, const sptr<IRemoteObject> &callerToken);
     ErrCode HandleDeleteFormCache(FormRecord &dbRecord, const int uid, const int64_t formId);
@@ -143,19 +139,13 @@ private:
     void CheckIsAddFormByHost(const FormRecord &formRecord, Want &allotFormWant);
     int DeleteCommonForm(const int64_t formId, const sptr<IRemoteObject> &callerToken, const int32_t userId);
     bool IsFormRenderServiceCall(int callingUid);
+    ErrCode CheckAddRequestPublishForm(const Want &want, const Want &formProviderWant);
 
 #ifdef THEME_MGR_ENABLE
     int DeleteThemeForm(const int64_t formId);
     int AddThemeDBRecord(const Want &want, int64_t formId);
     FormRecord AllotThemeRecord(const Want &want, int64_t formId);
 #endif
-
-    FormDataMgr* formDataMgr_;
-    FormInfoMgr* formInfoMgr_;
-    FormProviderMgr* formProviderMgr_;
-    FormRenderMgr* formRenderMgr_;
-    FormCommonAdapter* commonAdapter_;
-    FormPublishAdapter* publishAdapter_;
 };
 
 } // namespace AppExecFwk

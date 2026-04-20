@@ -16,7 +16,7 @@
 #include "form_refresh/refresh_impl/form_app_upgrade_refresh_impl.h"
 
 #include "data_center/form_cache_mgr.h"
-#include "form_mgr/form_mgr_adapter.h"
+#include "form_mgr/form_mgr_adapter_facade.h"
 
 namespace OHOS {
 namespace AppExecFwk {
@@ -38,10 +38,10 @@ FormAppUpgradeRefreshImpl::~FormAppUpgradeRefreshImpl() {}
 
 int FormAppUpgradeRefreshImpl::DoRefresh(RefreshData &data)
 {
-    if (!FormMgrAdapter::GetInstance().IsDeleteCacheInUpgradeScene(data.record)) {
+    if (!FormMgrAdapterFacade::GetInstance().IsDeleteCacheInUpgradeScene(data.record)) {
         FormProviderData formProviderData;
         formProviderData.EnableDbCache(true);
-        FormMgrAdapter::GetInstance().UpdateForm(data.formId, data.record.uid, formProviderData);
+        FormMgrAdapterFacade::GetInstance().UpdateForm(data.formId, data.record.uid, formProviderData);
         HILOG_INFO("Upgrade APP data agent card update, formId: %{public}" PRId64, data.formId);
     }
     return BaseFormRefresh::DoRefresh(data);

@@ -39,6 +39,8 @@
 #include "form_mgr/form_observer_adapter.h"
 #include "form_mgr/form_publish_adapter.h"
 #include "form_mgr/form_query_adapter.h"
+#include <singleton.h>
+
 #include "form_mgr/form_visibility_adapter.h"
 
 namespace OHOS {
@@ -51,37 +53,13 @@ namespace AppExecFwk {
  * This class follows the Facade pattern to provide a unified interface while
  * delegating to specialized adapters for different concerns.
  *
- * Design Note: This class does NOT inherit from IFormMgr. It is a standalone facade
- * that provides the same public interface as FormMgrAdapter for backward compatibility.
+ * Design Note: This class is a DelayedRefSingleton, matching the pattern used by
+ * FormMgrAdapter and all sub-adapters. Callers access it via GetInstance().
  */
-class FormMgrAdapterFacade {
+class FormMgrAdapterFacade final : public DelayedRefSingleton<FormMgrAdapterFacade> {
+    DECLARE_DELAYED_REF_SINGLETON(FormMgrAdapterFacade)
 public:
-    /**
-     * @brief Constructor
-     * @param lifecycleAdapter Lifecycle management adapter
-     * @param dataAdapter Data update management adapter
-     * @param visibilityAdapter Visibility management adapter
-     * @param queryAdapter Query management adapter
-     * @param eventAdapter Event handling adapter
-     * @param observerAdapter Observer management adapter
-     * @param publishAdapter Publish management adapter
-     * @param callbackAdapter Callback management adapter
-     * @param debugAdapter Debug/dump adapter
-     * @param commonAdapter Shared common adapter instance
-     */
-    FormMgrAdapterFacade(
-        FormLifecycleAdapter* lifecycleAdapter,
-        FormDataAdapter* dataAdapter,
-        FormVisibilityAdapter* visibilityAdapter,
-        FormQueryAdapter* queryAdapter,
-        FormEventAdapter* eventAdapter,
-        FormObserverAdapter* observerAdapter,
-        FormPublishAdapter* publishAdapter,
-        FormCallbackAdapter* callbackAdapter,
-        FormDebugAdapter* debugAdapter,
-        FormCommonAdapter* commonAdapter);
-
-    virtual ~FormMgrAdapterFacade() = default;
+    DISALLOW_COPY_AND_MOVE(FormMgrAdapterFacade);
 
     /**
      * @brief Initialize the facade.
@@ -246,6 +224,8 @@ public:
 
     ErrCode HandleFormAddObserver(const int64_t formId);
 
+    ErrCode HandleFormRemoveObserver(const RunningFormInfo runningFormInfo);
+
     ErrCode RegisterFormAddObserverByBundle(const std::string bundleName,
         const sptr<IRemoteObject> &callerToken);
 
@@ -284,6 +264,12 @@ public:
         const std::vector<FormDataProxy> &formDataProxies = {}, bool needCheckFormPermission = true);
 
     ErrCode QueryPublishFormToHost(Want &want);
+
+    ErrCode QueryPublishFormToHost(Want &want, int32_t userId);
+
+    ErrCode RequestPublishFormCommon(Want &want, int32_t userId, int64_t &formId);
+
+    ErrCode RequestPublishFormCrossUser(Want &want, int32_t userId, int64_t &formId);
 
     ErrCode SetPublishFormResult(const int64_t formId, Constants::PublishFormResult &errorCodeInfo);
 
@@ -359,16 +345,6 @@ public:
     int DumpFormRunningFormInfos(std::string &runningFormInfosResult) const;
 
 private:
-    FormLifecycleAdapter* lifecycleAdapter_;
-    FormDataAdapter* dataAdapter_;
-    FormVisibilityAdapter* visibilityAdapter_;
-    FormQueryAdapter* queryAdapter_;
-    FormEventAdapter* eventAdapter_;
-    FormObserverAdapter* observerAdapter_;
-    FormPublishAdapter* publishAdapter_;
-    FormCallbackAdapter* callbackAdapter_;
-    FormDebugAdapter* debugAdapter_;
-    FormCommonAdapter* commonAdapter_;
 };
 
 } // namespace AppExecFwk

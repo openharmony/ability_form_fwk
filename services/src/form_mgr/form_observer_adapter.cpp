@@ -18,6 +18,8 @@
 #include "hitrace_meter.h"
 #include "ipc_skeleton.h"
 
+#include "form_mgr/form_common_adapter.h"
+
 #include "bms_mgr/form_bms_helper.h"
 #include "common/util/form_util.h"
 #include "data_center/form_data_mgr.h"
@@ -26,10 +28,12 @@
 namespace OHOS {
 namespace AppExecFwk {
 
-FormObserverAdapter::FormObserverAdapter(FormObserverRecord* formObserverRecord,
-    FormCommonAdapter* commonAdapter)
-    : formObserverRecord_(formObserverRecord),
-      commonAdapter_(commonAdapter)
+FormObserverAdapter::FormObserverAdapter()
+{
+    HILOG_DEBUG("FormObserverAdapter created");
+}
+
+FormObserverAdapter::~FormObserverAdapter()
 {
 }
 
@@ -37,33 +41,33 @@ int FormObserverAdapter::RegisterFormAddObserverByBundle(const std::string &bund
     const sptr<IRemoteObject> &callerToken)
 {
     HILOG_DEBUG("call, bundleName:%{public}s", bundleName.c_str());
-    return formObserverRecord_->SetFormAddObserver(bundleName, callerToken);
+    return FormObserverRecord::GetInstance().SetFormAddObserver(bundleName, callerToken);
 }
 
 int FormObserverAdapter::RegisterFormRemoveObserverByBundle(const std::string &bundleName,
     const sptr<IRemoteObject> &callerToken)
 {
     HILOG_DEBUG("call, bundleName:%{public}s", bundleName.c_str());
-    return formObserverRecord_->SetFormRemoveObserver(bundleName, callerToken);
+    return FormObserverRecord::GetInstance().SetFormRemoveObserver(bundleName, callerToken);
 }
 
 int FormObserverAdapter::RegisterAddObserver(const std::string &bundleName,
     const sptr<IRemoteObject> &callerToken)
 {
     HILOG_DEBUG("call");
-    return commonAdapter_->RegisterAddObserver(bundleName, callerToken);
+    return FormCommonAdapter::GetInstance().RegisterAddObserver(bundleName, callerToken);
 }
 
 int FormObserverAdapter::RegisterRemoveObserver(const std::string &bundleName,
     const sptr<IRemoteObject> &callerToken)
 {
     HILOG_DEBUG("call");
-    return commonAdapter_->RegisterRemoveObserver(bundleName, callerToken);
+    return FormCommonAdapter::GetInstance().RegisterRemoveObserver(bundleName, callerToken);
 }
 
 void FormObserverAdapter::CleanResource(const wptr<IRemoteObject> &remote)
 {
-    commonAdapter_->CleanResource(remote);
+    FormCommonAdapter::GetInstance().CleanResource(remote);
 }
 
 ErrCode FormObserverAdapter::RegisterClickEventObserver(const std::string &bundleName,
@@ -74,7 +78,7 @@ ErrCode FormObserverAdapter::RegisterClickEventObserver(const std::string &bundl
         HILOG_ERROR("null CallerToken");
         return ERR_APPEXECFWK_FORM_INVALID_PARAM;
     }
-    return formObserverRecord_->SetFormEventObserver(bundleName, formEventType, observer);
+    return FormObserverRecord::GetInstance().SetFormEventObserver(bundleName, formEventType, observer);
 }
 
 ErrCode FormObserverAdapter::UnregisterClickEventObserver(const std::string &bundleName,
@@ -85,7 +89,7 @@ ErrCode FormObserverAdapter::UnregisterClickEventObserver(const std::string &bun
         HILOG_ERROR("null CallerToken");
         return ERR_APPEXECFWK_FORM_INVALID_PARAM;
     }
-    return formObserverRecord_->RemoveFormEventObserver(bundleName, formEventType, observer);
+    return FormObserverRecord::GetInstance().RemoveFormEventObserver(bundleName, formEventType, observer);
 }
 
 } // namespace AppExecFwk

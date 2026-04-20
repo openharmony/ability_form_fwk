@@ -21,7 +21,7 @@
 #include "form_mgr_errors.h"
 #include "ams_mgr/form_app_mgr_helper.h"
 #include "bms_mgr/form_bms_helper.h"
-#include "form_mgr/form_mgr_adapter.h"
+#include "form_mgr/form_mgr_adapter_facade.h"
 
 namespace OHOS {
 namespace AppExecFwk {
@@ -66,7 +66,7 @@ ErrCode FormEditService::CloseFormEditAbility(const int32_t uid, bool isMainPage
     want.SetAction(Constants::FORM_PAGE_ACTION);
     want.SetBundle(callerName);
     want.SetParams(wantarams);
-    return FormMgrAdapter::GetInstance().StartAbilityByFms(want);
+    return FormMgrAdapterFacade::GetInstance().StartAbilityByFms(want);
 }
 }  // namespace AppExecFwk
 }  // namespace OHOS

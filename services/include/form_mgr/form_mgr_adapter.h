@@ -56,6 +56,10 @@ enum class AddFormResultErrorCode : int8_t {
 /**
  * @class FormMgrAdapter
  * Form request handler from form host.
+ *
+ * @deprecated This class is deprecated. Use FormMgrAdapterFacade instead.
+ * All production code has been migrated to FormMgrAdapterFacade.
+ * This class is retained temporarily for test compatibility.
  */
 class FormMgrAdapter  final : public DelayedRefSingleton<FormMgrAdapter> {
 DECLARE_DELAYED_REF_SINGLETON(FormMgrAdapter)
