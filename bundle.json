@@ -213,8 +213,11 @@
                   ]
                 },
                 "name": "//foundation/ability/form_fwk:form_render_info"
+              },
+              {
+                "name": "//foundation/ability/form_fwk/services/common:libform_common"
               }
-          ],
+            ],
           "test": [
               "//foundation/ability/form_fwk/test:benchmarktest",
               "//foundation/ability/form_fwk/test:unittest",
