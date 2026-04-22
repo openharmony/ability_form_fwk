@@ -17,6 +17,10 @@
 
 #include "ability_manager_interface.h"
 #include "app_mgr_client.h"
+#include "common/util/form_util.h"
+#include "data_center/form_data_mgr.h"
+#include "data_center/form_record/form_record.h"
+#include "form_constants.h"
 #include "form_observer/form_resource_observer.h"
 #include "fms_log_wrapper.h"
 #include "form_mgr_errors.h"
@@ -76,7 +80,10 @@ ErrCode FormAmsHelper::ConnectServiceAbility(
         HILOG_ERROR("ability service not connect");
         return ERR_APPEXECFWK_FORM_BIND_PROVIDER_FAILED;
     }
-    return IN_PROCESS_CALL(ams->ConnectAbility(want, connect, nullptr));
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    int32_t userId = FormUtil::GetCallerUserId(callingUid);
+    Want newWant = AdjustWantModuleName(want, userId);
+    return IN_PROCESS_CALL(ams->ConnectAbility(newWant, connect, nullptr));
 }
 
 /**
@@ -95,7 +102,8 @@ ErrCode FormAmsHelper::ConnectServiceAbilityWithUserId(
         HILOG_ERROR("ability service not connect");
         return ERR_APPEXECFWK_FORM_BIND_PROVIDER_FAILED;
     }
-    return IN_PROCESS_CALL(abilityManagerService->ConnectAbility(want, connect, nullptr, userId));
+    Want newWant = AdjustWantModuleName(want, userId);
+    return IN_PROCESS_CALL(abilityManagerService->ConnectAbility(newWant, connect, nullptr, userId));
 }
 
 /**
@@ -243,6 +251,29 @@ ErrCode FormAmsHelper::StartAbilityOnlyUIAbility(Want &want, const sptr<IRemoteO
         return ERR_APPEXECFWK_FORM_INVALID_PARAM;
     }
     return IN_PROCESS_CALL(ams->StartAbilityWithSpecifyTokenId(want, callerToken, specifyTokenId, userId));
+}
+
+Want FormAmsHelper::AdjustWantModuleName(const Want &want, int32_t userId)
+{
+    const std::string moduleName = want.GetModuleName();
+    Want newWant = want;
+    if (moduleName.empty()) {
+        const std::string bundleName = want.GetBundle();
+        std::vector<FormRecord> formInfos;
+        FormDataMgr::GetInstance().GetFormRecord(bundleName, formInfos, userId);
+        if (formInfos.empty()) {
+            HILOG_WARN("No form records found for bundleName: %{public}s", bundleName.c_str());
+            return newWant;
+        }
+        for (const auto& formRecord : formInfos) {
+            if (formRecord.moduleName.empty()) {
+                continue;
+            }
+            newWant.SetModuleName(formRecord.moduleName);
+            break;
+        }
+    }
+    return newWant;
 }
 }  // namespace AppExecFwk
 }  // namespace OHOS
