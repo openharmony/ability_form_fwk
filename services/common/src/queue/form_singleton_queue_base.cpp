@@ -21,10 +21,10 @@ namespace AppExecFwk {
 namespace Common {
 
 FormSingletonQueueBase::FormSingletonQueueBase(const std::string &queueName,
-    std::shared_ptr<ITaskWrapperStrategy> strategy) :
-    queueName_(queueName),
-    serialQueue_(std::make_shared<FormBaseSerialQueue>(queueName)),
-    strategy_(strategy ? strategy : std::make_shared<NoWrapStrategy>())
+    std::shared_ptr<ITaskWrapperStrategy> strategy)
+    : queueName_(queueName),
+      serialQueue_(std::make_shared<FormBaseSerialQueue>(queueName)),
+      strategy_(strategy ? strategy : std::make_shared<NoWrapStrategy>())
 {
     HILOG_INFO("create queue: %{public}s", queueName_.c_str());
 }

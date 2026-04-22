@@ -105,8 +105,8 @@ HWTEST_P(FmsFormEventToStringParamTest, FmsFormEventToStringParamTest_FormEventT
     GTEST_LOG_(INFO) << "FmsFormEventToStringParamTest_FormEventToString_001 start";
     const EventTestEntry& entry = GetParam();
     std::string result = FormStatusPrint::FormEventToString(entry.event);
-    EXPECT_EQ(result, entry.expectedStr) << "Event: " << static_cast<int>(entry.event)
-        << ", Actual: \"" << result << "\", Expected: \"" << entry.expectedStr << "\"";
+    EXPECT_EQ(result, entry.expectedStr) << "Event: " << static_cast<int>(entry.event) <<
+        ", Actual: \"" << result << "\", Expected: \"" << entry.expectedStr << "\"";
     GTEST_LOG_(INFO) << "FmsFormEventToStringParamTest_FormEventToString_001 end";
 }
 

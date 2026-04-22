@@ -78,9 +78,8 @@ public:
      * @param timeoutSeconds Timeout duration in seconds, default 5.
      * @param tag Tag for XCollie timer identification, default "FMS_QueueTask".
      */
-    explicit XCollieTimeoutStrategy(int32_t timeoutSeconds = QUEUE_TASK_TIME_OUT, std::string tag = "FMS_QueueTask") :
-        timeoutSeconds_(timeoutSeconds), tag_(std::move(tag))
-    {}
+    explicit XCollieTimeoutStrategy(int32_t timeoutSeconds = QUEUE_TASK_TIME_OUT, std::string tag = "FMS_QueueTask")
+        : timeoutSeconds_(timeoutSeconds), tag_(std::move(tag)) {}
 
     /**
      * @brief Wrap task with XCollie timeout monitoring.
