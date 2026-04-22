@@ -50,7 +50,8 @@ using TaskKey = std::variant<
  * std::variant supports default comparison operator
  */
 struct TaskKeyComparator {
-    bool operator()(const TaskKey &lhs, const TaskKey &rhs) const {
+    bool operator()(const TaskKey &lhs, const TaskKey &rhs) const
+    {
         return lhs < rhs;
     }
 };

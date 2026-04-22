@@ -89,10 +89,10 @@ HWTEST_F(FmsFormTimeUtilTest, FmsFormTimeUtilTest_GetBootTimeMs_002, TestSize.Le
         minExpected = 0;
     }
 
-    EXPECT_GE(timeDiff, minExpected) << "Time diff " << timeDiff << "ms should be >= actual sleep "
-        << actualSleepMs << "ms minus tolerance " << TIME_TOLERANCE_MS << "ms";
-    EXPECT_LE(timeDiff, maxExpected) << "Time diff " << timeDiff << "ms should be <= actual sleep "
-        << actualSleepMs << "ms plus tolerance " << TIME_TOLERANCE_MS << "ms";
+    EXPECT_GE(timeDiff, minExpected) << "Time diff " << timeDiff << "ms should be >= actual sleep " <<
+        actualSleepMs << "ms minus tolerance " << TIME_TOLERANCE_MS << "ms";
+    EXPECT_LE(timeDiff, maxExpected) << "Time diff " << timeDiff << "ms should be <= actual sleep " <<
+        actualSleepMs << "ms plus tolerance " << TIME_TOLERANCE_MS << "ms";
     GTEST_LOG_(INFO) << "FmsFormTimeUtilTest_GetBootTimeMs_002 end";
 }
 
@@ -134,10 +134,10 @@ HWTEST_F(FmsFormTimeUtilTest, FmsFormTimeUtilTest_GetNowMillisecond_002, TestSiz
         minExpected = 0;
     }
 
-    EXPECT_GE(timeDiff, minExpected) << "Time diff " << timeDiff << "ms should be >= actual sleep "
-        << actualSleepMs << "ms minus tolerance " << TIME_TOLERANCE_MS << "ms";
-    EXPECT_LE(timeDiff, maxExpected) << "Time diff " << timeDiff << "ms should be <= actual sleep "
-        << actualSleepMs << "ms plus tolerance " << TIME_TOLERANCE_MS << "ms";
+    EXPECT_GE(timeDiff, minExpected) << "Time diff " << timeDiff << "ms should be >= actual sleep " <<
+        actualSleepMs << "ms minus tolerance " << TIME_TOLERANCE_MS << "ms";
+    EXPECT_LE(timeDiff, maxExpected) << "Time diff " << timeDiff << "ms should be <= actual sleep " <<
+        actualSleepMs << "ms plus tolerance " << TIME_TOLERANCE_MS << "ms";
     GTEST_LOG_(INFO) << "FmsFormTimeUtilTest_GetNowMillisecond_002 end";
 }
 
@@ -164,12 +164,12 @@ HWTEST_F(FmsFormTimeUtilTest, FmsFormTimeUtilTest_GetBootTimeMs_MultipleCalls_00
     int64_t minExpected = EXPECTED_TOTAL_SLEEP_MS - TOTAL_TIME_TOLERANCE_MS;
     int64_t maxExpected = EXPECTED_TOTAL_SLEEP_MS + TOTAL_TIME_TOLERANCE_MS;
 
-    EXPECT_GE(totalTimeDiff, minExpected) << "Total time diff " << totalTimeDiff
-        << "ms should be >= expected total sleep " << EXPECTED_TOTAL_SLEEP_MS
-        << "ms minus tolerance " << TOTAL_TIME_TOLERANCE_MS << "ms";
-    EXPECT_LE(totalTimeDiff, maxExpected) << "Total time diff " << totalTimeDiff
-        << "ms should be <= expected total sleep " << EXPECTED_TOTAL_SLEEP_MS
-        << "ms plus tolerance " << TOTAL_TIME_TOLERANCE_MS << "ms";
+    EXPECT_GE(totalTimeDiff, minExpected) << "Total time diff " << totalTimeDiff <<
+        "ms should be >= expected total sleep " << EXPECTED_TOTAL_SLEEP_MS <<
+        "ms minus tolerance " << TOTAL_TIME_TOLERANCE_MS << "ms";
+    EXPECT_LE(totalTimeDiff, maxExpected) << "Total time diff " << totalTimeDiff <<
+        "ms should be <= expected total sleep " << EXPECTED_TOTAL_SLEEP_MS <<
+        "ms plus tolerance " << TOTAL_TIME_TOLERANCE_MS << "ms";
     GTEST_LOG_(INFO) << "FmsFormTimeUtilTest_GetBootTimeMs_MultipleCalls_001 end";
 }
 
@@ -196,12 +196,12 @@ HWTEST_F(FmsFormTimeUtilTest, FmsFormTimeUtilTest_GetNowMillisecond_MultipleCall
     int64_t minExpected = EXPECTED_TOTAL_SLEEP_MS - TOTAL_TIME_TOLERANCE_MS;
     int64_t maxExpected = EXPECTED_TOTAL_SLEEP_MS + TOTAL_TIME_TOLERANCE_MS;
 
-    EXPECT_GE(totalTimeDiff, minExpected) << "Total time diff " << totalTimeDiff
-        << "ms should be >= expected total sleep " << EXPECTED_TOTAL_SLEEP_MS
-        << "ms minus tolerance " << TOTAL_TIME_TOLERANCE_MS << "ms";
-    EXPECT_LE(totalTimeDiff, maxExpected) << "Total time diff " << totalTimeDiff
-        << "ms should be <= expected total sleep " << EXPECTED_TOTAL_SLEEP_MS
-        << "ms plus tolerance " << TOTAL_TIME_TOLERANCE_MS << "ms";
+    EXPECT_GE(totalTimeDiff, minExpected) << "Total time diff " << totalTimeDiff <<
+        "ms should be >= expected total sleep " << EXPECTED_TOTAL_SLEEP_MS <<
+        "ms minus tolerance " << TOTAL_TIME_TOLERANCE_MS << "ms";
+    EXPECT_LE(totalTimeDiff, maxExpected) << "Total time diff " << totalTimeDiff <<
+        "ms should be <= expected total sleep " << EXPECTED_TOTAL_SLEEP_MS <<
+        "ms plus tolerance " << TOTAL_TIME_TOLERANCE_MS << "ms";
     GTEST_LOG_(INFO) << "FmsFormTimeUtilTest_GetNowMillisecond_MultipleCalls_001 end";
 }
 }

@@ -26,8 +26,8 @@ namespace {
 constexpr uint32_t CONVERSION_FACTOR = 1000; // ms to us
 }
 
-FormBaseSerialQueue::FormBaseSerialQueue(const std::string &queueName) :
-    queueName_(queueName), queue_(queueName.c_str())
+FormBaseSerialQueue::FormBaseSerialQueue(const std::string &queueName)
+    : queueName_(queueName), queue_(queueName.c_str())
 {
     HILOG_DEBUG("create FormBaseSerialQueue, queueName: %{public}s", queueName.c_str());
 }
