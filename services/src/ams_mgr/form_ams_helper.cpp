@@ -265,6 +265,7 @@ Want FormAmsHelper::AdjustWantModuleName(const Want &want, int32_t userId)
             HILOG_WARN("No form records found for bundleName: %{public}s", bundleName.c_str());
             return newWant;
         }
+
         for (const auto& formRecord : formInfos) {
             if (formRecord.moduleName.empty()) {
                 continue;
