@@ -156,7 +156,12 @@ group("unittest") {
     "unittest/fms_form_check_mgr_test:unittest",
     "unittest/fms_form_status_mgr_center_test:unittest",
     "unittest/frs_form_status_mgr_center_test:unittest",
-    "unittest/fms_form_abnormal_reporter_test:unittest"
+    "unittest/fms_form_abnormal_reporter_test:unittest",
+    "unittest/fms_form_base_serial_queue_test:unittest",
+    "unittest/fms_form_singleton_queue_base_test:unittest",
+    "unittest/fms_form_status_print_test:unittest",
+    "unittest/fms_form_time_util_test:unittest",
+    "unittest/fms_task_wrapper_strategy_test:unittest",
   ]
 }
 
