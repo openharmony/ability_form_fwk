@@ -117,6 +117,15 @@ private:
      * @param connect Callback used to notify caller the result of connecting or disconnecting.
      */
     void DisconnectAbilityTask(const sptr<AAFwk::IAbilityConnection> &connect);
+
+    /**
+     * @brief Adjust the moduleName of the Want object.
+     * @param want Special want for service type's ability.
+     * @param userId Designation User ID.
+     * @return Returns the updated Want object.
+     */
+    Want AdjustWantModuleName(const Want &want, int32_t userId);
+
 private:
     sptr<AAFwk::IAbilityManager> abilityManager_ = nullptr;
     sptr<IConfigurationObserver> configurationObserver_ = nullptr;
