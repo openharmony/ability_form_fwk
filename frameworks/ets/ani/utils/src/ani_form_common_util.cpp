@@ -50,7 +50,6 @@ constexpr const char *ENUMNAME_FORMUSAGESTATE = "@ohos.app.form.formInfo.formInf
 constexpr const char *ENUMNAME_FORMLOCATION = "@ohos.app.form.formInfo.formInfo.FormLocation";
 constexpr const char *ETS_FUNINTERACTIONPARAMS_NAME = "@ohos.app.form.formInfo.formInfo.FunInteractionParamsInner";
 constexpr const char *ETS_SCENEANIMATIONPARAMS_NAME = "@ohos.app.form.formInfo.formInfo.SceneAnimationParamsInner";
-constexpr const char *FORM_STATE_INFO_CLASS_NAME = "@ohos.app.form.formInfo.formInfo.FormStateInfo";
 constexpr const char *FORM_STATE_CLASS_NAME = "@ohos.app.form.formInfo.formInfo.FormState";
 
 ani_class GetAniClass(ani_env *env, const char *className)
@@ -1111,7 +1110,8 @@ ani_object CreateFormInfoAniArrayFromVec(ani_env *env, const std::vector<AppExec
 
 ani_object CreateFormStateInfo(ani_env *env, int32_t state, Want want)
 {
-    ani_object returnObject = FormAniUtil::CreateAniObject(env, FORM_STATE_INFO_CLASS_NAME);
+    ani_object returnObject = FormAniUtil::CreateAniObject(
+        env, AppExecFwk::Constants::FORM_STATE_INFO_INNER_CLASS_NAME);
     if (env == nullptr) {
         HILOG_ERROR("env is nullptr");
         return nullptr;
