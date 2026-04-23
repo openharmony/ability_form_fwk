@@ -450,17 +450,20 @@ ErrCode FormMgrAdapterFacade::GetRunningFormInfosByBundleName(
     return g_getRunningFormInfosByBundleName;
 }
 
-ErrCode FormMgrAdapterFacade::GetFormInstanceById(const int64_t formId, bool isUnusedIncluded, FormInstance &formInstance)
+ErrCode FormMgrAdapterFacade::GetFormInstanceById(const int64_t formId, bool isUnusedIncluded,
+    FormInstance &formInstance)
 {
     return g_getFormInstanceById;
 }
 
-ErrCode FormMgrAdapterFacade::RegisterAddObserver(const std::string &bundleName, const sptr<IRemoteObject> &callerToken)
+ErrCode FormMgrAdapterFacade::RegisterAddObserver(const std::string &bundleName,
+    const sptr<IRemoteObject> &callerToken)
 {
     return g_registerAddObserver;
 }
 
-ErrCode FormMgrAdapterFacade::RegisterRemoveObserver(const std::string &bundleName, const sptr<IRemoteObject> &callerToken)
+ErrCode FormMgrAdapterFacade::RegisterRemoveObserver(const std::string &bundleName,
+    const sptr<IRemoteObject> &callerToken)
 {
     return g_registerRemoveObserver;
 }
