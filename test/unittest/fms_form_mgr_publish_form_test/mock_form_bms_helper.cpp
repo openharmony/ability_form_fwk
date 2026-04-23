@@ -66,7 +66,6 @@ ErrCode FormMgrAdapterFacade::RequestPublishForm(Want &want, bool withFormBindin
     } else if (formId == 2) {
         return ERR_OK;
     }
-
     return ERR_APPEXECFWK_FORM_PERMISSION_DENY_SYS;
 }
 } // namespace AppExecFwk
