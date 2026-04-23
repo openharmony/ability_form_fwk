@@ -13,21 +13,21 @@
  * limitations under the License.
  */
 
-#include "mock_form_mgr_adapter.h"
+#include "mock_form_mgr_adapter_facade.h"
 #include <gtest/gtest.h>
 
 #include "fms_log_wrapper.h"
-#include "form_mgr/form_mgr_adapter.h"
+#include "form_mgr/form_mgr_adapter_facade.h"
 
 namespace OHOS {
 namespace AppExecFwk {
-std::shared_ptr<MockFormMgrAdapter> MockFormMgrAdapter::obj = nullptr;
+std::shared_ptr<MockFormMgrAdapterFacade> MockFormMgrAdapterFacade::obj = nullptr;
 
-bool FormMgrAdapter::IsDeleteCacheInUpgradeScene(const FormRecord &record)
+bool FormMgrAdapterFacade::IsDeleteCacheInUpgradeScene(const FormRecord &record)
 {
     GTEST_LOG_(INFO) << "IsDeleteCacheInUpgradeScene called";
-    if (AppExecFwk::MockFormMgrAdapter::obj) {
-        return AppExecFwk::MockFormMgrAdapter::obj->IsDeleteCacheInUpgradeScene(record);
+    if (AppExecFwk::MockFormMgrAdapterFacade::obj) {
+        return AppExecFwk::MockFormMgrAdapterFacade::obj->IsDeleteCacheInUpgradeScene(record);
     }
     return false;
 }

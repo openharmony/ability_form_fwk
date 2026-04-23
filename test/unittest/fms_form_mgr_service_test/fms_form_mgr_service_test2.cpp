@@ -1781,7 +1781,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_StartAbilityByCrossBundle_0004, 
     Want want;
     MockIsSystemAppByFullTokenID(true);
     MockVerifyCallingPermission(true);
-    MockFormMgrAdapterStartAbilityByFms(ERR_OK);
+    MockFormMgrAdapterFacadeStartAbilityByFms(ERR_OK);
     int32_t ret = formMgrService.StartAbilityByCrossBundle(want);
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_StartAbilityByCrossBundle_0004 end";
@@ -1978,7 +1978,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_OpenFormEditAbility_0005, TestSi
     bool isMainPage = true;
     MockFormBmsHelperGetBundleNameByUid(ERR_OK, "caller");
     MockFormDataMgrGetRunningFormInfosByFormId(ERR_OK, "caller", FormVisibilityType::VISIBLE);
-    MockFormMgrAdapterStartAbilityByFms(ERR_OK);
+    MockFormMgrAdapterFacadeStartAbilityByFms(ERR_OK);
     ErrCode ret = formMgrService.OpenFormEditAbility(abilityName, formId, isMainPage);
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_OpenFormEditAbility_0005 end";
@@ -1998,7 +1998,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_OpenFormEditAbility_0006, TestSi
     bool isMainPage = false;
     MockFormBmsHelperGetBundleNameByUid(ERR_OK, "caller");
     MockFormDataMgrGetRunningFormInfosByFormId(ERR_OK, "caller", FormVisibilityType::VISIBLE);
-    MockFormMgrAdapterStartAbilityByFms(ERR_OK);
+    MockFormMgrAdapterFacadeStartAbilityByFms(ERR_OK);
     ErrCode ret = formMgrService.OpenFormEditAbility(abilityName, formId, isMainPage);
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_OpenFormEditAbility_0006 end";
@@ -2032,7 +2032,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_RegisterChangeSceneAnimationStat
     FormMgrService formMgrService;
     sptr<IRemoteObject> callerToken = nullptr;
     MockIsSystemAppByFullTokenID(true);
-    MockFormMgrAdapterRegisterChangeSceneAnimationStateProxy(ERR_OK);
+    MockFormMgrAdapterFacadeRegisterChangeSceneAnimationStateProxy(ERR_OK);
     ErrCode ret = formMgrService.RegisterChangeSceneAnimationStateProxy(callerToken);
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_RegisterChangeSceneAnimationStateProxy_0002 end";
@@ -2066,7 +2066,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_RegisterOverflowProxy_0002, Test
     FormMgrService formMgrService;
     sptr<IRemoteObject> callerToken = nullptr;
     MockIsSystemAppByFullTokenID(true);
-    MockFormMgrAdapterRegisterOverflowProxy(ERR_OK);
+    MockFormMgrAdapterFacadeRegisterOverflowProxy(ERR_OK);
     ErrCode ret = formMgrService.RegisterOverflowProxy(callerToken);
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_RegisterOverflowProxy_0002 end";
@@ -2100,7 +2100,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_RegisterGetFormRectProxy_0002, T
     FormMgrService formMgrService;
     sptr<IRemoteObject> callerToken = nullptr;
     MockIsSystemAppByFullTokenID(true);
-    MockFormMgrAdapterRegisterGetFormRectProxy(ERR_OK);
+    MockFormMgrAdapterFacadeRegisterGetFormRectProxy(ERR_OK);
     ErrCode ret = formMgrService.RegisterGetFormRectProxy(callerToken);
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_RegisterGetFormRectProxy_0002 end";
@@ -2134,7 +2134,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_RegisterGetLiveFormStatusProxy_0
     FormMgrService formMgrService;
     sptr<IRemoteObject> callerToken = nullptr;
     MockIsSystemAppByFullTokenID(true);
-    MockFormMgrAdapterRegisterGetLiveFormStatusProxy(ERR_OK);
+    MockFormMgrAdapterFacadeRegisterGetLiveFormStatusProxy(ERR_OK);
     ErrCode ret = formMgrService.RegisterGetLiveFormStatusProxy(callerToken);
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_RegisterGetLiveFormStatusProxy_0002 end";
@@ -2166,7 +2166,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_UnregisterGetLiveFormStatusProxy
     GTEST_LOG_(INFO) << "FormMgrService_UnregisterGetLiveFormStatusProxy_0002 start";
     FormMgrService formMgrService;
     MockIsSystemAppByFullTokenID(true);
-    MockFormMgrAdapterUnregisterGetLiveFormStatusProxy(ERR_OK);
+    MockFormMgrAdapterFacadeUnregisterGetLiveFormStatusProxy(ERR_OK);
     ErrCode ret = formMgrService.UnregisterGetLiveFormStatusProxy();
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_UnregisterGetLiveFormStatusProxy_0002 end";
@@ -2208,7 +2208,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_UpdateFormSize_0002, TestSize.Le
     float borderWidth = 10.0f;
     float formViewScale = 1.0f;
     MockIsSACall(true);
-    (void)MockFormMgrAdapterUpdateFormSizeFloat(ERR_OK);
+    (void)MockFormMgrAdapterFacadeUpdateFormSizeFloat(ERR_OK);
     ErrCode ret = formMgrService.UpdateFormSize(formId, width, height, borderWidth, formViewScale);
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_UpdateFormSize_0002 end";
@@ -2279,7 +2279,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_RegisterTemplateFormDetailInfoCh
     MockIsSystemAppByFullTokenID(true);
     MockCheckAcrossLocalAccountsPermission(true);
     MockVerifyCallingPermission(true);
-    MockFormMgrAdapterRegisterTemplateFormDetailInfoChange(ERR_OK);
+    MockFormMgrAdapterFacadeRegisterTemplateFormDetailInfoChange(ERR_OK);
     ErrCode ret = formMgrService.RegisterTemplateFormDetailInfoChange(callerToken);
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_RegisterTemplateFormDetailInfoChange_0004 end";
@@ -2346,7 +2346,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_UnregisterTemplateFormDetailInfo
     MockIsSystemAppByFullTokenID(true);
     MockCheckAcrossLocalAccountsPermission(true);
     MockVerifyCallingPermission(true);
-    MockFormMgrAdapterUnregisterTemplateFormDetailInfoChange(ERR_OK);
+    MockFormMgrAdapterFacadeUnregisterTemplateFormDetailInfoChange(ERR_OK);
     ErrCode ret = formMgrService.UnregisterTemplateFormDetailInfoChange();
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_UnregisterTemplateFormDetailInfoChange_0004 end";
@@ -2380,7 +2380,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_UpdateTemplateFormDetailInfo_000
     FormMgrService formMgrService;
     std::vector<TemplateFormDetailInfo> templateFormInfo;
     MockIsSystemAppByFullTokenID(true);
-    MockFormMgrAdapterUpdateTemplateFormDetailInfo(ERR_OK);
+    MockFormMgrAdapterFacadeUpdateTemplateFormDetailInfo(ERR_OK);
     ErrCode ret = formMgrService.UpdateTemplateFormDetailInfo(templateFormInfo);
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_UpdateTemplateFormDetailInfo_0002 end";
@@ -2429,7 +2429,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_UnregisterPublishFormCrossBundle
     FormMgrService formMgrService;
     MockIsSystemAppByFullTokenID(true);
     MockVerifyCallingPermission(true);
-    MockFormMgrAdapterUnregisterPublishFormCrossBundleControl(ERR_OK);
+    MockFormMgrAdapterFacadeUnregisterPublishFormCrossBundleControl(ERR_OK);
     ErrCode ret = formMgrService.UnregisterPublishFormCrossBundleControl();
     EXPECT_EQ(ret, ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrService_UnregisterPublishFormCrossBundleControl_0003 end";
@@ -2479,7 +2479,7 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_PublishFormCrossBundleControl_00
     Want want;
     want.SetParam(Constants::FORM_MANAGER_SHOW_SINGLE_FORM_KEY, true);
     MockGetCallerBundleName(ERR_OK);
-    MockFormMgrAdapterPublishFormCrossBundleControl(true);
+    MockFormMgrAdapterFacadePublishFormCrossBundleControl(true);
     bool result = formMgrService.PublishFormCrossBundleControl(want);
     EXPECT_TRUE(result);
     GTEST_LOG_(INFO) << "FormMgrService_PublishFormCrossBundleControl_0003 end";

@@ -34,7 +34,7 @@
 #include "gmock/gmock.h"
 #include "mock_form_mgr_proxy.h"
 #include "mock_form_token.h"
-#include "mock_form_mgr_adapter.h"
+#include "mock_form_mgr_adapter_facade.h"
 #include "mock_form_render_mgr.h"
 #include "mock_form_data_mgr.h"
 
@@ -727,7 +727,7 @@ HWTEST_F(FmsFormSupplyCallbackTest, HandleRenderFormTest_001, TestSize.Level1)
     formProviderInfo.SetFormData(formProviderData);
     
     MockFormDataMgr::obj = std::make_shared<MockFormDataMgr>();
-    MockFormMgrAdapter::obj = std::make_shared<MockFormMgrAdapter>();
+    MockFormMgrAdapterFacade::obj = std::make_shared<MockFormMgrAdapterFacade>();
     MockFormRenderMgr::obj = std::make_shared<MockFormRenderMgr>();
     
     EXPECT_CALL(*MockFormDataMgr::obj, GetFormRecord(_, _)).WillOnce(Return(false));
@@ -739,7 +739,7 @@ HWTEST_F(FmsFormSupplyCallbackTest, HandleRenderFormTest_001, TestSize.Level1)
     EXPECT_EQ(ret, ERR_OK);
     
     MockFormDataMgr::obj = nullptr;
-    MockFormMgrAdapter::obj = nullptr;
+    MockFormMgrAdapterFacade::obj = nullptr;
     MockFormRenderMgr::obj = nullptr;
     
     GTEST_LOG_(INFO) << "HandleRenderFormTest_001 end";
@@ -763,7 +763,7 @@ HWTEST_F(FmsFormSupplyCallbackTest, HandleRenderFormTest_002, TestSize.Level1)
     formProviderInfo.SetFormData(formProviderData);
     
     MockFormDataMgr::obj = std::make_shared<MockFormDataMgr>();
-    MockFormMgrAdapter::obj = std::make_shared<MockFormMgrAdapter>();
+    MockFormMgrAdapterFacade::obj = std::make_shared<MockFormMgrAdapterFacade>();
     MockFormRenderMgr::obj = std::make_shared<MockFormRenderMgr>();
     
     FormRecord formRecord;
@@ -772,7 +772,7 @@ HWTEST_F(FmsFormSupplyCallbackTest, HandleRenderFormTest_002, TestSize.Level1)
             record = formRecord;
             return true;
         }));
-    EXPECT_CALL(*MockFormMgrAdapter::obj, IsDeleteCacheInUpgradeScene(_)).WillOnce(Return(false));
+    EXPECT_CALL(*MockFormMgrAdapterFacade::obj, IsDeleteCacheInUpgradeScene(_)).WillOnce(Return(false));
     EXPECT_CALL(*MockFormRenderMgr::obj, UpdateRenderingForm(_, _, _, _)).WillOnce(Return(ERR_OK));
     
     FormSupplyCallback formSupplyCallback;
@@ -781,7 +781,7 @@ HWTEST_F(FmsFormSupplyCallbackTest, HandleRenderFormTest_002, TestSize.Level1)
     EXPECT_EQ(ret, ERR_OK);
     
     MockFormDataMgr::obj = nullptr;
-    MockFormMgrAdapter::obj = nullptr;
+    MockFormMgrAdapterFacade::obj = nullptr;
     MockFormRenderMgr::obj = nullptr;
     
     GTEST_LOG_(INFO) << "HandleRenderFormTest_002 end";
