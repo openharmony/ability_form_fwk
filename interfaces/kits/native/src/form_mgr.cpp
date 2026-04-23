@@ -2708,5 +2708,37 @@ ErrCode FormMgr::GetFormIdsByFormLocation(int32_t formLocation, std::vector<std:
  
     return resultCode;
 }
+
+ErrCode FormMgr::RegisterFormWantCallback(int32_t location, const sptr<IRemoteObject> &callerToken)
+{
+    HILOG_INFO("call");
+    ErrCode errCode = Connect();
+    if (errCode != ERR_OK) {
+        HILOG_ERROR("connect form mgr service failed, errCode %{public}d", errCode);
+        return ERR_APPEXECFWK_FORM_COMMON_CODE;
+    }
+    std::shared_lock<std::shared_mutex> lock(connectMutex_);
+    if (remoteProxy_ == nullptr) {
+        HILOG_ERROR("null remoteProxy_");
+        return ERR_APPEXECFWK_FORM_COMMON_CODE;
+    }
+    return remoteProxy_->RegisterFormWantCallback(location, callerToken);
+}
+
+ErrCode FormMgr::UnregisterFormWantCallback(int32_t location)
+{
+    HILOG_INFO("call");
+    ErrCode errCode = Connect();
+    if (errCode != ERR_OK) {
+        HILOG_ERROR("connect form mgr service failed, errCode %{public}d", errCode);
+        return ERR_APPEXECFWK_FORM_COMMON_CODE;
+    }
+    std::shared_lock<std::shared_mutex> lock(connectMutex_);
+    if (remoteProxy_ == nullptr) {
+        HILOG_ERROR("null remoteProxy_");
+        return ERR_APPEXECFWK_FORM_COMMON_CODE;
+    }
+    return remoteProxy_->UnregisterFormWantCallback(location);
+}
 }  // namespace AppExecFwk
 }  // namespace OHOS
