@@ -63,6 +63,7 @@ ohos_fuzztest("FormEditServiceFuzzTest") {
     "ffrt:libffrt",
     "hilog:libhilog",
     "hisysevent:libhisysevent",
+    "libxml2:libxml2",
     "ipc:ipc_core",
     "relational_store:native_rdb",
     "samgr:samgr_proxy",

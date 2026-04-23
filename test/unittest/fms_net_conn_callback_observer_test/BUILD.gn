@@ -63,6 +63,7 @@ ohos_unittest("FmsNetConnCallbackObserverTest") {
     "hisysevent:libhisysevent",
     "huks:libhukssdk",
     "ipc:ipc_core",
+    "libxml2:libxml2",
     "netmanager_base:net_conn_manager_if",
     "os_account:os_account_innerkits",
     "safwk:system_ability_fwk",
