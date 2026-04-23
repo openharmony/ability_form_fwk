@@ -40,6 +40,7 @@ FormObserverAdapter::~FormObserverAdapter()
 int FormObserverAdapter::RegisterFormAddObserverByBundle(const std::string &bundleName,
     const sptr<IRemoteObject> &callerToken)
 {
+    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
     HILOG_DEBUG("call, bundleName:%{public}s", bundleName.c_str());
     return FormObserverRecord::GetInstance().SetFormAddObserver(bundleName, callerToken);
 }
@@ -47,6 +48,7 @@ int FormObserverAdapter::RegisterFormAddObserverByBundle(const std::string &bund
 int FormObserverAdapter::RegisterFormRemoveObserverByBundle(const std::string &bundleName,
     const sptr<IRemoteObject> &callerToken)
 {
+    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
     HILOG_DEBUG("call, bundleName:%{public}s", bundleName.c_str());
     return FormObserverRecord::GetInstance().SetFormRemoveObserver(bundleName, callerToken);
 }

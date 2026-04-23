@@ -1304,6 +1304,7 @@ ErrCode FormLifecycleAdapter::HandleCastTempForm(const int64_t formId, const For
 
 int FormLifecycleAdapter::ReleaseRenderer(const int64_t formId, const std::string &compId)
 {
+    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
     HILOG_INFO("FormLifecycleAdapter::ReleaseRenderer called, formId:%{public}" PRId64, formId);
 
     if (formId <= 0 || compId.empty()) {

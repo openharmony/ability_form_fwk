@@ -18,6 +18,7 @@
 #include "form_js_info.h"
 #include "form_provider_data.h"
 #include "form_provider_data_proxy.h"
+#include "hitrace_meter.h"
 #include "ipc_skeleton.h"
 #include "want.h"
 
@@ -47,6 +48,7 @@ FormQueryAdapter::~FormQueryAdapter()
 
 int FormQueryAdapter::GetAllFormsInfo(std::vector<FormInfo> &formInfos)
 {
+    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
     HILOG_DEBUG("call");
     int32_t userId = FormUtil::GetCallerUserId(IPCSkeleton::GetCallingUid());
     return FormInfoMgr::GetInstance().GetAllFormsInfo(formInfos, userId);
@@ -55,6 +57,7 @@ int FormQueryAdapter::GetAllFormsInfo(std::vector<FormInfo> &formInfos)
 int FormQueryAdapter::GetFormsInfoByApp(const std::string &bundleName,
     std::vector<FormInfo> &formInfos)
 {
+    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
     HILOG_DEBUG("call, bundleName:%{public}s", bundleName.c_str());
     int32_t userId = FormUtil::GetCallerUserId(IPCSkeleton::GetCallingUid());
     return FormInfoMgr::GetInstance().GetFormsInfoByBundle(bundleName, formInfos, userId);
@@ -63,6 +66,7 @@ int FormQueryAdapter::GetFormsInfoByApp(const std::string &bundleName,
 int FormQueryAdapter::GetFormsInfoByModule(const std::string &bundleName,
     const std::string &moduleName, std::vector<FormInfo> &formInfos)
 {
+    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
     HILOG_DEBUG("call, bundleName:%{public}s, moduleName:%{public}s",
         bundleName.c_str(), moduleName.c_str());
     int32_t userId = FormUtil::GetCallerUserId(IPCSkeleton::GetCallingUid());
@@ -72,6 +76,7 @@ int FormQueryAdapter::GetFormsInfoByModule(const std::string &bundleName,
 int FormQueryAdapter::GetFormsInfoByFilter(const FormInfoFilter &filter,
     std::vector<FormInfo> &formInfos)
 {
+    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
     HILOG_DEBUG("call");
     int32_t userId = FormUtil::GetCallerUserId(IPCSkeleton::GetCallingUid());
     return FormInfoMgr::GetInstance().GetFormsInfoByFilter(filter, formInfos, userId);
@@ -93,12 +98,14 @@ int FormQueryAdapter::GetFormInstanceById(const int64_t formId, bool isUnusedInc
 ErrCode FormQueryAdapter::GetRunningFormInfos(bool isUnusedIncluded,
     std::vector<RunningFormInfo> &runningFormInfos, const int32_t userId)
 {
+    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
     HILOG_DEBUG("call, userId:%{public}d", userId);
     return FormDataMgr::GetInstance().GetRunningFormInfos(isUnusedIncluded, runningFormInfos, userId);
 }
 
 int FormQueryAdapter::GetAllTemplateFormsInfo(std::vector<FormInfo> &formInfos)
 {
+    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
     HILOG_DEBUG("call");
     int32_t userId = FormUtil::GetCallerUserId(IPCSkeleton::GetCallingUid());
     return FormInfoMgr::GetInstance().GetAllTemplateFormsInfo(formInfos, userId);
@@ -107,6 +114,7 @@ int FormQueryAdapter::GetAllTemplateFormsInfo(std::vector<FormInfo> &formInfos)
 int FormQueryAdapter::GetTemplateFormsInfoByApp(const std::string &bundleName,
     std::vector<FormInfo> &formInfos)
 {
+    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
     HILOG_DEBUG("call, bundleName:%{public}s", bundleName.c_str());
     int32_t userId = FormUtil::GetCallerUserId(IPCSkeleton::GetCallingUid());
     return FormInfoMgr::GetInstance().GetTemplateFormsInfoByBundle(bundleName, formInfos, userId);
@@ -115,6 +123,7 @@ int FormQueryAdapter::GetTemplateFormsInfoByApp(const std::string &bundleName,
 int FormQueryAdapter::GetTemplateFormsInfoByModule(const std::string &bundleName,
     const std::string &moduleName, std::vector<FormInfo> &formInfos)
 {
+    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
     HILOG_DEBUG("call, bundleName:%{public}s, moduleName:%{public}s",
         bundleName.c_str(), moduleName.c_str());
     int32_t userId = FormUtil::GetCallerUserId(IPCSkeleton::GetCallingUid());
@@ -140,6 +149,7 @@ ErrCode FormQueryAdapter::GetRunningFormInfosByBundleName(
     const std::string &bundleName, bool isUnusedIncluded,
     std::vector<RunningFormInfo> &runningFormInfos)
 {
+    HITRACE_METER_NAME(HITRACE_TAG_ABILITY_MANAGER, __PRETTY_FUNCTION__);
     HILOG_DEBUG("call, bundleName:%{public}s", bundleName.c_str());
     int32_t userId = FormUtil::GetCallerUserId(IPCSkeleton::GetCallingUid());
     return FormDataMgr::GetInstance().GetRunningFormInfosByBundleName(
