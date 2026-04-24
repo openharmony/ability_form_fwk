@@ -1121,7 +1121,7 @@ export default namespace formHost {
     }
 
     private callPromise(p: Promise<formInfo.Rect>): void {
-      let rectObj: formInfo.Rect = waitForCompletion(async () => { return await p});
+      let rectObj: formInfo.Rect = p.awaitSync();
       this.nativePromiseCallback(rectObj);
     }
 
