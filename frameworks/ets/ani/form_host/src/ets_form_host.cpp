@@ -184,59 +184,6 @@ public:
         EtsFormRouterProxyMgr::GetInstance()->UnregisterTemplateFormDetailInfoChange();
     }
 
-    static void OnRegisterFormWantCallback(ani_env* env, ani_object location)
-    {
-        HILOG_INFO("OnRegisterFormWantCallback Call");
-        if (env == nullptr) {
-            HILOG_ERROR("env is nullptr");
-            return;
-        }
-        if (!FormAniUtil::CheckCallerIsSystemApp()) {
-            HILOG_ERROR("The app not system-app,can't use system-api");
-            EtsFormErrorUtil::ThrowByExternalErrorCode(env, ERR_FORM_EXTERNAL_NOT_SYSTEM_APP);
-            return;
-        }
-        ani_int locationValue = 0;
-        ani_status status = GetEnumValueInt(env, location, locationValue);
-        if (status != ANI_OK) {
-            HILOG_ERROR("get location value failed");
-            EtsFormErrorUtil::ThrowByExternalErrorCode(env, ERR_FORM_EXTERNAL_FORM_LOCATION_INVALID);
-            return;
-        }
-        ErrCode result = AppExecFwk::FormMgr::GetInstance().RegisterFormWantCallback(
-            locationValue, EtsFormRouterProxyMgr::GetInstance());
-        if (result != ERR_OK) {
-            HILOG_ERROR("RegisterFormWantCallback failed");
-            EtsFormErrorUtil::ThrowByInternalErrorCode(env, result);
-        }
-    }
-
-    static void OffRegisterFormWantCallback(ani_env* env, ani_object location)
-    {
-        HILOG_INFO("OffRegisterFormWantCallback Call");
-        if (env == nullptr) {
-            HILOG_ERROR("env is nullptr");
-            return;
-        }
-        if (!FormAniUtil::CheckCallerIsSystemApp()) {
-            HILOG_ERROR("The app not system-app,can't use system-api");
-            EtsFormErrorUtil::ThrowByExternalErrorCode(env, ERR_FORM_EXTERNAL_NOT_SYSTEM_APP);
-            return;
-        }
-        ani_int locationValue = 0;
-        ani_status status = GetEnumValueInt(env, location, locationValue);
-        if (status != ANI_OK) {
-            HILOG_ERROR("get location value failed");
-            EtsFormErrorUtil::ThrowByExternalErrorCode(env, ERR_FORM_EXTERNAL_FORM_LOCATION_INVALID);
-            return;
-        }
-        ErrCode result = AppExecFwk::FormMgr::GetInstance().UnregisterFormWantCallback(locationValue);
-        if (result != ERR_OK) {
-            HILOG_ERROR("UnregisterFormWantCallback failed");
-            EtsFormErrorUtil::ThrowByInternalErrorCode(env, result);
-        }
-    }
-
     static void OnRegisterChangeSceneAnimationStateListener(ani_env* env, ani_object callback)
     {
         HILOG_INFO("OnRegisterChangeSceneAnimationStateListener Call");
@@ -435,14 +382,6 @@ void EtsFormHostInit(ani_env* env)
         ani_native_function {
             "nativeOffGetLiveFormStatus", nullptr,
             reinterpret_cast<void *>(EtsFormHost::OffRegisterGetLiveFormStatusListener)
-        },
-        ani_native_function {
-            "nativeOnFormWantCallback", nullptr,
-            reinterpret_cast<void *>(EtsFormHost::OnRegisterFormWantCallback)
-        },
-        ani_native_function {
-            "nativeOffFormWantCallback", nullptr,
-            reinterpret_cast<void *>(EtsFormHost::OffRegisterFormWantCallback)
         },
     };
     status = env->Namespace_BindNativeFunctions(ns, methods.data(), methods.size());

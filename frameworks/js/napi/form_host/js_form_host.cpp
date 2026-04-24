@@ -466,16 +466,6 @@ public:
         GET_CB_INFO_AND_CALL(env, info, JsFormHost, OnGetFormIdsByFormLocation);
     }
 
-    static napi_value RegisterFormWantCallback(napi_env env, napi_callback_info info)
-    {
-        GET_CB_INFO_AND_CALL(env, info, JsFormHost, OnRegisterFormWantCallback);
-    }
-
-    static napi_value UnregisterFormWantCallback(napi_env env, napi_callback_info info)
-    {
-        GET_CB_INFO_AND_CALL(env, info, JsFormHost, OnUnregisterFormWantCallback);
-    }
-
 private:
     bool CheckCallerIsSystemApp()
     {
@@ -2401,66 +2391,7 @@ private:
             CreateAsyncTaskWithLastParam(env, nullptr, std::move(execute), std::move(complete), &result));
         return result;
     }
-
-    napi_value OnRegisterFormWantCallback(napi_env env, size_t argc, napi_value* argv)
-    {
-        HILOG_DEBUG("call");
-        if (!CheckCallerIsSystemApp()) {
-            HILOG_ERROR("the application not system-app,can't use system-api");
-            NapiFormUtil::ThrowByExternalErrorCode(env, ERR_FORM_EXTERNAL_NOT_SYSTEM_APP);
-            return CreateJsUndefined(env);
-        }
-
-        if (argc != ARGS_ONE) {
-            HILOG_ERROR("invalid argc");
-            NapiFormUtil::ThrowParamNumError(env, std::to_string(argc), "1");
-            return CreateJsUndefined(env);
-        }
-
-        int32_t location = 0;
-        if (napi_get_value_int32(env, argv[PARAM0], &location) != napi_ok) {
-            HILOG_ERROR("invalid param0");
-            NapiFormUtil::ThrowParamTypeError(env, "location", "number");
-            return CreateJsUndefined(env);
-        }
-
-        ErrCode result = FormMgr::GetInstance().RegisterFormWantCallback(
-            location, FormHostClient::GetInstance());
-        if (result != ERR_OK) {
-            NapiFormUtil::ThrowByInternalErrorCode(env, result);
-        }
-        return CreateJsUndefined(env);
-    }
-
-    napi_value OnUnregisterFormWantCallback(napi_env env, size_t argc, napi_value* argv)
-    {
-        HILOG_DEBUG("call");
-        if (!CheckCallerIsSystemApp()) {
-            HILOG_ERROR("the application not system-app,can't use system-api");
-            NapiFormUtil::ThrowByExternalErrorCode(env, ERR_FORM_EXTERNAL_NOT_SYSTEM_APP);
-            return CreateJsUndefined(env);
-        }
-
-        if (argc != ARGS_ONE) {
-            HILOG_ERROR("invalid argc");
-            NapiFormUtil::ThrowParamNumError(env, std::to_string(argc), "1");
-            return CreateJsUndefined(env);
-        }
-
-        int32_t location = 0;
-        if (napi_get_value_int32(env, argv[PARAM0], &location) != napi_ok) {
-            HILOG_ERROR("invalid param0");
-            NapiFormUtil::ThrowParamTypeError(env, "location", "number");
-            return CreateJsUndefined(env);
-        }
-
-        ErrCode result = FormMgr::GetInstance().UnregisterFormWantCallback(location);
-        if (result != ERR_OK) {
-            NapiFormUtil::ThrowByInternalErrorCode(env, result);
-        }
-        return CreateJsUndefined(env);
-    }
-
+ 
     NapiAsyncTask::CompleteCallback CreateFormIdsCompleteCallback(
         std::shared_ptr<int32_t> errCodeVal, std::shared_ptr<std::vector<std::string>> formIdList)
     {
@@ -2537,8 +2468,6 @@ napi_value JsFormHostInit(napi_env env, napi_value exportObj)
     BindNativeFunction(env, exportObj, "offTemplateFormDetailInfoChange", moduleName,
         JsFormHost::UnregisterTemplateFormDetailInfoObserver);
     BindNativeFunction(env, exportObj, "getFormIdsByFormLocation", moduleName, JsFormHost::GetFormIdsByFormLocation);
-    BindNativeFunction(env, exportObj, "onFormWantCallback", moduleName, JsFormHost::RegisterFormWantCallback);
-    BindNativeFunction(env, exportObj, "offFormWantCallback", moduleName, JsFormHost::UnregisterFormWantCallback);
 
     return CreateJsUndefined(env);
 }
