@@ -45,7 +45,7 @@
 #include "inner/mock_form_mgr_service.h"
 #include "inner/mock_form_util.h"
 #include "inner/mock_form_bms_helper.h"
-#include "inner/mock_form_mgr_adapter.h"
+#include "inner/mock_form_mgr_adapter_facade.h"
 #include "inner/mock_form_data_mgr.h"
 #include "form_instance.h"
 #include "template_form_detail_info.h"
