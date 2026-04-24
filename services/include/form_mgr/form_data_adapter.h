@@ -18,6 +18,7 @@
 
 #include <unordered_map>
 
+#include "singleton.h"
 #include "app_mgr_interface.h"
 #include "bundle_info.h"
 #include "form_info.h"
@@ -48,15 +49,9 @@ namespace AppExecFwk {
 
 class FormCommonAdapter;
 
-class FormDataAdapter {
+class FormDataAdapter final : public DelayedRefSingleton<FormDataAdapter> {
+    DECLARE_DELAYED_REF_SINGLETON(FormDataAdapter)
 public:
-    FormDataAdapter(
-        FormDataMgr* formDataMgr,
-        FormRefreshMgr* formRefreshMgr,
-        FormProviderMgr* formProviderMgr,
-        FormCommonAdapter* commonAdapter);
-
-    virtual ~FormDataAdapter() = default;
 
     int UpdateForm(const int64_t formId, const int32_t callingUid,
         const FormProviderData &formProviderData,
@@ -77,7 +72,7 @@ public:
     int DisableUpdateForm(const std::vector<int64_t> &formIds,
         const sptr<IRemoteObject> &callerToken);
 
-    ErrCode BatchRefreshForms(const std::vector<int64_t> &formIds);
+    ErrCode BatchRefreshForms(const int32_t formRefreshType);
 
     int SetNextRefreshTime(const int64_t formId, const int64_t nextTime);
 
@@ -105,26 +100,21 @@ public:
     bool IsDeleteCacheInUpgradeScene(const FormRecord &record);
     void DeleteInvalidFormCacheIfNeed();
 
+    ErrCode UpdateTimer(const int64_t formId, const FormRecord &record);
+    void UpdateReUpdateFormMap(const int64_t formId);
+    void SetReUpdateFormMap(const int64_t formId);
+
 private:
     ErrCode InnerAcquireProviderFormInfoAsync(const int64_t formId,
         const FormItemInfo &info, const WantParams &wantParams);
 
-    ErrCode UpdateTimer(const int64_t formId, const FormRecord &record);
-
     ErrCode HandleUpdateFormFlag(const std::vector<int64_t> &formIds,
         const sptr<IRemoteObject> &callerToken, bool flag, bool isOnlyEnableUpdate);
-
-    void UpdateReUpdateFormMap(const int64_t formId);
-    void SetReUpdateFormMap(const int64_t formId);
     void UpdateFormRenderParamsAfterReload(const int64_t formId);
     int64_t GetUpdateDurationFromAdditionalInfo(const std::string &additionalInfo);
     bool CheckUIAbilityContext(const pid_t pid);
     void PostEnterpriseAppInstallFailedRetryTask(const FormRecord &record, const Want &want);
 
-    FormDataMgr* formDataMgr_;
-    FormRefreshMgr* formRefreshMgr_;
-    FormProviderMgr* formProviderMgr_;
-    FormCommonAdapter* commonAdapter_;
     std::mutex reUpdateFormMapMutex_;
     std::map<int64_t, std::pair<int64_t, bool>> reUpdateFormMap_;
     std::mutex reconnectMutex_;

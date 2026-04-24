@@ -22,21 +22,19 @@
 
 #include "iremote_object.h"
 #include "running_form_info.h"
+#include "singleton.h"
 
 #include "form_mgr_errors.h"
 #include "fms_log_wrapper.h"
-#include "form_mgr/form_common_adapter.h"
 #include "form_observer/form_observer_record.h"
 
 namespace OHOS {
 namespace AppExecFwk {
 
-class FormObserverAdapter {
-public:
-    FormObserverAdapter(FormObserverRecord* formObserverRecord,
-        FormCommonAdapter* commonAdapter);
+class FormObserverAdapter final : public DelayedRefSingleton<FormObserverAdapter> {
+    DECLARE_DELAYED_REF_SINGLETON(FormObserverAdapter)
 
-    virtual ~FormObserverAdapter() = default;
+public:
 
     int RegisterFormAddObserverByBundle(const std::string &bundleName,
         const sptr<IRemoteObject> &callerToken);
@@ -57,10 +55,6 @@ public:
 
     ErrCode UnregisterClickEventObserver(const std::string &bundleName,
         const std::string &formEventType, const sptr<IRemoteObject> &observer);
-
-private:
-    FormObserverRecord* formObserverRecord_;
-    FormCommonAdapter* commonAdapter_;
 };
 
 } // namespace AppExecFwk

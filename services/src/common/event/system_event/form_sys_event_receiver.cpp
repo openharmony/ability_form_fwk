@@ -25,7 +25,7 @@
 #include "data_center/database/form_db_cache.h"
 #include "data_center/form_info/form_info_mgr.h"
 #include "form_mgr_errors.h"
-#include "form_mgr/form_mgr_adapter.h"
+#include "form_mgr/form_mgr_adapter_facade.h"
 #include "form_render/form_render_mgr.h"
 #include "common/util/form_serial_queue.h"
 #include "common/timer_mgr/form_timer_mgr.h"
@@ -256,7 +256,7 @@ void FormSysEventReceiver::RecycleForms(int32_t userId)
     FormDataMgr::GetInstance().GetFormIdsByUserId(userId, formIds);
     Want want;
     want.SetParam(Constants::RECYCLE_FORMS_USER_ID, userId);
-    FormMgrAdapter::GetInstance().RecycleForms(formIds, want, false);
+    FormMgrAdapterFacade::GetInstance().RecycleForms(formIds, want, false);
 }
 
 void FormSysEventReceiver::HandleUserStopped(const int32_t userId)

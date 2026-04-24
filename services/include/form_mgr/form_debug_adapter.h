@@ -20,6 +20,7 @@
 #include <string>
 
 #include "app_mgr_interface.h"
+#include "singleton.h"
 
 #include "form_mgr_errors.h"
 #include "fms_log_wrapper.h"
@@ -43,11 +44,10 @@ constexpr int32_t INSTANCE_SEQ_INDEX = 2;
 constexpr const char *BUNDLE_INFO_SEPARATOR = "_";
 }
 
-class FormDebugAdapter {
-public:
-    FormDebugAdapter();
+class FormDebugAdapter final : public DelayedRefSingleton<FormDebugAdapter> {
+    DECLARE_DELAYED_REF_SINGLETON(FormDebugAdapter)
 
-    virtual ~FormDebugAdapter() = default;
+public:
 
     int DumpStorageFormInfos(std::string &formInfos) const;
 

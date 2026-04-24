@@ -34,7 +34,7 @@
 #include "common/timer_mgr/form_timer_mgr.h"
 #include "common/util/form_report.h"
 #include "data_center/form_record/form_record_report.h"
-#include "form_mgr/form_mgr_adapter.h"
+#include "form_mgr/form_mgr_adapter_facade.h"
 #ifdef SUPPORT_POWER
 #include "power_mgr_client.h"
 #endif
@@ -133,7 +133,7 @@ void FormProviderMgr::DataProxyUpdate(const int64_t formId, const FormRecord &re
     if (isFormProviderUpdate && record.isDataProxy) {
         FormProviderData formProviderData;
         formProviderData.EnableDbCache(true);
-        FormMgrAdapter::GetInstance().UpdateForm(formId, record.uid, formProviderData);
+        FormMgrAdapterFacade::GetInstance().UpdateForm(formId, record.uid, formProviderData);
         HILOG_INFO("Upgrade APP data agent card update, formId:%{public}" PRId64, formId);
     }
 }

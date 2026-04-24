@@ -19,6 +19,7 @@
 #include <map>
 #include <mutex>
 
+#include "singleton.h"
 #include "accesstoken_kit.h"
 #include "ipc_skeleton.h"
 
@@ -44,20 +45,9 @@
 namespace OHOS {
 namespace AppExecFwk {
 
-class FormCommonAdapter;
-
-class FormVisibilityAdapter {
+class FormVisibilityAdapter final : public DelayedRefSingleton<FormVisibilityAdapter> {
+    DECLARE_DELAYED_REF_SINGLETON(FormVisibilityAdapter)
 public:
-    FormVisibilityAdapter(
-        FormDataMgr* formDataMgr,
-        FormCacheMgr* formCacheMgr,
-        RefreshCacheMgr* refreshCacheMgr,
-        FormInfoMgr* formInfoMgr,
-        FormRenderMgr* formRenderMgr,
-        FormMgrQueue* formMgrQueue,
-        FormCommonAdapter* commonAdapter);
-
-    virtual ~FormVisibilityAdapter() = default;
 
     ErrCode NotifyWhetherVisibleForms(const std::vector<int64_t> &formIds,
         const sptr<IRemoteObject> &callerToken, const int32_t formVisibleType);
@@ -122,13 +112,6 @@ private:
     ErrCode HandleUpdateFormFlag(const std::vector<int64_t> &formIds,
         const sptr<IRemoteObject> &callerToken, bool flag, bool isOnlyEnableUpdate);
 
-    FormDataMgr* formDataMgr_;
-    FormCacheMgr* formCacheMgr_;
-    RefreshCacheMgr* refreshCacheMgr_;
-    FormInfoMgr* formInfoMgr_;
-    FormRenderMgr* formRenderMgr_;
-    FormMgrQueue* formMgrQueue_;
-    FormCommonAdapter* commonAdapter_;
     int32_t visibleNotifyDelay_;
     mutable std::mutex formObserversMutex_;
     std::map<std::string, std::vector<sptr<IRemoteObject>>> formObservers_;

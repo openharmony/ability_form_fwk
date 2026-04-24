@@ -18,6 +18,8 @@
 
 #include <memory>
 
+#include "singleton.h"
+
 #include "form_info.h"
 #include "form_info_filter.h"
 #include "form_instance.h"
@@ -37,14 +39,9 @@ namespace AppExecFwk {
 
 class FormCommonAdapter;
 
-class FormQueryAdapter {
+class FormQueryAdapter final : public DelayedRefSingleton<FormQueryAdapter> {
+    DECLARE_DELAYED_REF_SINGLETON(FormQueryAdapter)
 public:
-    FormQueryAdapter(
-        FormCommonAdapter* commonAdapter,
-        FormInfoMgr* formInfoMgr,
-        FormDataMgr* formDataMgr);
-
-    virtual ~FormQueryAdapter() = default;
 
     int GetAllFormsInfo(std::vector<FormInfo> &formInfos);
 
@@ -113,10 +110,6 @@ private:
      */
     ErrCode AcquireFormStateCheck(const std::string &bundleName,
         const std::string &abilityName, const Want &want, std::string &provider);
-
-    FormCommonAdapter* commonAdapter_;
-    FormInfoMgr* formInfoMgr_;
-    FormDataMgr* formDataMgr_;
 };
 
 } // namespace AppExecFwk
