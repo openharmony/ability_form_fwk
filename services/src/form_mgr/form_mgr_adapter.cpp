@@ -5162,6 +5162,9 @@ sptr<IFormPublishInterceptor> FormMgrAdapter::GetFormPublishInterceptor()
 
 bool FormMgrAdapter::IsDeleteCacheInUpgradeScene(const FormRecord &record)
 {
+    if (record.isDataProxy) {
+        return false;
+    }
     FormInfo formInfo;
     ErrCode errCode = FormInfoMgr::GetInstance().GetFormsInfoByRecord(record, formInfo);
     if (errCode != ERR_OK) {
