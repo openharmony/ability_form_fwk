@@ -99,8 +99,6 @@ export default namespace formHost {
   export native function nativeOffGetLiveFormStatus(callback?: GetLiveFormStatusCallbackWrapper): void;
   export native function nativeOnTemplateFormDetailInfoChange(callback: TemplateFormDetailInfoChangeCallbackWrapper): void;
   export native function nativeOffTemplateFormDetailInfoChange(callback?: TemplateFormDetailInfoChangeCallbackWrapper): void;
-  export native function nativeOnFormWantCallback(location: formInfo.FormLocation): void;
-  export native function nativeOffFormWantCallback(location: formInfo.FormLocation): void;
   export native function nativeUpdateFormSize(formId: string, newDimension: formInfo.FormDimension, newRect: formInfo.Rect): void;
 
   const ERR_OK = 0;
@@ -1104,14 +1102,6 @@ export default namespace formHost {
       myCall = new TemplateFormDetailInfoChangeCallbackWrapper(callback);
     }
     formHost.nativeOffTemplateFormDetailInfoChange(myCall);
-  }
-
-  function onFormWantCallback(location: formInfo.FormLocation): void {
-    formHost.nativeOnFormWantCallback(location);
-  }
-
-  function offFormWantCallback(location: formInfo.FormLocation): void {
-    formHost.nativeOffFormWantCallback(location);
   }
 
   function updateFormSize(formId: string, newDimension: formInfo.FormDimension, newRect: formInfo.Rect): void {
