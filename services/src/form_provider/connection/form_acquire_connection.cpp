@@ -21,7 +21,7 @@
 #include "common/util/form_report.h"
 #include "fms_log_wrapper.h"
 #include "form_constants.h"
-#include "form_mgr/form_mgr_adapter.h"
+#include "form_mgr/form_mgr_adapter_facade.h"
 #include "form_provider/form_supply_callback.h"
 #include "form_provider/form_provider_task_mgr.h"
 #include "common/util/form_util.h"
@@ -57,7 +57,7 @@ void FormAcquireConnection::OnAbilityConnectDone(const AppExecFwk::ElementName &
         return;
     }
     isConnected_ = true;
-    FormMgrAdapter::GetInstance().ClearReconnectNum(GetFormId());
+    FormMgrAdapterFacade::GetInstance().ClearReconnectNum(GetFormId());
     FormReport::GetInstance().SetEndBindTime(GetFormId(), FormUtil::GetCurrentSteadyClockMillseconds());
     onFormAppConnect();
 #ifdef RES_SCHEDULE_ENABLE
@@ -102,7 +102,7 @@ void FormAcquireConnection::OnAbilityDisconnectDone(const AppExecFwk::ElementNam
     OnFormAbilityDisconnectDoneCallback();
 #endif
     if (!isConnected_ && resultCode == DISCONNECT_ERROR) {
-        FormMgrAdapter::GetInstance().ReAcquireProviderFormInfoAsync(info_, wantParams_);
+        FormMgrAdapterFacade::GetInstance().ReAcquireProviderFormInfoAsync(info_, wantParams_);
     }
 }
 

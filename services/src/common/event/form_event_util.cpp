@@ -26,7 +26,7 @@
 #include "data_center/form_data_proxy_mgr.h"
 #include "data_center/database/form_db_cache.h"
 #include "data_center/form_info/form_info_mgr.h"
-#include "form_mgr/form_mgr_adapter.h"
+#include "form_mgr/form_mgr_adapter_facade.h"
 #include "form_render/form_render_mgr.h"
 #include "common/timer_mgr/form_timer_mgr.h"
 #include "common/util/form_trust_mgr.h"
@@ -85,7 +85,7 @@ void FormEventUtil::HandleBundleFormInfoChanged(const std::string &bundleName, i
 
 void FormEventUtil::HandleUpdateFormCloud(const std::string &bundleName)
 {
-    FormMgrAdapter::GetInstance().UpdateFormCloudUpdateDuration(bundleName);
+    FormMgrAdapterFacade::GetInstance().UpdateFormCloudUpdateDuration(bundleName);
 }
 
 void FormEventUtil::HandleProviderUpdated(const std::string &bundleName, const int userId,
@@ -158,7 +158,7 @@ void FormEventUtil::HandleFormReload(
     want.SetParam(Constants::PARAM_FORM_USER_ID, userId);
     want.SetParam(Constants::FORM_ENABLE_UPDATE_REFRESH_KEY, true);
     want.SetParam(Constants::FORM_DATA_UPDATE_TYPE, Constants::FULL_UPDATE);
-    FormMgrAdapter::GetInstance().DelayRefreshFormsOnAppUpgrade(updatedForms, want);
+    FormMgrAdapterFacade::GetInstance().DelayRefreshFormsOnAppUpgrade(updatedForms, want);
     if (needReload) {
         FormRenderMgr::GetInstance().ReloadForm(std::move(updatedForms), bundleName, userId);
     } else {
@@ -293,7 +293,7 @@ bool FormEventUtil::ProviderFormUpdated(const int64_t formId, FormRecord &formRe
     HILOG_INFO("form is still exist, form:%{public}s, formId:%{public}" PRId64, formRecord.formName.c_str(), formId);
 
     // update resource
-    if (FormMgrAdapter::GetInstance().IsDeleteCacheInUpgradeScene(formRecord)) {
+    if (FormMgrAdapterFacade::GetInstance().IsDeleteCacheInUpgradeScene(formRecord)) {
         HILOG_INFO("Delete cache data in upgrade scene");
         FormCacheMgr::GetInstance().DeleteData(formId);
     }
@@ -513,7 +513,7 @@ void FormEventUtil::HandleTimerUpdate(const int64_t formId,
         if (timerCfg.updateDuration > 0 && (!record.isDataProxy || !record.isSystemApp)) {
             HILOG_INFO("add interval timer:%{public}" PRId64, timerCfg.updateDuration);
             int64_t updateDuration = timerCfg.updateDuration;
-            if (!FormMgrAdapter::GetInstance().GetValidFormUpdateDuration(formId, updateDuration)) {
+            if (!FormMgrAdapterFacade::GetInstance().GetValidFormUpdateDuration(formId, updateDuration)) {
                 HILOG_WARN("Get updateDuration failed, uses local configuration");
             }
             FormTimerMgr::GetInstance().AddFormTimer(formId, updateDuration, record.providerUserId);
@@ -534,7 +534,7 @@ void FormEventUtil::HandleTimerUpdate(const int64_t formId,
     auto newTimerCfg = timerCfg;
     if (type == TYPE_INTERVAL_CHANGE || type == TYPE_ATTIME_TO_INTERVAL) {
         int64_t updateDuration = timerCfg.updateDuration;
-        if (!FormMgrAdapter::GetInstance().GetValidFormUpdateDuration(formId, updateDuration)) {
+        if (!FormMgrAdapterFacade::GetInstance().GetValidFormUpdateDuration(formId, updateDuration)) {
             HILOG_WARN("Get updateDuration failed, uses local configuration");
         }
         newTimerCfg.updateDuration = updateDuration;
@@ -652,7 +652,7 @@ void FormEventUtil::BatchDeleteNoHostDBForms(const int uid, std::map<FormIdKey, 
 bool FormEventUtil::HandleAdditionalInfoChanged(const std::string &bundleName)
 {
     HILOG_DEBUG("Call, bundleName:%{public}s", bundleName.c_str());
-    FormMgrAdapter::GetInstance().UpdateFormCloudUpdateDuration(bundleName);
+    FormMgrAdapterFacade::GetInstance().UpdateFormCloudUpdateDuration(bundleName);
     std::vector<FormRecord> formInfos;
     if (!FormDataMgr::GetInstance().GetFormRecord(bundleName, formInfos)) {
         HILOG_DEBUG("No form info");
@@ -664,7 +664,7 @@ bool FormEventUtil::HandleAdditionalInfoChanged(const std::string &bundleName)
             continue;
         }
         int64_t updateDuration = formRecord.updateDuration;
-        if (!FormMgrAdapter::GetInstance().GetValidFormUpdateDuration(formRecord.formId, updateDuration)) {
+        if (!FormMgrAdapterFacade::GetInstance().GetValidFormUpdateDuration(formRecord.formId, updateDuration)) {
             HILOG_WARN("Get updateDuration failed, uses local configuration");
         }
 

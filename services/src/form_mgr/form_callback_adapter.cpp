@@ -42,8 +42,12 @@
 namespace OHOS {
 namespace AppExecFwk {
 
-FormCallbackAdapter::FormCallbackAdapter(FormCommonAdapter* commonAdapter)
-    : commonAdapter_(commonAdapter)
+FormCallbackAdapter::FormCallbackAdapter()
+{
+    HILOG_DEBUG("FormCallbackAdapter created");
+}
+
+FormCallbackAdapter::~FormCallbackAdapter()
 {
 }
 
@@ -191,39 +195,44 @@ ErrCode FormCallbackAdapter::UnregisterPublishFormInterceptor(
 
 ErrCode FormCallbackAdapter::RegisterOverflowProxy(const sptr<IRemoteObject> &callerToken)
 {
-    std::lock_guard<std::mutex> lock(overflowCallerTokenMutex_);
     HILOG_INFO("call");
-    if (callerToken == nullptr) {
-        HILOG_ERROR("callerToken is null");
-        return ERR_APPEXECFWK_FORM_COMMON_CODE;
-    }
-    overflowCallerToken_ = callerToken;
-    return ERR_OK;
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    return overflowRegistry_.Register(callingUid, callerToken);
 }
 
 ErrCode FormCallbackAdapter::UnregisterOverflowProxy()
 {
-    std::lock_guard<std::mutex> lock(overflowCallerTokenMutex_);
     HILOG_INFO("call");
-    overflowCallerToken_ = nullptr;
-    return ERR_OK;
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    return overflowRegistry_.Unregister(callingUid);
 }
 
 ErrCode FormCallbackAdapter::RequestOverflow(const int64_t formId, const int32_t callingUid,
     const OverflowInfo &overflowInfo, bool isOverflow)
 {
-    std::lock_guard<std::mutex> lock(overflowCallerTokenMutex_);
     HILOG_INFO("call");
     ErrCode checkResult = SceneAnimationCheck(formId, callingUid);
     if (checkResult != ERR_OK) {
         return checkResult;
     }
-    sptr<IFormHostDelegate> remoteFormHostDelegateProxy = iface_cast<IFormHostDelegate>(overflowCallerToken_);
-    if (remoteFormHostDelegateProxy == nullptr) {
-        HILOG_ERROR("Failed, remoteFormHostDelegateProxy is nullptr");
-        return ERR_APPEXECFWK_FORM_GET_HOST_FAILED;
+    int64_t matchedFormId = FormDataMgr::GetInstance().FindMatchedFormId(formId);
+    FormRecord formRecord;
+    if (!FormDataMgr::GetInstance().GetFormRecord(matchedFormId, formRecord)) {
+        HILOG_ERROR("not exist such form:%{public}" PRId64, matchedFormId);
+        return ERR_APPEXECFWK_FORM_NOT_EXIST_ID;
     }
-    ErrCode result = remoteFormHostDelegateProxy->RequestOverflow(formId, overflowInfo, isOverflow);
+    ErrCode result = ERR_APPEXECFWK_FORM_GET_HOST_FAILED;
+    for (int uid : formRecord.formUserUids) {
+        sptr<IRemoteObject> callerToken;
+        if (overflowRegistry_.Get(uid, callerToken) != ERR_OK) {
+            continue;
+        }
+        sptr<IFormHostDelegate> proxy = iface_cast<IFormHostDelegate>(callerToken);
+        if (proxy == nullptr) {
+            continue;
+        }
+        result = proxy->RequestOverflow(formId, overflowInfo, isOverflow);
+    }
     HILOG_INFO("RequestOverflow result: %{public}d", result);
     return result;
 }
@@ -231,39 +240,47 @@ ErrCode FormCallbackAdapter::RequestOverflow(const int64_t formId, const int32_t
 ErrCode FormCallbackAdapter::RegisterChangeSceneAnimationStateProxy(
     const sptr<IRemoteObject> &callerToken)
 {
-    std::lock_guard<std::mutex> lock(sceneanimationCallerTokenMutex_);
     HILOG_INFO("call");
-    if (callerToken == nullptr) {
-        HILOG_ERROR("callerToken is null");
-        return ERR_APPEXECFWK_FORM_COMMON_CODE;
-    }
-    sceneanimationCallerToken_ = callerToken;
-    return ERR_OK;
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    return sceneAnimationRegistry_.Register(callingUid, callerToken);
 }
 
 ErrCode FormCallbackAdapter::UnregisterChangeSceneAnimationStateProxy()
 {
-    std::lock_guard<std::mutex> lock(sceneanimationCallerTokenMutex_);
     HILOG_INFO("call");
-    sceneanimationCallerToken_ = nullptr;
-    return ERR_OK;
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    return sceneAnimationRegistry_.Unregister(callingUid);
 }
 
 ErrCode FormCallbackAdapter::ChangeSceneAnimationState(const int64_t formId,
     const int32_t callingUid, int32_t state)
 {
-    std::lock_guard<std::mutex> lock(sceneanimationCallerTokenMutex_);
     HILOG_INFO("call");
     ErrCode checkResult = SceneAnimationCheck(formId, callingUid);
     if (checkResult != ERR_OK) {
         return checkResult;
     }
-    sptr<IFormHostDelegate> remoteFormHostDelegateProxy = iface_cast<IFormHostDelegate>(sceneanimationCallerToken_);
-    if (remoteFormHostDelegateProxy == nullptr) {
-        HILOG_ERROR("Fail, remoteFormHostDelegateProxy is nullptr!");
-        return ERR_APPEXECFWK_FORM_GET_HOST_FAILED;
+    int64_t matchedFormId = FormDataMgr::GetInstance().FindMatchedFormId(formId);
+    FormRecord formRecord;
+    if (!FormDataMgr::GetInstance().GetFormRecord(matchedFormId, formRecord)) {
+        HILOG_ERROR("not exist such form:%{public}" PRId64, matchedFormId);
+        return ERR_APPEXECFWK_FORM_NOT_EXIST_ID;
     }
-    ErrCode result = remoteFormHostDelegateProxy->ChangeSceneAnimationState(formId, state);
+    ErrCode result = ERR_APPEXECFWK_FORM_GET_HOST_FAILED;
+    for (int uid : formRecord.formUserUids) {
+        sptr<IRemoteObject> callerToken;
+        if (sceneAnimationRegistry_.Get(uid, callerToken) != ERR_OK) {
+            continue;
+        }
+        sptr<IFormHostDelegate> proxy = iface_cast<IFormHostDelegate>(callerToken);
+        if (proxy == nullptr) {
+            continue;
+        }
+        result = proxy->ChangeSceneAnimationState(formId, state);
+        if (result == ERR_OK) {
+            break;
+        }
+    }
     HILOG_INFO("ChangeSceneAnimationState result: %{public}d", result);
     return result;
 }
@@ -271,19 +288,15 @@ ErrCode FormCallbackAdapter::ChangeSceneAnimationState(const int64_t formId,
 ErrCode FormCallbackAdapter::RegisterGetFormRectProxy(const sptr<IRemoteObject> &callerToken)
 {
     HILOG_INFO("call");
-    if (callerToken == nullptr) {
-        HILOG_ERROR("callerToken is null");
-        return ERR_APPEXECFWK_FORM_COMMON_CODE;
-    }
-    SetFormRectCallerToken(callerToken);
-    return ERR_OK;
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    return formRectRegistry_.Register(callingUid, callerToken);
 }
 
 ErrCode FormCallbackAdapter::UnregisterGetFormRectProxy()
 {
     HILOG_INFO("call");
-    ClearFormRectCallerToken();
-    return ERR_OK;
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    return formRectRegistry_.Unregister(callingUid);
 }
 
 ErrCode FormCallbackAdapter::GetFormRect(const int64_t formId,
@@ -294,18 +307,27 @@ ErrCode FormCallbackAdapter::GetFormRect(const int64_t formId,
     if (checkResult != ERR_OK) {
         return checkResult;
     }
-    sptr<IRemoteObject> formRectCallerToken = GetFormRectCallerToken();
-    if (formRectCallerToken == nullptr) {
-        HILOG_ERROR("Fail, formRectCallerToken_ is nullptr!");
-        return ERR_APPEXECFWK_FORM_GET_HOST_FAILED;
+    int64_t matchedFormId = FormDataMgr::GetInstance().FindMatchedFormId(formId);
+    FormRecord formRecord;
+    if (!FormDataMgr::GetInstance().GetFormRecord(matchedFormId, formRecord)) {
+        HILOG_ERROR("not exist such form:%{public}" PRId64, matchedFormId);
+        return ERR_APPEXECFWK_FORM_NOT_EXIST_ID;
     }
-    sptr<IFormHostDelegate> remoteFormHostDelegateProxy = iface_cast<IFormHostDelegate>(formRectCallerToken);
-    if (remoteFormHostDelegateProxy == nullptr) {
-        HILOG_ERROR("Fail, remoteFormHostDelegateProxy is nullptr!");
-        return ERR_APPEXECFWK_FORM_GET_HOST_FAILED;
+    ErrCode result = ERR_APPEXECFWK_FORM_GET_HOST_FAILED;
+    for (int uid : formRecord.formUserUids) {
+        sptr<IRemoteObject> callerToken;
+        if (formRectRegistry_.Get(uid, callerToken) != ERR_OK) {
+            continue;
+        }
+        sptr<IFormHostDelegate> proxy = iface_cast<IFormHostDelegate>(callerToken);
+        if (proxy == nullptr) {
+            continue;
+        }
+        result = proxy->GetFormRect(formId, rect);
+        if (result == ERR_OK) {
+            break;
+        }
     }
-    ErrCode result = remoteFormHostDelegateProxy->GetFormRect(formId, rect);
-
     HILOG_DEBUG("GetFormRect, result:%{public}d", result);
     return result;
 }
@@ -313,37 +335,39 @@ ErrCode FormCallbackAdapter::GetFormRect(const int64_t formId,
 ErrCode FormCallbackAdapter::RegisterGetLiveFormStatusProxy(const sptr<IRemoteObject> &callerToken)
 {
     HILOG_INFO("call");
-    if (callerToken == nullptr) {
-        HILOG_ERROR("callerToken is null");
-        return ERR_APPEXECFWK_FORM_COMMON_CODE;
-    }
-    SetLiveFormStatusCallerToken(callerToken);
-    return ERR_OK;
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    return liveFormStatusRegistry_.Register(callingUid, callerToken);
 }
 
 ErrCode FormCallbackAdapter::UnregisterGetLiveFormStatusProxy()
 {
     HILOG_INFO("call");
-    ClearLiveFormStatusCallerToken();
-    return ERR_OK;
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    return liveFormStatusRegistry_.Unregister(callingUid);
 }
 
 ErrCode FormCallbackAdapter::GetLiveFormStatus(
     std::unordered_map<std::string, std::string> &liveFormStatusMap)
 {
     HILOG_INFO("call");
-    sptr<IRemoteObject> liveFormStatusCallerToken = GetLiveFormStatusCallerToken();
-    if (liveFormStatusCallerToken == nullptr) {
-        HILOG_ERROR("Fail, liveFormStatusCallerToken_ is nullptr!");
-        return ERR_APPEXECFWK_FORM_GET_HOST_FAILED;
+    std::vector<sptr<IRemoteObject>> callerTokens;
+    ErrCode ret = liveFormStatusRegistry_.GetAll(callerTokens);
+    if (ret != ERR_OK) {
+        return ret;
     }
-    sptr<IFormHostDelegate> remoteFormHostDelegateProxy = iface_cast<IFormHostDelegate>(liveFormStatusCallerToken);
-    if (remoteFormHostDelegateProxy == nullptr) {
-        HILOG_ERROR("Fail, remoteFormHostDelegateProxy is nullptr!");
-        return ERR_APPEXECFWK_FORM_GET_HOST_FAILED;
+    ErrCode result = ERR_APPEXECFWK_FORM_GET_HOST_FAILED;
+    for (const auto &callerToken : callerTokens) {
+        sptr<IFormHostDelegate> proxy = iface_cast<IFormHostDelegate>(callerToken);
+        if (proxy == nullptr) {
+            continue;
+        }
+        std::unordered_map<std::string, std::string> partialMap;
+        ErrCode proxyResult = proxy->GetLiveFormStatus(partialMap);
+        if (proxyResult == ERR_OK) {
+            result = ERR_OK;
+            liveFormStatusMap.insert(partialMap.begin(), partialMap.end());
+        }
     }
-    ErrCode result = remoteFormHostDelegateProxy->GetLiveFormStatus(liveFormStatusMap);
-
     HILOG_INFO("GetLiveFormStatus, result:%{public}d", result);
     return result;
 }
@@ -351,84 +375,86 @@ ErrCode FormCallbackAdapter::GetLiveFormStatus(
 ErrCode FormCallbackAdapter::RegisterPublishFormCrossBundleControl(
     const sptr<IRemoteObject> &callerToken)
 {
-    std::lock_guard<std::mutex> lock(crossBundleControlCallerTokenMutex_);
     HILOG_INFO("call");
-    if (callerToken == nullptr) {
-        HILOG_ERROR("callerToken is null");
-        return ERR_APPEXECFWK_FORM_COMMON_CODE;
-    }
-    crossBundleControlCallerToken_ = callerToken;
-    return ERR_OK;
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    return crossBundleControlRegistry_.Register(callingUid, callerToken);
 }
 
 ErrCode FormCallbackAdapter::UnregisterPublishFormCrossBundleControl()
 {
-    std::lock_guard<std::mutex> lock(crossBundleControlCallerTokenMutex_);
     HILOG_INFO("call");
-    crossBundleControlCallerToken_ = nullptr;
-    return ERR_OK;
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    return crossBundleControlRegistry_.Unregister(callingUid);
 }
 
 bool FormCallbackAdapter::PublishFormCrossBundleControl(const PublishFormCrossBundleInfo &bundleInfo)
 {
-    std::lock_guard<std::mutex> lock(crossBundleControlCallerTokenMutex_);
     HILOG_INFO("call, callerBundleName:%{public}s, targetBundleName:%{public}s, targetTemplateFormDetailId:%{public}s,",
         bundleInfo.callerBundleName.c_str(), bundleInfo.targetBundleName.c_str(),
         bundleInfo.targetTemplateFormDetailId.c_str());
-    if (!crossBundleControlCallerToken_) {
-        HILOG_ERROR("Fail, crossBundleControlCallerToken_ is nullptr!");
+    int32_t userId = FormUtil::GetCallerUserId(IPCSkeleton::GetCallingUid());
+    std::vector<sptr<IRemoteObject>> callerTokens;
+    ErrCode ret = crossBundleControlRegistry_.GetByUserId(userId, callerTokens);
+    if (ret != ERR_OK) {
         return false;
     }
-    sptr<IFormProviderDelegate> remoteFormProviderDelegateProxy =
-        iface_cast<IFormProviderDelegate>(crossBundleControlCallerToken_);
-    if (remoteFormProviderDelegateProxy == nullptr) {
-        HILOG_ERROR("Fail, remoteFormProviderDelegateProxy is nullptr!");
-        return false;
+    // All proxies must approve for cross-bundle control to pass
+    for (const auto &callerToken : callerTokens) {
+        sptr<IFormProviderDelegate> remoteFormProviderDelegateProxy =
+            iface_cast<IFormProviderDelegate>(callerToken);
+        if (remoteFormProviderDelegateProxy == nullptr) {
+            HILOG_ERROR("Failed to cast IFormProviderDelegate");
+            continue;
+        }
+        bool isCanOpen = false;
+        ErrCode result = remoteFormProviderDelegateProxy->PublishFormCrossBundleControl(bundleInfo, isCanOpen);
+        HILOG_INFO("result:%{public}d, isCanOpen:%{public}d", result, isCanOpen);
+        if (result != ERR_OK || !isCanOpen) {
+            return false;
+        }
     }
-    bool isCanOpen = false;
-    ErrCode result = remoteFormProviderDelegateProxy->PublishFormCrossBundleControl(bundleInfo, isCanOpen);
-    HILOG_INFO("result:%{public}d, isCanOpen:%{public}d", result, isCanOpen);
-    return (result == ERR_OK) ? isCanOpen : false;
+    return true;
 }
 
 ErrCode FormCallbackAdapter::RegisterTemplateFormDetailInfoChange(
     const sptr<IRemoteObject> &callerToken)
 {
     HILOG_INFO("call");
-    if (callerToken == nullptr) {
-        HILOG_ERROR("callerToken is null");
-        return ERR_APPEXECFWK_FORM_COMMON_CODE;
-    }
-    SetTemplateFormDetailInfoCallerToken(callerToken);
-    return ERR_OK;
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    return templateFormDetailInfoRegistry_.Register(callingUid, callerToken);
 }
 
 ErrCode FormCallbackAdapter::UnregisterTemplateFormDetailInfoChange()
 {
     HILOG_INFO("call");
-    ClearTemplateFormDetailInfoCallerToken();
-    return ERR_OK;
+    int32_t callingUid = IPCSkeleton::GetCallingUid();
+    return templateFormDetailInfoRegistry_.Unregister(callingUid);
 }
 
 ErrCode FormCallbackAdapter::UpdateTemplateFormDetailInfo(
     const std::vector<TemplateFormDetailInfo> &templateFormInfo)
 {
-    HILOG_DEBUG("r");
-    auto templateFormDetailInfoCallerToken = GetTemplateFormDetailInfoCallerToken();
-    if (templateFormDetailInfoCallerToken == nullptr) {
-        HILOG_ERROR("failed, templateFormDetailInfoCallerToken_ is nullptr!");
+    HILOG_DEBUG("call");
+    int32_t userId = FormUtil::GetCallerUserId(IPCSkeleton::GetCallingUid());
+    std::vector<sptr<IRemoteObject>> callerTokens;
+    ErrCode ret = templateFormDetailInfoRegistry_.GetByUserId(userId, callerTokens);
+    if (ret != ERR_OK) {
         return ERR_APPEXECFWK_TEMPLATE_UNSUPPORTED_OPERATION;
     }
-    sptr<IFormHostDelegate> remoteFormHostDelegateProxy =
-        iface_cast<IFormHostDelegate>(templateFormDetailInfoCallerToken);
-    if (remoteFormHostDelegateProxy == nullptr) {
-        HILOG_ERROR("failed, remoteFormHostDelegateProxy is nullptr!");
-        return ERR_APPEXECFWK_TEMPLATE_UNSUPPORTED_OPERATION;
+    ErrCode result = ERR_APPEXECFWK_TEMPLATE_UNSUPPORTED_OPERATION;
+    for (const auto &callerToken : callerTokens) {
+        sptr<IFormHostDelegate> remoteFormHostDelegateProxy =
+            iface_cast<IFormHostDelegate>(callerToken);
+        if (remoteFormHostDelegateProxy == nullptr) {
+            HILOG_ERROR("failed, remoteFormHostDelegateProxy is nullptr!");
+            continue;
+        }
+        ErrCode ret = remoteFormHostDelegateProxy->TemplateFormDetailInfoChange(templateFormInfo);
+        HILOG_DEBUG("update result:%{public}d", ret);
+        if (ret == ERR_OK) {
+            result = ERR_OK;
+        }
     }
-
-    ErrCode result = remoteFormHostDelegateProxy->TemplateFormDetailInfoChange(templateFormInfo);
-
-    HILOG_DEBUG("update result:%{public}d", result);
     return result;
 }
 
@@ -445,9 +471,8 @@ ErrCode FormCallbackAdapter::CallerCheck(const int64_t formId, const int32_t cal
         HILOG_ERROR("not exist such form:%{public}" PRId64 ".", matchedFormId);
         return ERR_APPEXECFWK_FORM_NOT_EXIST_ID;
     }
-    int32_t userId = FormUtil::GetCallerUserId(callingUid);
-    if (formRecord.providerUserId != userId) {
-        HILOG_ERROR("not self form:%{public}" PRId64 ", callingUid:%{public}d", formId, callingUid);
+    if (formRecord.uid != callingUid) {
+        HILOG_ERROR("not match providerUid:%{public}d and callingUid:%{public}d", formRecord.uid, callingUid);
         return ERR_APPEXECFWK_FORM_OPERATION_NOT_SELF;
     }
     return ERR_OK;
@@ -481,7 +506,7 @@ ErrCode FormCallbackAdapter::SceneAnimationCheck(const int64_t formId, const int
     want.SetParam(Constants::PARAM_MODULE_NAME_KEY, formRecord.moduleName);
     want.SetParam(Constants::PARAM_FORM_NAME_KEY, formRecord.formName);
     FormInfo formInfo;
-    ErrCode errCode = commonAdapter_->GetFormInfo(want, formInfo);
+    ErrCode errCode = FormCommonAdapter::GetInstance().GetFormInfo(want, formInfo);
     if (errCode != ERR_OK) {
         HILOG_ERROR("Get target form info failed");
         return errCode;
@@ -491,82 +516,6 @@ ErrCode FormCallbackAdapter::SceneAnimationCheck(const int64_t formId, const int
         return ERR_APPEXECFWK_FORM_LIVE_OP_UNSUPPORTED;
     }
     return ERR_OK;
-}
-
-void FormCallbackAdapter::SetFormRectCallerToken(const sptr<IRemoteObject> formRectCallerToken)
-{
-    HILOG_INFO("call");
-    if (formRectCallerToken == nullptr) {
-        HILOG_ERROR("callerToken is null");
-        return;
-    }
-    std::lock_guard<std::mutex> lock(formRectCallerTokenMutex_);
-    formRectCallerToken_ = formRectCallerToken;
-}
-
-void FormCallbackAdapter::ClearFormRectCallerToken()
-{
-    HILOG_INFO("call");
-    std::lock_guard<std::mutex> lock(formRectCallerTokenMutex_);
-    formRectCallerToken_ = nullptr;
-}
-
-sptr<IRemoteObject> FormCallbackAdapter::GetFormRectCallerToken()
-{
-    HILOG_DEBUG("call");
-    std::lock_guard<std::mutex> lock(formRectCallerTokenMutex_);
-    return formRectCallerToken_;
-}
-
-void FormCallbackAdapter::SetLiveFormStatusCallerToken(const sptr<IRemoteObject> liveFormStatusCallerToken)
-{
-    HILOG_INFO("call");
-    if (liveFormStatusCallerToken == nullptr) {
-        HILOG_ERROR("callerToken is null");
-        return;
-    }
-    std::lock_guard<std::mutex> lock(liveFormStatusCallerTokenMutex_);
-    liveFormStatusCallerToken_ = liveFormStatusCallerToken;
-}
-
-void FormCallbackAdapter::ClearLiveFormStatusCallerToken()
-{
-    HILOG_INFO("call");
-    std::lock_guard<std::mutex> lock(liveFormStatusCallerTokenMutex_);
-    liveFormStatusCallerToken_ = nullptr;
-}
-
-sptr<IRemoteObject> FormCallbackAdapter::GetLiveFormStatusCallerToken()
-{
-    HILOG_DEBUG("call");
-    std::lock_guard<std::mutex> lock(liveFormStatusCallerTokenMutex_);
-    return liveFormStatusCallerToken_;
-}
-
-void FormCallbackAdapter::SetTemplateFormDetailInfoCallerToken(
-    const sptr<IRemoteObject> templateFormDetailInfoCallerToken)
-{
-    HILOG_INFO("call");
-    if (templateFormDetailInfoCallerToken == nullptr) {
-        HILOG_ERROR("callerToken is null");
-        return;
-    }
-    std::lock_guard<std::mutex> lock(templateFormDetailInfoCallerTokenMutex_);
-    templateFormDetailInfoCallerToken_ = templateFormDetailInfoCallerToken;
-}
-
-void FormCallbackAdapter::ClearTemplateFormDetailInfoCallerToken()
-{
-    HILOG_INFO("call");
-    std::lock_guard<std::mutex> lock(templateFormDetailInfoCallerTokenMutex_);
-    templateFormDetailInfoCallerToken_ = nullptr;
-}
-
-sptr<IRemoteObject> FormCallbackAdapter::GetTemplateFormDetailInfoCallerToken()
-{
-    HILOG_DEBUG("call");
-    std::lock_guard<std::mutex> lock(templateFormDetailInfoCallerTokenMutex_);
-    return templateFormDetailInfoCallerToken_;
 }
 
 void FormCallbackAdapter::SetFormPublishInterceptor(const sptr<IFormPublishInterceptor> &interceptor)
@@ -675,7 +624,7 @@ bool FormCallbackAdapter::IsForegroundApp()
         HILOG_ERROR("get BundleName failed");
         return false;
     }
-    auto appMgrProxy = commonAdapter_->GetAppMgr();
+    auto appMgrProxy = FormCommonAdapter::GetInstance().GetAppMgr();
     if (!appMgrProxy) {
         HILOG_ERROR("Get app mgr failed");
         return false;

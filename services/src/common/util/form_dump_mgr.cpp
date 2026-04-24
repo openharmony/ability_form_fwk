@@ -22,7 +22,7 @@
 #include "common/util/form_trust_mgr.h"
 #include "data_center/form_cache_mgr.h"
 #include "data_center/form_data_mgr.h"
-#include "form_mgr/form_mgr_adapter.h"
+#include "form_mgr/form_mgr_adapter_facade.h"
 #include "form_refresh/strategy/refresh_control_mgr.h"
 #include "status_mgr_center/form_status.h"
 #ifdef SUPPORT_POWER
@@ -164,7 +164,8 @@ void FormDumpMgr::DumpHasFormVisible(
     formInfos += "    bundleName [" + bundleName + "]\n";
     formInfos += "    userId [" + std::to_string(userId) + "]\n";
     formInfos += "    instIndex [" + std::to_string(instIndex) + "]\n";
-    formInfos += "    hasFormVisible [" + std::to_string(FormMgrAdapter::GetInstance().HasFormVisible(tokenId)) + "]\n";
+    formInfos += "    hasFormVisible [" +
+        std::to_string(FormMgrAdapterFacade::GetInstance().HasFormVisible(tokenId)) + "]\n";
 }
 
 /**
@@ -275,7 +276,7 @@ void FormDumpMgr::AppendRunningFormInfos(const std::string &formHostBundleName,
 {
     HILOG_INFO("call");
     std::unordered_map<std::string, std::string> liveFormStatusMap;
-    FormMgrAdapter::GetInstance().GetLiveFormStatus(liveFormStatusMap);
+    FormMgrAdapterFacade::GetInstance().GetLiveFormStatus(liveFormStatusMap);
     for (const auto& info : runningFormInfos) {
         if (info.hostBundleName == formHostBundleName) {
             infosResult += "  FormId [ " + std::to_string(info.formId) + " ] \n";

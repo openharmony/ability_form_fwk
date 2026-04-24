@@ -16,7 +16,7 @@
 #include "form_observer/net_conn_callback_observer.h"
 
 #include "fms_log_wrapper.h"
-#include "form_mgr/form_mgr_adapter.h"
+#include "form_mgr/form_mgr_adapter_facade.h"
 #include "common/util/form_util.h"
 #include "common/util/form_task_common.h"
 #include "form_mgr/form_mgr_queue.h"
@@ -85,7 +85,7 @@ void NetConnCallbackObserver::SetNetConnect()
     int64_t currentTime = FormUtil::GetCurrentMillisecond();
     if ((currentTime - lastNetLostTime_.load()) >= FORM_DISCON_NETWORK_CHECK_TIME) {
         HILOG_INFO("network is available for form update");
-        FormMgrAdapter::GetInstance().UpdateFormByCondition(CONDITION_NETWORK);
+        FormMgrAdapterFacade::GetInstance().UpdateFormByCondition(CONDITION_NETWORK);
         lastNetLostTime_.store(0);
     }
 }

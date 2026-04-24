@@ -13,27 +13,27 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_FORM_FWK_MOCK_FORM_MGR_ADAPTER_H
-#define OHOS_FORM_FWK_MOCK_FORM_MGR_ADAPTER_H
+#ifndef OHOS_FORM_FWK_MOCK_FORM_MGR_ADAPTER_FACADE_H
+#define OHOS_FORM_FWK_MOCK_FORM_MGR_ADAPTER_FACADE_H
 
 #include "gmock/gmock.h"
 #include "data_center/form_record/form_record.h"
 
 namespace OHOS {
 namespace AppExecFwk {
-class AbstractMockFormMgrAdapter {
+class AbstractMockFormMgrAdapterFacade {
 public:
-    virtual ~AbstractMockFormMgrAdapter() = default;
+    virtual ~AbstractMockFormMgrAdapterFacade() = default;
     virtual bool IsDeleteCacheInUpgradeScene(const FormRecord &record) = 0;
 };
 
-class MockFormMgrAdapter : public AbstractMockFormMgrAdapter {
+class MockFormMgrAdapterFacade : public AbstractMockFormMgrAdapterFacade {
 public:
-    static std::shared_ptr<MockFormMgrAdapter> obj;
-    MockFormMgrAdapter() = default;
-    ~MockFormMgrAdapter() override = default;
+    static std::shared_ptr<MockFormMgrAdapterFacade> obj;
+    MockFormMgrAdapterFacade() = default;
+    ~MockFormMgrAdapterFacade() override = default;
     MOCK_METHOD1(IsDeleteCacheInUpgradeScene, bool(const FormRecord &record));
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS
-#endif  // OHOS_FORM_FWK_MOCK_FORM_MGR_ADAPTER_H
+#endif  // OHOS_FORM_FWK_MOCK_FORM_MGR_ADAPTER_FACADE_H

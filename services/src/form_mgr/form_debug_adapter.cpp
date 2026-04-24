@@ -43,6 +43,10 @@ FormDebugAdapter::FormDebugAdapter()
     HILOG_DEBUG("FormDebugAdapter constructed");
 }
 
+FormDebugAdapter::~FormDebugAdapter()
+{
+}
+
 int FormDebugAdapter::DumpStorageFormInfos(std::string &formInfos) const
 {
     std::vector<FormDBInfo> formDBInfos;

@@ -15,7 +15,7 @@
 
 #include <gtest/gtest.h>
 
-#include "form_mgr/form_mgr_adapter.h"
+#include "form_mgr/form_mgr_adapter_facade.h"
 #include "form_mgr/form_edit_service.h"
 #include "form_mgr_errors.h"
 #include "fms_log_wrapper.h"
@@ -175,62 +175,62 @@ void MockStopRenderingForm(int mockRet)
 
 namespace OHOS {
 namespace AppExecFwk {
-void MockFormMgrAdapterStartAbilityByFms(int mockRet)
+void MockFormMgrAdapterFacadeStartAbilityByFms(int mockRet)
 {
     g_startAbilityByFms = mockRet;
 }
 
-void MockFormMgrAdapterRegisterChangeSceneAnimationStateProxy(int mockRet)
+void MockFormMgrAdapterFacadeRegisterChangeSceneAnimationStateProxy(int mockRet)
 {
     g_registerChangeSceneAnimationStateProxy = mockRet;
 }
 
-void MockFormMgrAdapterRegisterOverflowProxy(int mockRet)
+void MockFormMgrAdapterFacadeRegisterOverflowProxy(int mockRet)
 {
     g_registerOverflowProxy = mockRet;
 }
 
-void MockFormMgrAdapterRegisterGetFormRectProxy(int mockRet)
+void MockFormMgrAdapterFacadeRegisterGetFormRectProxy(int mockRet)
 {
     g_registerGetFormRectProxy = mockRet;
 }
 
-void MockFormMgrAdapterRegisterGetLiveFormStatusProxy(int mockRet)
+void MockFormMgrAdapterFacadeRegisterGetLiveFormStatusProxy(int mockRet)
 {
     g_registerGetLiveFormStatusProxy = mockRet;
 }
 
-void MockFormMgrAdapterUnregisterGetLiveFormStatusProxy(int mockRet)
+void MockFormMgrAdapterFacadeUnregisterGetLiveFormStatusProxy(int mockRet)
 {
     g_unregisterGetLiveFormStatusProxy = mockRet;
 }
 
-void MockFormMgrAdapterUpdateFormSizeFloat(int mockRet)
+void MockFormMgrAdapterFacadeUpdateFormSizeFloat(int mockRet)
 {
     g_updateFormSizeFloat = mockRet;
 }
 
-void MockFormMgrAdapterRegisterTemplateFormDetailInfoChange(int mockRet)
+void MockFormMgrAdapterFacadeRegisterTemplateFormDetailInfoChange(int mockRet)
 {
     g_registerTemplateFormDetailInfoChange = mockRet;
 }
 
-void MockFormMgrAdapterUnregisterTemplateFormDetailInfoChange(int mockRet)
+void MockFormMgrAdapterFacadeUnregisterTemplateFormDetailInfoChange(int mockRet)
 {
     g_unregisterTemplateFormDetailInfoChange = mockRet;
 }
 
-void MockFormMgrAdapterUpdateTemplateFormDetailInfo(int mockRet)
+void MockFormMgrAdapterFacadeUpdateTemplateFormDetailInfo(int mockRet)
 {
     g_updateTemplateFormDetailInfo = mockRet;
 }
 
-void MockFormMgrAdapterUnregisterPublishFormCrossBundleControl(int mockRet)
+void MockFormMgrAdapterFacadeUnregisterPublishFormCrossBundleControl(int mockRet)
 {
     g_unregisterPublishFormCrossBundleControl = mockRet;
 }
 
-void MockFormMgrAdapterPublishFormCrossBundleControl(bool mockRet)
+void MockFormMgrAdapterFacadePublishFormCrossBundleControl(bool mockRet)
 {
     g_publishFormCrossBundleControl = mockRet;
 }
@@ -245,321 +245,324 @@ void MockEnableForms(int mockRet)
     g_enableForms = mockRet;
 }
 
-int FormMgrAdapter::EnableUpdateForm(const std::vector<int64_t> formIDs, const sptr<IRemoteObject> &callerToken)
+int FormMgrAdapterFacade::EnableUpdateForm(const std::vector<int64_t> formIDs, const sptr<IRemoteObject> &callerToken)
 {
     GTEST_LOG_(INFO) << "EnableUpdateForm called " << g_enableUpdateForm;
     return g_enableUpdateForm;
 }
 
-int FormMgrAdapter::DisableUpdateForm(const std::vector<int64_t> formIDs, const sptr<IRemoteObject> &callerToken)
+int FormMgrAdapterFacade::DisableUpdateForm(const std::vector<int64_t> formIDs, const sptr<IRemoteObject> &callerToken)
 {
     GTEST_LOG_(INFO) << "DisableUpdateForm called " << g_disableUpdateForm;
     return g_disableUpdateForm;
 }
 
-int FormMgrAdapter::AddForm(
+int FormMgrAdapterFacade::AddForm(
     const int64_t formId, const Want &want, const sptr<IRemoteObject> &callerToken, FormJsInfo &formInfo)
 {
     GTEST_LOG_(INFO) << "AddForm called " << g_addForm;
     return g_addForm;
 }
 
-int FormMgrAdapter::DeleteForm(const int64_t formId, const sptr<IRemoteObject> &callerToken)
+int FormMgrAdapterFacade::DeleteForm(const int64_t formId, const sptr<IRemoteObject> &callerToken)
 {
     GTEST_LOG_(INFO) << "DeleteForm called " << g_deleteForm;
     return g_deleteForm;
 }
 
-int FormMgrAdapter::ReleaseForm(const int64_t formId, const sptr<IRemoteObject> &callerToken, const bool delCache)
+int FormMgrAdapterFacade::ReleaseForm(const int64_t formId, const sptr<IRemoteObject> &callerToken, const bool delCache)
 {
     GTEST_LOG_(INFO) << "ReleaseForm called " << g_releaseForm;
     return g_releaseForm;
 }
 
-int FormMgrAdapter::RequestForm(const int64_t formId, const sptr<IRemoteObject> &callerToken, const Want &want)
+int FormMgrAdapterFacade::RequestForm(const int64_t formId, const sptr<IRemoteObject> &callerToken, const Want &want)
 {
     GTEST_LOG_(INFO) << "RequestForm called " << g_requestForm;
     return g_requestForm;
 }
 
-ErrCode FormMgrAdapter::NotifyWhetherVisibleForms(
+ErrCode FormMgrAdapterFacade::NotifyWhetherVisibleForms(
     const std::vector<int64_t> &formIds, const sptr<IRemoteObject> &callerToken, const int32_t formVisibleType)
 {
     GTEST_LOG_(INFO) << "NotifyWhetherVisibleForms called " << g_notifyWhetherVisibleForms;
     return g_notifyWhetherVisibleForms;
 }
 
-int FormMgrAdapter::CastTempForm(const int64_t formId, const sptr<IRemoteObject> &callerToken)
+int FormMgrAdapterFacade::CastTempForm(const int64_t formId, const sptr<IRemoteObject> &callerToken)
 {
     GTEST_LOG_(INFO) << "CastTempForm called " << g_castTempForm;
     return g_castTempForm;
 }
 
-int FormMgrAdapter::MessageEvent(const int64_t formId, const Want &want, const sptr<IRemoteObject> &callerToken)
+int FormMgrAdapterFacade::MessageEvent(const int64_t formId, const Want &want, const sptr<IRemoteObject> &callerToken)
 {
     GTEST_LOG_(INFO) << "MessageEvent called " << g_messageEvent;
     return g_messageEvent;
 }
 
-int FormMgrAdapter::RouterEvent(const int64_t formId, Want &want, const sptr<IRemoteObject> &callerToken)
+int FormMgrAdapterFacade::RouterEvent(const int64_t formId, Want &want, const sptr<IRemoteObject> &callerToken)
 {
     GTEST_LOG_(INFO) << "RouterEvent called " << g_routerEvent;
     return g_routerEvent;
 }
 
-int FormMgrAdapter::DeleteInvalidForms(
+int FormMgrAdapterFacade::DeleteInvalidForms(
     const std::vector<int64_t> &formIds, const sptr<IRemoteObject> &callerToken, int32_t &numFormsDeleted)
 {
     GTEST_LOG_(INFO) << "DeleteInvalidForms called " << g_deleteInvalidForms;
     return g_deleteInvalidForms;
 }
 
-int FormMgrAdapter::AcquireFormState(
+int FormMgrAdapterFacade::AcquireFormState(
     const Want &want, const sptr<IRemoteObject> &callerToken, FormStateInfo &stateInfo)
 {
     GTEST_LOG_(INFO) << "AcquireFormState called " << g_acquireFormState;
     return g_acquireFormState;
 }
 
-int FormMgrAdapter::NotifyFormsVisible(
+int FormMgrAdapterFacade::NotifyFormsVisible(
     const std::vector<int64_t> &formIds, bool isVisible, const sptr<IRemoteObject> &callerToken)
 {
     GTEST_LOG_(INFO) << "NotifyFormsVisible called " << g_notifyFormsVisible;
     return g_notifyFormsVisible;
 }
 
-int FormMgrAdapter::NotifyFormsEnableUpdate(
+int FormMgrAdapterFacade::NotifyFormsEnableUpdate(
     const std::vector<int64_t> &formIds, bool isEnableUpdate, const sptr<IRemoteObject> &callerToken)
 {
     GTEST_LOG_(INFO) << "NotifyFormsEnableUpdate called " << g_notifyFormsEnableUpdate;
     return g_notifyFormsEnableUpdate;
 }
 
-int FormMgrAdapter::GetFormsInfoByApp(const std::string &bundleName, std::vector<FormInfo> &formInfos)
+int FormMgrAdapterFacade::GetFormsInfoByApp(const std::string &bundleName, std::vector<FormInfo> &formInfos)
 {
     GTEST_LOG_(INFO) << "GetFormsInfoByApp called " << g_getFormsInfoByApp;
     return g_getFormsInfoByApp;
 }
 
-int FormMgrAdapter::GetFormsInfoByModule(
+int FormMgrAdapterFacade::GetFormsInfoByModule(
     const std::string &bundleName, const std::string &moduleName, std::vector<FormInfo> &formInfos)
 {
     GTEST_LOG_(INFO) << "GetFormsInfoByModule called " << g_getFormsInfoByModule;
     return g_getFormsInfoByModule;
 }
 
-bool FormMgrAdapter::IsRequestPublishFormSupported()
+bool FormMgrAdapterFacade::IsRequestPublishFormSupported()
 {
     return g_isRequestPublishFormSupported;
 }
 
-ErrCode FormMgrAdapter::RequestPublishForm(Want &want, bool withFormBindingData,
+ErrCode FormMgrAdapterFacade::RequestPublishForm(Want &want, bool withFormBindingData,
     std::unique_ptr<FormProviderData> &formBindingData, int64_t &formId,
     const std::vector<FormDataProxy> &formDataProxies, bool needCheckFormPermission)
 {
     return g_requestPublishForm;
 }
 
-int FormMgrAdapter::UpdateForm(const int64_t formId, const int32_t uid,
+int FormMgrAdapterFacade::UpdateForm(const int64_t formId, const int32_t uid,
     const FormProviderData &formProviderData, const std::vector<FormDataProxy> &formDataProxies)
 {
     return g_updateForm;
 }
 
-int FormMgrAdapter::UpdateFormLocation(const int64_t &formId, const int32_t &formLocation,
+int FormMgrAdapterFacade::UpdateFormLocation(const int64_t &formId, const int32_t &formLocation,
     const bool isRequestPublishFormWithSnapshot)
 {
     return g_updateFormLocation;
 }
 
-int FormMgrAdapter::SetPublishFormResult(const int64_t formId, Constants::PublishFormResult &errorCodeInfo)
+int FormMgrAdapterFacade::SetPublishFormResult(const int64_t formId, Constants::PublishFormResult &errorCodeInfo)
 {
     return g_setPublishFormResult;
 }
 
-int FormMgrAdapter::AcquireAddFormResult(const int64_t formId)
+int FormMgrAdapterFacade::AcquireAddFormResult(const int64_t formId)
 {
     return g_acquireAddFormResult;
 }
 
-int FormMgrAdapter::StopRenderingForm(const int64_t formId, const std::string &compId)
+int FormMgrAdapterFacade::StopRenderingForm(const int64_t formId, const std::string &compId)
 {
     return g_stopRenderingForm;
 }
 
-int FormMgrAdapter::ReleaseRenderer(int64_t formId, const std::string &compId)
+int FormMgrAdapterFacade::ReleaseRenderer(int64_t formId, const std::string &compId)
 {
     return g_releaseRenderer;
 }
 
-int FormMgrAdapter::DumpStorageFormInfos(std::string &formInfos) const
+int FormMgrAdapterFacade::DumpStorageFormInfos(std::string &formInfos) const
 {
     return g_dumpStorageFormInfos;
 }
 
-int FormMgrAdapter::DumpFormInfoByBundleName(const std::string &bundleName, std::string &formInfos) const
+int FormMgrAdapterFacade::DumpFormInfoByBundleName(const std::string &bundleName, std::string &formInfos) const
 {
     return g_dumpFormInfoByBundleName;
 }
 
-int FormMgrAdapter::DumpFormInfoByFormId(const std::int64_t formId, std::string &formInfo) const
+int FormMgrAdapterFacade::DumpFormInfoByFormId(const std::int64_t formId, std::string &formInfo) const
 {
     return g_dumpFormInfoByFormId;
 }
 
-int FormMgrAdapter::DumpFormTimerByFormId(const std::int64_t formId, std::string &isTimingService) const
+int FormMgrAdapterFacade::DumpFormTimerByFormId(const std::int64_t formId, std::string &isTimingService) const
 {
     return g_dumpFormTimerByFormId;
 }
 
-int FormMgrAdapter::BackgroundEvent(const int64_t formId, Want &want, const sptr<IRemoteObject> &callerToken)
+int FormMgrAdapterFacade::BackgroundEvent(const int64_t formId, Want &want, const sptr<IRemoteObject> &callerToken)
 {
     return g_backgroundEvent;
 }
 
-ErrCode FormMgrAdapter::RegisterFormRouterProxy(const std::vector<int64_t> &formIds,
+ErrCode FormMgrAdapterFacade::RegisterFormRouterProxy(const std::vector<int64_t> &formIds,
     const sptr<IRemoteObject> &callerToken)
 {
     return g_registerFormRouterProxy;
 }
 
-ErrCode FormMgrAdapter::UnregisterFormRouterProxy(const std::vector<int64_t> &formIds)
+ErrCode FormMgrAdapterFacade::UnregisterFormRouterProxy(const std::vector<int64_t> &formIds)
 {
     return g_unregisterFormRouterProxy;
 }
 
-int32_t FormMgrAdapter::GetFormsCount(bool isTempFormFlag, int32_t &formCount)
+int32_t FormMgrAdapterFacade::GetFormsCount(bool isTempFormFlag, int32_t &formCount)
 {
     return g_getFormsCount;
 }
 
-int32_t FormMgrAdapter::GetHostFormsCount(std::string &bundleName, int32_t &formCount)
+int32_t FormMgrAdapterFacade::GetHostFormsCount(std::string &bundleName, int32_t &formCount)
 {
     return g_getHostFormsCount;
 }
 
-ErrCode FormMgrAdapter::GetRunningFormInfos(bool isUnusedIncluded, std::vector<RunningFormInfo> &runningFormInfos,
+ErrCode FormMgrAdapterFacade::GetRunningFormInfos(bool isUnusedIncluded, std::vector<RunningFormInfo> &runningFormInfos,
     const int32_t userId)
 {
     return g_getRunningFormInfos;
 }
 
-ErrCode FormMgrAdapter::GetRunningFormInfosByBundleName(
+ErrCode FormMgrAdapterFacade::GetRunningFormInfosByBundleName(
     const std::string &bundleName, bool isUnusedIncluded, std::vector<RunningFormInfo> &runningFormInfos)
 {
     return g_getRunningFormInfosByBundleName;
 }
 
-ErrCode FormMgrAdapter::GetFormInstanceById(const int64_t formId, bool isUnusedIncluded, FormInstance &formInstance)
+ErrCode FormMgrAdapterFacade::GetFormInstanceById(const int64_t formId, bool isUnusedIncluded,
+    FormInstance &formInstance)
 {
     return g_getFormInstanceById;
 }
 
-ErrCode FormMgrAdapter::RegisterAddObserver(const std::string &bundleName, const sptr<IRemoteObject> &callerToken)
+ErrCode FormMgrAdapterFacade::RegisterAddObserver(const std::string &bundleName,
+    const sptr<IRemoteObject> &callerToken)
 {
     return g_registerAddObserver;
 }
 
-ErrCode FormMgrAdapter::RegisterRemoveObserver(const std::string &bundleName, const sptr<IRemoteObject> &callerToken)
+ErrCode FormMgrAdapterFacade::RegisterRemoveObserver(const std::string &bundleName,
+    const sptr<IRemoteObject> &callerToken)
 {
     return g_registerRemoveObserver;
 }
 
-ErrCode FormMgrAdapter::RegisterClickEventObserver(
+ErrCode FormMgrAdapterFacade::RegisterClickEventObserver(
     const std::string &bundleName, const std::string &formEventType, const sptr<IRemoteObject> &observer)
 {
     return g_registerClickEventObserver;
 }
 
-ErrCode FormMgrAdapter::UnregisterClickEventObserver(
+ErrCode FormMgrAdapterFacade::UnregisterClickEventObserver(
     const std::string &bundleName, const std::string &formEventType, const sptr<IRemoteObject> &observer)
 {
     return g_unregisterClickEventObserver;
 }
 
-ErrCode FormMgrAdapter::RequestOverflow(const int64_t formId, const int32_t callingUid,
+ErrCode FormMgrAdapterFacade::RequestOverflow(const int64_t formId, const int32_t callingUid,
     const OverflowInfo &overflowInfo, bool isOverflow)
 {
     return g_requestoverflow;
 }
 
-ErrCode FormMgrAdapter::ChangeSceneAnimationState(const int64_t formId, const int32_t callingUid, int32_t state)
+ErrCode FormMgrAdapterFacade::ChangeSceneAnimationState(const int64_t formId, const int32_t callingUid, int32_t state)
 {
     return g_changesceneanimationstate;
 }
 
-ErrCode FormMgrAdapter::GetFormRect(const int64_t formId, const int32_t callingUid, Rect &rect)
+ErrCode FormMgrAdapterFacade::GetFormRect(const int64_t formId, const int32_t callingUid, Rect &rect)
 {
     return g_getformrect;
 }
 
-ErrCode FormMgrAdapter::StartAbilityByFms(const Want &want)
+ErrCode FormMgrAdapterFacade::StartAbilityByFms(const Want &want)
 {
     return g_startAbilityByFms;
 }
 
-ErrCode FormMgrAdapter::RegisterChangeSceneAnimationStateProxy(const sptr<IRemoteObject> &callerToken)
+ErrCode FormMgrAdapterFacade::RegisterChangeSceneAnimationStateProxy(const sptr<IRemoteObject> &callerToken)
 {
     return g_registerChangeSceneAnimationStateProxy;
 }
 
-ErrCode FormMgrAdapter::RegisterOverflowProxy(const sptr<IRemoteObject> &callerToken)
+ErrCode FormMgrAdapterFacade::RegisterOverflowProxy(const sptr<IRemoteObject> &callerToken)
 {
     return g_registerOverflowProxy;
 }
 
-ErrCode FormMgrAdapter::RegisterGetFormRectProxy(const sptr<IRemoteObject> &callerToken)
+ErrCode FormMgrAdapterFacade::RegisterGetFormRectProxy(const sptr<IRemoteObject> &callerToken)
 {
     return g_registerGetFormRectProxy;
 }
 
-ErrCode FormMgrAdapter::RegisterGetLiveFormStatusProxy(const sptr<IRemoteObject> &callerToken)
+ErrCode FormMgrAdapterFacade::RegisterGetLiveFormStatusProxy(const sptr<IRemoteObject> &callerToken)
 {
     return g_registerGetLiveFormStatusProxy;
 }
 
-ErrCode FormMgrAdapter::UnregisterGetLiveFormStatusProxy()
+ErrCode FormMgrAdapterFacade::UnregisterGetLiveFormStatusProxy()
 {
     return g_unregisterGetLiveFormStatusProxy;
 }
 
-ErrCode FormMgrAdapter::UpdateFormSize(const int64_t &formId, float width, float height, float borderWidth,
+ErrCode FormMgrAdapterFacade::UpdateFormSize(const int64_t &formId, float width, float height, float borderWidth,
     float formViewScale)
 {
     return g_updateFormSizeFloat;
 }
 
-ErrCode FormMgrAdapter::RegisterTemplateFormDetailInfoChange(const sptr<IRemoteObject> &callerToken)
+ErrCode FormMgrAdapterFacade::RegisterTemplateFormDetailInfoChange(const sptr<IRemoteObject> &callerToken)
 {
     return g_registerTemplateFormDetailInfoChange;
 }
 
-ErrCode FormMgrAdapter::UnregisterTemplateFormDetailInfoChange()
+ErrCode FormMgrAdapterFacade::UnregisterTemplateFormDetailInfoChange()
 {
     return g_unregisterTemplateFormDetailInfoChange;
 }
 
-ErrCode FormMgrAdapter::UpdateTemplateFormDetailInfo(const std::vector<TemplateFormDetailInfo> &templateFormInfo)
+ErrCode FormMgrAdapterFacade::UpdateTemplateFormDetailInfo(const std::vector<TemplateFormDetailInfo> &templateFormInfo)
 {
     return g_updateTemplateFormDetailInfo;
 }
 
-ErrCode FormMgrAdapter::UnregisterPublishFormCrossBundleControl()
+ErrCode FormMgrAdapterFacade::UnregisterPublishFormCrossBundleControl()
 {
     return g_unregisterPublishFormCrossBundleControl;
 }
 
-bool FormMgrAdapter::PublishFormCrossBundleControl(const PublishFormCrossBundleInfo &bundleInfo)
+bool FormMgrAdapterFacade::PublishFormCrossBundleControl(const PublishFormCrossBundleInfo &bundleInfo)
 {
     return g_publishFormCrossBundleControl;
 }
 
-bool FormMgrAdapter::HasFormVisible(const uint32_t tokenId)
+bool FormMgrAdapterFacade::HasFormVisible(const uint32_t tokenId)
 {
     return g_hasFormVisible;
 }
 
-int32_t FormMgrAdapter::EnableForms(const std::string bundleName, const int32_t userId, const bool enable)
+int32_t FormMgrAdapterFacade::EnableForms(const std::string bundleName, const int32_t userId, const bool enable)
 {
     return g_enableForms;
 }

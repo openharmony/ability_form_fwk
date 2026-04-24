@@ -18,6 +18,8 @@
 
 #include <memory>
 
+#include "singleton.h"
+
 #include "form_constants.h"
 #include "common/util/form_util.h"
 #include "ams_mgr/form_ams_helper.h"
@@ -39,15 +41,9 @@ class FormCommonAdapter;
  *
  * This adapter uses FormCommonAdapter through composition for shared functionality.
  */
-class FormEventAdapter {
+class FormEventAdapter final : public DelayedRefSingleton<FormEventAdapter> {
+    DECLARE_DELAYED_REF_SINGLETON(FormEventAdapter)
 public:
-    /**
-     * @brief Constructor
-     * @param commonAdapter Shared common adapter for shared functionality
-     */
-    FormEventAdapter(FormCommonAdapter* commonAdapter);
-
-    virtual ~FormEventAdapter() = default;
 
     int MessageEvent(const int64_t formId, const Want &want,
         const sptr<IRemoteObject> &callerToken);
@@ -74,8 +70,6 @@ private:
      */
     bool CheckKeepBackgroundRunningPermission(const sptr<IBundleMgr> &iBundleMgr,
         const std::string &bundleName);
-
-    FormCommonAdapter* commonAdapter_;
 };
 
 } // namespace AppExecFwk
