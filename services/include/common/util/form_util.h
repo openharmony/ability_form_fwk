@@ -72,12 +72,6 @@ public:
     static int64_t GetCurrentSteadyClockMillseconds();
 
     /**
-     * @brief Get current system millisecond.
-     * @return Current system millisecond.
-     */
-    static int64_t GetNowMillisecond();
-
-    /**
      * @brief Get millisecond from tm.
      * @param tmAtTime tm time.
      * @return Millisecond.

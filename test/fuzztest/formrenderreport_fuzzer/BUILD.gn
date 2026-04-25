@@ -26,6 +26,7 @@ ohos_fuzztest("FormRenderReportFuzzTest") {
   include_dirs = [
     "${form_fwk_path}/interfaces/kits/native/include",
     "${form_fwk_path}/services/include",
+    "${form_fwk_path}/services/common/include",
   ]
   cflags = [
     "-g",
@@ -35,6 +36,7 @@ ohos_fuzztest("FormRenderReportFuzzTest") {
   ]
   sources = [
     "${form_fwk_path}/services/src/feature/memory_mgr/form_render_report.cpp",
+    "${form_fwk_path}/services/common/src/util/form_time_util.cpp",
     "formrenderreport_fuzzer.cpp"
   ]
 

@@ -137,6 +137,7 @@ config("formmgr_config") {
   include_dirs = [
     "services/config",
     "services/include",
+    "services/common/include",
   ]
 }
 
@@ -183,7 +184,6 @@ ohos_shared_library("libfms") {
     "services/src/common/util/form_serial_queue.cpp",
     "services/src/common/util/form_trust_mgr.cpp",
     "services/src/common/util/form_util.cpp",
-    "services/src/common/util/form_timer_util.cpp",
     "services/src/common/util/mem_status_listener.cpp",
     "services/src/data_center/database/form_db_cache.cpp",
     "services/src/data_center/database/form_db_info.cpp",
@@ -223,7 +223,6 @@ ohos_shared_library("libfms") {
     "services/src/feature/theme_form/theme_form_client.cpp",
     "services/src/feature/form_check/form_abnormal_reporter.cpp",
     "services/src/form_host/form_host_callback.cpp",
-    "services/src/form_host/form_host_queue.cpp",
     "services/src/form_host/form_host_record.cpp",
     "services/src/form_host/form_host_task_mgr.cpp",
     "services/src/form_host/form_mgr_host_adapter.cpp",
@@ -237,7 +236,6 @@ ohos_shared_library("libfms") {
     "services/src/form_mgr/form_lifecycle_adapter.cpp",
     "services/src/form_mgr/form_mgr_adapter.cpp",
     "services/src/form_mgr/form_mgr_adapter_facade.cpp",
-    "services/src/form_mgr/form_mgr_queue.cpp",
     "services/src/form_mgr/form_mgr_service.cpp",
     "services/src/form_mgr/form_observer_adapter.cpp",
     "services/src/form_mgr/form_publish_adapter.cpp",
@@ -261,7 +259,6 @@ ohos_shared_library("libfms") {
     "services/src/form_provider/connection/form_refresh_connection.cpp",
     "services/src/form_provider/connection/form_update_size_connection.cpp",
     "services/src/form_provider/form_provider_mgr.cpp",
-    "services/src/form_provider/form_provider_queue.cpp",
     "services/src/form_provider/form_provider_task_mgr.cpp",
     "services/src/form_provider/form_supply_callback.cpp",
     "services/src/form_refresh/check_mgr/active_user_checker.cpp",
@@ -295,15 +292,12 @@ ohos_shared_library("libfms") {
     "services/src/form_render/form_render_mgr.cpp",
     "services/src/form_render/form_render_mgr_inner.cpp",
     "services/src/form_render/form_res_sched.cpp",
-    "services/src/form_render/form_render_queue.cpp",
     "services/src/form_render/form_render_task_mgr.cpp",
     "services/src/form_render/form_sandbox_render_mgr_inner.cpp",
     "services/src/status_mgr_center/form_event_queue.cpp",
     "services/src/status_mgr_center/form_event_retry_mgr.cpp",
-    "services/src/status_mgr_center/form_event_timeout_queue.cpp",
     "services/src/status_mgr_center/form_status.cpp",
     "services/src/status_mgr_center/form_status_mgr.cpp",
-    "services/src/status_mgr_center/form_status_queue.cpp",
     "services/src/status_mgr_center/form_status_table.cpp",
     "services/src/status_mgr_center/form_status_task_mgr.cpp",
   ]
@@ -326,6 +320,7 @@ ohos_shared_library("libfms") {
     ":form_render_info",
     ":form_common_info",
     ":form_utils",
+    "${form_fwk_path}/services/common:libform_common",
   ]
 
   external_deps = [
@@ -445,6 +440,25 @@ ohos_shared_library("fmskit_native") {
     "interfaces/kits/native/src/form_provider_caller.cpp",
   ]
 
+  cflags_cc = [
+    "-fdata-sections",
+    "-ffunction-sections",
+    "-Oz"
+  ]
+
+  ldflags = [
+    "-flto",
+    "-Wl,-z,relro",
+    "-Wl,--exclude-libs=ALL",
+    "-Wl,--gc-sections",
+    "-Wl,--as-needed",
+    "-Wl,--sort-common",
+    "-Wl,--relax",
+    "-Wl,-Bsymbolic",
+    "-Wl,-z,now",
+    "-Wl,--icf=all",
+  ]
+
   cflags = []
   if (target_cpu == "arm") {
     cflags += [ "-DBINDER_IPC_32BIT" ]
@@ -512,6 +526,25 @@ ohos_shared_library("fmskit_provider_client") {
   public_configs = [ ":fmskit_provider_public_config" ]
   sources = [ "interfaces/kits/native/src/form_provider_client.cpp" ]
 
+  cflags_cc = [
+    "-fdata-sections",
+    "-ffunction-sections",
+    "-Oz"
+  ]
+
+  ldflags = [
+    "-flto",
+    "-Wl,-z,relro",
+    "-Wl,--exclude-libs=ALL",
+    "-Wl,--gc-sections",
+    "-Wl,--as-needed",
+    "-Wl,--sort-common",
+    "-Wl,--relax",
+    "-Wl,-Bsymbolic",
+    "-Wl,-z,now",
+    "-Wl,--icf=all",
+  ]
+
   cflags = []
   if (target_cpu == "arm") {
     cflags += [ "-DBINDER_IPC_32BIT" ]
@@ -576,6 +609,24 @@ ohos_shared_library("form_manager") {
     cfi_cross_dso = true
     debug = false
   }
+  cflags_cc = [
+    "-fdata-sections",
+    "-ffunction-sections",
+    "-Oz"
+  ]
+
+  ldflags = [
+    "-flto",
+    "-Wl,-z,relro",
+    "-Wl,--exclude-libs=ALL",
+    "-Wl,--gc-sections",
+    "-Wl,--as-needed",
+    "-Wl,--sort-common",
+    "-Wl,--relax",
+    "-Wl,-Bsymbolic",
+    "-Wl,-z,now",
+    "-Wl,--icf=all",
+  ]
 
   sources = [
     "interfaces/inner_api/src/form_host_stub.cpp",
@@ -642,13 +693,30 @@ ohos_shared_library("form_utils") {
     debug = false
   }
   cflags = []
+  cflags_cc = [
+    "-fdata-sections",
+    "-ffunction-sections",
+    "-Oz"
+  ]
+  ldflags = [
+    "-flto",
+    "-Wl,-z,relro",
+    "-Wl,--exclude-libs=ALL",
+    "-Wl,--gc-sections",
+    "-Wl,--as-needed",
+    "-Wl,--sort-common",
+    "-Wl,--relax",
+    "-Wl,-Bsymbolic",
+    "-Wl,-z,now",
+    "-Wl,--icf=all",
+  ]
   include_dirs = [
     "services/include",
+    "services/common/include",
   ]
   sources = [
     "interfaces/inner_api/src/form_event_report.cpp",
     "interfaces/inner_api/src/form_file_util.cpp",
-    "interfaces/inner_api/src/form_status_print.cpp",
   ]
  
   public_configs = [
@@ -658,7 +726,7 @@ ohos_shared_library("form_utils") {
   deps = [
     ":form_config",
   ]
- 
+
   external_deps = [
     "ability_base:want",
     "c_utils:utils",
@@ -666,7 +734,7 @@ ohos_shared_library("form_utils") {
     "hilog:libhilog",
     "hisysevent:libhisysevent",
   ]
- 
+
   subsystem_name = "ability"
   innerapi_tags = [ "platformsdk" ]
   part_name = "form_fwk"
@@ -682,6 +750,23 @@ ohos_shared_library("form_common_info") {
     debug = false
   }
   cflags = []
+  cflags_cc = [
+    "-fdata-sections",
+    "-ffunction-sections",
+    "-Oz"
+  ]
+  ldflags = [
+    "-flto",
+    "-Wl,-z,relro",
+    "-Wl,--exclude-libs=ALL",
+    "-Wl,--gc-sections",
+    "-Wl,--as-needed",
+    "-Wl,--sort-common",
+    "-Wl,--relax",
+    "-Wl,-Bsymbolic",
+    "-Wl,-z,now",
+    "-Wl,--icf=all",
+  ]
   include_dirs = [
     "services/include",
   ]

@@ -78,7 +78,6 @@ bool DoSomethingInterestingWithMyAPI(FuzzedDataProvider *fdp)
     std::string statusData = fdp->ConsumeRandomLengthString(5);
     sptr<IRemoteObject> callerToken = new (std::nothrow) FormSupplyStubFuzzTest();
     sptr<IFormSupply> formSupplyClient = iface_cast<IFormSupply>(callerToken);
-    FormRenderStatusMgr::GetInstance().DeleteFormEventId(formId);
     FormRenderStatusTaskMgr::GetInstance().OnRenderFormDone(
         formId, FormFsmEvent::RENDER_FORM_DONE, "", formSupplyClient);
     FormRenderStatusTaskMgr::GetInstance().OnRecoverFormDone(
@@ -90,7 +89,6 @@ bool DoSomethingInterestingWithMyAPI(FuzzedDataProvider *fdp)
     FormRenderStatusTaskMgr::GetInstance().OnRecycleForm(
         formId, FormFsmEvent::RECYCLE_DATA_DONE, statusData, want, formSupplyClient);
     std::string eventId = fdp->ConsumeRandomLengthString(5);
-    FormRenderStatusMgr::GetInstance().SetFormEventId(formId, eventId);
     FormRenderStatusTaskMgr::GetInstance().OnRenderFormDone(
         formId, FormFsmEvent::RENDER_FORM_DONE, eventId, formSupplyClient);
     FormRenderStatusTaskMgr::GetInstance().OnRecoverFormDone(
@@ -102,7 +100,7 @@ bool DoSomethingInterestingWithMyAPI(FuzzedDataProvider *fdp)
     FormRenderStatusTaskMgr::GetInstance().OnRecycleForm(
         formId, FormFsmEvent::RECYCLE_DATA_DONE, statusData, want, formSupplyClient);
     std::string queueStr = "FormRenderSerialQueue";
-    std::shared_ptr<FormRenderSerialQueue> serialQueue = std::make_unique<FormRenderSerialQueue>(queueStr);
+    std::shared_ptr<Common::FormBaseSerialQueue> serialQueue = std::make_shared<Common::FormBaseSerialQueue>(queueStr);
     FormRenderStatusTaskMgr::GetInstance().SetSerialQueue(serialQueue);
     FormRenderStatusTaskMgr::GetInstance().CancelRecycleTimeout(formId);
     FormRenderStatusTaskMgr::GetInstance().ScheduleRecycleTimeout(formId);

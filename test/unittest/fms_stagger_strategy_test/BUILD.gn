@@ -22,7 +22,6 @@ ohos_unittest("FmsStaggerStrategyTest") {
   sources = [
     "${form_fwk_path}/test/unittest/fms_stagger_strategy_test/fms_stagger_strategy_test.cpp",
     "${form_fwk_path}/test/mock/src/form_refresh/mock_form_refresh_mgr.cpp",
-    "${form_fwk_path}/test/mock/src/form_mgr/mock_form_mgr_queue.cpp",
     "${form_fwk_path}/test/mock/src/form_refresh/mock_refresh_control_mgr.cpp",
     "${form_fwk_path}/test/mock/src/form_refresh/mock_refresh_cache_mgr.cpp",
     "${form_fwk_path}/services/src/form_refresh/batch_refresh/strategy/default_stagger_strategy.cpp",
@@ -50,12 +49,14 @@ ohos_unittest("FmsStaggerStrategyTest") {
     "${form_fwk_path}:form_render_info",
     "${form_fwk_path}:form_utils",
     "${form_fwk_path}:form_common_info",
+    "${form_fwk_path}/services/common:libform_common",
   ]
   
   external_deps = [
     "ability_runtime:app_manager",
     "c_utils:utils",
     "ffrt:libffrt",
+    "hicollie:libhicollie",
     "hilog:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",

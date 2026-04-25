@@ -27,6 +27,7 @@ ohos_fuzztest("FormSyseventReceiverTwoFuzzTest") {
   include_dirs = [
     "${form_fwk_path}/interfaces/kits/native/include",
     "${form_fwk_path}/services/include",
+    "${form_fwk_path}/services/common/include",
   ]
   cflags = [
     "-g",

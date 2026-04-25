@@ -163,13 +163,6 @@ int64_t FormUtil::GetCurrentSteadyClockMillseconds()
         std::chrono::steady_clock::now().time_since_epoch()).count();
 }
 
-int64_t FormUtil::GetNowMillisecond()
-{
-    system_clock::time_point pointTime = system_clock::now();
-    auto timeMilliseconds = chrono::duration_cast<chrono::milliseconds>(pointTime.time_since_epoch());
-    return timeMilliseconds.count();
-}
-
 /**
  * @brief Get millisecond from tm.
  * @param tmAtTime tm time.

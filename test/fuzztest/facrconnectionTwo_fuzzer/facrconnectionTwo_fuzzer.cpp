@@ -51,10 +51,6 @@ bool DoSomethingInterestingWithMyAPI(FuzzedDataProvider *fdp)
     FormFsmEvent event = FormFsmEvent::RELOAD_FORM;
     std::function<int32_t()> func = []() { return 1; };
     FormRenderStatusMgr::GetInstance().PostFormEvent(formId, event, func);
-    FormRenderStatusMgr::GetInstance().GetFormEventId(formId);
-    std::string eventId = fdp->ConsumeRandomLengthString();
-    FormRenderStatusMgr::GetInstance().SetFormEventId(formId, eventId);
-    FormRenderStatusMgr::GetInstance().DeleteFormEventId(formId);
     FormFsmStatus status = FormFsmStatus::UNPROCESSABLE;
     FormFsmProcessType processType = fdp->ConsumeBool() ? FormFsmProcessType::PROCESS_TASK_DELETE
         : FormFsmProcessType::PROCESS_TASK_DIRECT;

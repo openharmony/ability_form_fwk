@@ -35,6 +35,7 @@
 #include "status_mgr_center/form_render_status_task_mgr.h"
 #include "status_mgr_center/form_render_status_mgr.h"
 #include "xcollie/watchdog.h"
+#include "util/form_time_util.h"
 
 namespace OHOS {
 namespace AppExecFwk {
@@ -95,7 +96,7 @@ const static std::unordered_set<std::string> CONFIG_ITEM_BLACK_LIST = { SYSTEM_M
 
 FormRenderServiceMgr::FormRenderServiceMgr()
 {
-    serialQueue_ = std::make_unique<FormRenderSerialQueue>(FORM_RENDER_SERIAL_QUEUE);
+    serialQueue_ = std::make_shared<Common::FormBaseSerialQueue>(FORM_RENDER_SERIAL_QUEUE);
     FormRenderStatusTaskMgr::GetInstance().SetSerialQueue(serialQueue_);
     appliedConfig_ = std::make_shared<AppExecFwk::Configuration>();
     mainHandler_ = std::make_shared<AppExecFwk::EventHandler>(AppExecFwk::EventRunner::GetMainEventRunner());
@@ -519,7 +520,7 @@ void FormRenderServiceMgr::OnConfigurationUpdatedInner()
     HILOG_INFO("OnConfigurationUpdated %{public}zu forms updated.", allFormCount);
     hasCachedConfig_ = false;
     PerformanceEventInfo eventInfo;
-    eventInfo.timeStamp = FormRenderEventReport::GetNowMillisecond();
+    eventInfo.timeStamp = Common::FormTimeUtil::GetNowMillisecond();
     eventInfo.bundleName = Constants::FRS_BUNDLE_NAME;
     eventInfo.sceneId = Constants::CPU_SCENE_ID_CONFIG_UPDATE;
     FormRenderEventReport::SendPerformanceEvent(SceneType::CPU_SCENE_ENTRY, eventInfo);

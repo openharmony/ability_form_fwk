@@ -37,6 +37,14 @@ constexpr int32_t MAX_NUM = 10000;
 constexpr int32_t MIN_NUM = 0;
 constexpr int32_t MAX_LOOP_COUNT = 10;
 
+class MockFormAbilityConnection : public FormAbilityConnection {
+public:
+    MockFormAbilityConnection() = default;
+    ~MockFormAbilityConnection() override = default;
+protected:
+    void OnExecuteConnectTask(const Want &want, const sptr<IRemoteObject> &remoteObject) override {}
+};
+
 void DoSomethingInterestingPart2(FuzzedDataProvider *fdp)
 {
     FormAmsHelper formAmsHelper;
@@ -86,7 +94,7 @@ bool DoSomethingInterestingWithMyAPI(FuzzedDataProvider *fdp)
         return true;
     }
 
-    FormAbilityConnection formAbilityConnection;
+    MockFormAbilityConnection formAbilityConnection;
     AppExecFwk::ElementName element;
     sptr<IRemoteObject> remoteObjects = nullptr;
     int resultCode = fdp->ConsumeIntegralInRange(MIN_NUM, MAX_NUM);
