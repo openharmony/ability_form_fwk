@@ -1829,7 +1829,7 @@ void FormDataMgr::GetNoHostTempForms(
             continue;
         }
 
-        FormIdKey formIdKey(itFormRecord->second.bundleName, itFormRecord->second.abilityFormName,
+        FormIdKey formIdKey(itFormRecord->second.bundleName, itFormRecord->second.abilityName,
             itFormRecord->second.moduleName);
         auto itIdsSet = noHostTempFormsMap.find(formIdKey);
         if (itIdsSet == noHostTempFormsMap.end()) {
