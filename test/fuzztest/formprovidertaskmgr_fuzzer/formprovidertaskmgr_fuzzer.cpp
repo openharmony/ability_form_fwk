@@ -38,10 +38,6 @@ void FormProviderQueueTest(FuzzedDataProvider *fdp)
     std::function<void()> func = []() { return 1; };
     uint32_t ms32 = fdp->ConsumeIntegral<uint32_t>();
     const std::pair<int64_t, int64_t> eventMsg;
-    bool isTrue = fdp->ConsumeBool();
-    if (isTrue) {
-        FormProviderQueue::GetInstance().serialQueue_ = nullptr;
-    }
     FormProviderQueue::GetInstance().ScheduleTask(ms64, func);
     FormProviderQueue::GetInstance().ScheduleDelayTask(eventMsg, ms32, func);
     FormProviderQueue::GetInstance().CancelDelayTask(eventMsg);

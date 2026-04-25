@@ -65,6 +65,13 @@ public:
 
     void UpdateFormRecord(const FormRecord &formRecord);
 
+protected:
+    /**
+     * @brief Empty implementation - FormRenderConnection uses its own OnAbilityConnectDone logic.
+     *        This class does NOT participate in the template method pattern refactoring.
+     */
+    void OnExecuteConnectTask(const Want &want, const sptr<IRemoteObject> &remoteObject) override {}
+
 private:
     enum class ConnectState {
         DISCONNECTED,

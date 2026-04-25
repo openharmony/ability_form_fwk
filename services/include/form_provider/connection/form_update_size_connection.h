@@ -17,12 +17,10 @@
 #define OHOS_FORM_FWK_FORM_UPDATE_SIZE_CONNECTION_H
 
 #include "common/connection/form_ability_connection.h"
-#include "want.h"
 #include "form_instance.h"
 
 namespace OHOS {
 namespace AppExecFwk {
-using Want = OHOS::AAFwk::Want;
 
 /**
  * @class FormUpdateSizeConnection
@@ -34,17 +32,22 @@ public:
         const int32_t newDimension, const Rect &newRect, const int32_t userId);
     virtual ~FormUpdateSizeConnection() = default;
 
+protected:
     /**
-     * @brief OnAbilityConnectDone, AbilityMs notify caller ability the result of connect.
-     * @param element service ability's ElementName.
-     * @param remoteObject the session proxy of service ability.
-     * @param resultCode ERR_OK on success, others on failure.
+     * @brief Whether freeInstall processing is needed.
+     *        Update size connection needs freeInstall processing.
+     * @return true.
      */
-    void OnAbilityConnectDone(const AppExecFwk::ElementName &element,
-        const sptr<IRemoteObject> &remoteObject, int resultCode) override;
+    bool NeedFreeInstallProcessing() const override { return true; }
+
+    /**
+     * @brief Execute size changed task after connection success.
+     * @param want Task Want parameter.
+     * @param remoteObject Remote object.
+     */
+    void OnExecuteConnectTask(const Want &want, const sptr<IRemoteObject> &remoteObject) override;
 
 private:
-    Want want_;
     int32_t newDimension_;
     Rect newRect_;
     DISALLOW_COPY_AND_MOVE(FormUpdateSizeConnection);

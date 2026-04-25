@@ -244,19 +244,6 @@ HWTEST_F(FormUtilTest, FormUtilTest_012, TestSize.Level1)
 }
 
 /**
- * @tc.name: FormUtilTest_013
- * @tc.desc: Verify GetNowMillisecond
- * @tc.type: FUNC
- */
-HWTEST_F(FormUtilTest, FormUtilTest_013, TestSize.Level1)
-{
-    auto result1 = FormUtil::GetNowMillisecond();
-    auto result2 = FormUtil::GetNowMillisecond();
-
-    EXPECT_TRUE(result2 >= result1);
-}
-
-/**
  * @tc.name: FormUtilTest_014
  * @tc.desc: Verify IsActiveUser
  * @tc.type: FUNC

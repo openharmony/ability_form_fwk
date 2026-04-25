@@ -22,11 +22,13 @@
 
 namespace OHOS {
 namespace AppExecFwk {
+using Want = OHOS::AAFwk::Want;
 using WantParams = OHOS::AAFwk::WantParams;
 
 /**
  * @class FormAbilityConnection
- * Form Ability Connection Stub.
+ * Form Ability Connection Stub. Uses template method pattern for connection handling.
+ * Note: FormRenderConnection does not participate in this refactoring and keeps original impl.
  */
 class FormAbilityConnection : public ProviderConnectStub {
 public:
@@ -35,11 +37,12 @@ public:
 
     /**
      * @brief OnAbilityConnectDone, AbilityMs notify caller ability the result of connect.
+     *        Template method that defines the connection workflow.
      * @param element service ability's ElementName.
      * @param remoteObject the session proxy of service ability.
      * @param resultCode ERR_OK on success, others on failure.
      */
-    virtual void OnAbilityConnectDone(
+    void OnAbilityConnectDone(
         const AppExecFwk::ElementName &element, const sptr<IRemoteObject> &remoteObject, int resultCode) override;
 
     /**
@@ -47,7 +50,7 @@ public:
      * @param element service ability's ElementName.
      * @param resultCode ERR_OK on success, others on failure.
      */
-    virtual void OnAbilityDisconnectDone(const AppExecFwk::ElementName &element, int resultCode) override;
+    void OnAbilityDisconnectDone(const AppExecFwk::ElementName &element, int resultCode) override;
 
     /**
      * @brief remote object died event.
@@ -56,14 +59,14 @@ public:
     void OnConnectDied(const wptr<IRemoteObject> &remoteObject);
 
     /**
-     * @brief onFormAppConnect, when ability connetDone.
+     * @brief onFormAppConnect, when ability connectDone.
      * @return result of onFormAppConnect.
-    */
+     */
     bool onFormAppConnect();
 
     /**
      * @brief Report Hisys FormApp UnbindEvent.
-    */
+     */
     void ReportFormAppUnbindEvent();
 
     /**
@@ -77,30 +80,29 @@ public:
      * @param connectId The ability connection id.
      */
     void SetConnectId(int32_t connectId);
+
     /**
-     * @brief Get the provider Key
-     *
-     * @return The provider Key
+     * @brief Get the provider Key.
+     * @return The provider Key.
      */
     std::string GetProviderKey() const;
+
     /**
-     * @brief Set the Provider Key
-     *
-     * @param bundleName bundleName
-     * @param abilityName abilityName
+     * @brief Set the Provider Key.
+     * @param bundleName bundleName.
+     * @param abilityName abilityName.
+     * @param userId userId.
      */
     void SetProviderKey(const std::string &bundleName, const std::string &abilityName, const int32_t userId);
 
     /**
      * @brief Set free install true or false.
-     *
      * @param isFreeInstall Indicates the free install flag is true or false.
      */
     void SetFreeInstall(bool isFreeInstall);
 
     /**
      * @brief Set form ID.
-     *
      * @param formId Indicates the form ID.
      */
     void SetFormId(int64_t formId);
@@ -123,7 +125,7 @@ public:
 
     /**
      * @brief Set provider token.
-     * @param hostToken Indicates the provider token.
+     * @param providerToken Indicates the provider token.
      */
     void SetProviderToken(const sptr<IRemoteObject> providerToken);
 
@@ -147,12 +149,80 @@ public:
      */
     int32_t GetAppFormPid();
 
+protected:
+    /**
+     * @brief Execute task after connection success - subclass must implement.
+     *        Different subclasses call different TaskMgr:
+     *        - Provider classes call FormProviderTaskMgr
+     *        - FormShareConnection calls FormShareTaskMgr
+     * @param want Task Want parameter.
+     * @param remoteObject Remote object.
+     */
+    virtual void OnExecuteConnectTask(const Want &want, const sptr<IRemoteObject> &remoteObject) = 0;
+
+    /**
+     * @brief Build task Want parameter - subclass can override.
+     *        Default implementation sets FORM_CONNECT_ID.
+     * @return Built Want object.
+     */
+    virtual Want OnBuildTaskWant();
+
+    /**
+     * @brief Pre-processing after connection success - subclass optional impl.
+     *        Used for pre-processing before task execution.
+     */
+    virtual void OnPreConnectTask() {}
+
+    /**
+     * @brief Error handling when connection fails - subclass optional impl.
+     *        FormShareConnection needs to send error response.
+     * @param resultCode Error code.
+     * @param element Connection element.
+     */
+    virtual void OnConnectError(int resultCode, const AppExecFwk::ElementName &element) {}
+
+    /**
+     * @brief Whether freeInstall processing is needed.
+     *        FormRefreshConnection/FormUpdateSizeConnection etc need it.
+     * @return true means need freeInstall processing.
+     */
+    virtual bool NeedFreeInstallProcessing() const { return false; }
+
+    /**
+     * @brief Whether register to FormSupplyCallback.
+     *        FormBackgroundConnection does not need register.
+     * @return true means need register.
+     */
+    virtual bool NeedRegisterToSupplyCallback() const { return true; }
+
 private:
     /**
      * @brief Get app manager proxy.
      * @return App manager proxy.
      */
     sptr<OHOS::AppExecFwk::IAppMgr> GetAppMgr();
+
+    /**
+     * @brief Validate connection result.
+     * @param resultCode Result code.
+     * @param element Connection element.
+     * @return true if valid.
+     */
+    bool ValidateResult(int resultCode, const AppExecFwk::ElementName &element);
+
+    /**
+     * @brief Register to FormSupplyCallback.
+     */
+    void RegisterToSupplyCallback();
+
+    /**
+     * @brief Process freeInstall logic.
+     * @param element Connection element.
+     * @param remoteObject Remote object.
+     * @param resultCode Result code.
+     */
+    void ProcessFreeInstall(const AppExecFwk::ElementName &element,
+        const sptr<IRemoteObject> &remoteObject, int resultCode);
 
     int64_t formId_ = -1;
     std::string deviceId_ = "";

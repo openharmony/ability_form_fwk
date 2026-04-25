@@ -233,20 +233,6 @@ HWTEST_F(FmsFormRefreshConnectionTest, FormSupplyCallback_002, TestSize.Level0)
 }
 
 /**
- * @tc.name: FormSupplyCallback_003
- * @tc.desc: test CanDisconnect function.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormRefreshConnectionTest, FormSupplyCallback_003, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FormSupplyCallback_003 start";
-    FormSupplyCallback formSupplyCallback;
-    sptr<FormAbilityConnection> connection = new (std::nothrow) FormAbilityConnection();
-    EXPECT_EQ(false, formSupplyCallback.CanDisconnect(connection));
-    GTEST_LOG_(INFO) << "FormSupplyCallback_003 end";
-}
-
-/**
  * @tc.name: FormShareConnection_001
  * @tc.desc: test OnAbilityConnectDone function.
  * @tc.type: FUNC

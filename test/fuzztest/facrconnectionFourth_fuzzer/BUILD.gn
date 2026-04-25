@@ -28,6 +28,7 @@ ohos_fuzztest("facrconnectionFourthFuzzTest") {
     "${form_fwk_path}/interfaces/kits/native/include",
     "${form_fwk_path}/services/form_render_service/include",
     "${form_fwk_path}/services/include",
+    "${form_fwk_path}/services/common/include",
   ]
   cflags = [
     "-g",
@@ -38,12 +39,15 @@ ohos_fuzztest("facrconnectionFourthFuzzTest") {
 
   sources = [
     "${form_fwk_path}/services/src/data_center/form_basic_info_mgr.cpp",
+    "${form_fwk_path}/services/common/src/queue/form_base_serial_queue.cpp",
+    "${form_fwk_path}/services/common/src/queue/form_singleton_queue_base.cpp",
     "facrconnectionFourth_fuzzer.cpp",
   ]
 
   deps = [
     "${form_fwk_path}:fms_target",
     "${form_fwk_path}:fmskit_native",
+    "${form_fwk_path}:form_manager",
     "${form_fwk_path}:form_render_info",
     "${form_fwk_path}:form_utils",
     "${form_fwk_path}:form_common_info",
@@ -63,7 +67,7 @@ ohos_fuzztest("facrconnectionFourthFuzzTest") {
     "common_event_service:cesfwk_core",
     "common_event_service:cesfwk_innerkits",
     "ffrt:libffrt",
-    "form_fwk:form_manager",
+    "hicollie:libhicollie",
     "hilog:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
