@@ -17,10 +17,6 @@
 
 #include "ability_manager_interface.h"
 #include "app_mgr_client.h"
-#include "common/util/form_util.h"
-#include "data_center/form_data_mgr.h"
-#include "data_center/form_record/form_record.h"
-#include "form_constants.h"
 #include "form_observer/form_resource_observer.h"
 #include "fms_log_wrapper.h"
 #include "form_mgr_errors.h"
