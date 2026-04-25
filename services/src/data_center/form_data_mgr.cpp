@@ -1829,7 +1829,8 @@ void FormDataMgr::GetNoHostTempForms(
             continue;
         }
 
-        FormIdKey formIdKey(itFormRecord->second.bundleName, itFormRecord->second.abilityName);
+        FormIdKey formIdKey(itFormRecord->second.bundleName, itFormRecord->second.abilityFormName,
+            itFormRecord->second.moduleName);
         auto itIdsSet = noHostTempFormsMap.find(formIdKey);
         if (itIdsSet == noHostTempFormsMap.end()) {
             std::set<int64_t> formIdsSet;
@@ -2214,7 +2215,7 @@ void FormDataMgr::GetNoHostInvalidTempForms(int32_t userId, int32_t callingUid, 
         HILOG_DEBUG("found invalid form:%{public}" PRId64 "", formId);
         formRecord.formUserUids.erase(iter);
         if (formRecord.formUserUids.empty()) {
-            FormIdKey formIdKey(formRecord.bundleName, formRecord.abilityName);
+            FormIdKey formIdKey(formRecord.bundleName, formRecord.abilityName, formRecord.moduleName);
             auto itIdsSet = noHostTempFormsMap.find(formIdKey);
             if (itIdsSet == noHostTempFormsMap.end()) {
                 std::set<int64_t> formIdsSet;
