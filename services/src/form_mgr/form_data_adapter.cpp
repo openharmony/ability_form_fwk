@@ -486,6 +486,9 @@ ErrCode FormDataAdapter::InnerAcquireProviderFormInfoAsync(const int64_t formId,
     }
     Want want;
     want.SetElementName(info.GetProviderBundleName(), info.GetAbilityName());
+    if (!info.GetModuleName().empty()) {
+        want.SetModuleName(info.GetModuleName());
+    }
     want.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbilityWithUserId(
         want, formAcquireConnection, record.providerUserId);

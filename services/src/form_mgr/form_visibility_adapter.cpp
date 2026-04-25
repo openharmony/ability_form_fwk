@@ -476,7 +476,10 @@ ErrCode FormVisibilityAdapter::HandleEventNotify(const std::string &providerKey,
     HILOG_INFO("call");
     size_t position = providerKey.find(Constants::NAME_DELIMITER);
     std::string bundleName = providerKey.substr(0, position);
-    std::string abilityName = providerKey.substr(position + strlen(Constants::NAME_DELIMITER));
+    size_t secondPosition = providerKey.find(Constants::NAME_DELIMITER, position + 1);
+    std::string abilityName = providerKey.substr(position + strlen(Constants::NAME_DELIMITER),
+        secondPosition - position - strlen(Constants::NAME_DELIMITER));
+    std::string moduleName = providerKey.substr(secondPosition + strlen(Constants::NAME_DELIMITER));
     sptr<IAbilityConnection> formEventNotifyConnection = new (std::nothrow) FormEventNotifyConnection(formIdsByProvider,
         formVisibleType, bundleName, abilityName, commonAdapter_->GetCallingUserId());
     if (formEventNotifyConnection == nullptr) {
@@ -487,6 +490,9 @@ ErrCode FormVisibilityAdapter::HandleEventNotify(const std::string &providerKey,
     Want connectWant;
     connectWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     connectWant.SetElementName(bundleName, abilityName);
+    if (!moduleName.empty()) {
+        connectWant.SetModuleName(moduleName);
+    }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(connectWant, formEventNotifyConnection);
     if (errorCode != ERR_OK) {
         HILOG_ERROR("ConnectServiceAbility failed");

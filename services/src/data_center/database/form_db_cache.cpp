@@ -365,8 +365,10 @@ void FormDbCache::BatchDeleteNoHostDBForms(int32_t callingUid, std::map<FormIdKe
         FormIdKey formIdKey = element.first;
         std::string bundleName = formIdKey.bundleName;
         std::string abilityName = formIdKey.abilityName;
+        std::string moduleName = formIdKey.moduleName;
         int32_t userId = FormUtil::GetCallerUserId(callingUid);
-        FormProviderMgr::GetInstance().NotifyProviderFormsBatchDelete(bundleName, abilityName, formIds, userId);
+        FormProviderMgr::GetInstance().NotifyProviderFormsBatchDelete(bundleName, abilityName, moduleName,
+            formIds, userId);
         for (const int64_t formId : formIds) {
             foundFormsMap.emplace(formId, true);
             FormDBInfo dbInfo;

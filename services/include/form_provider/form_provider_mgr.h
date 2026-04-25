@@ -113,12 +113,13 @@ public:
     /**
      * @brief Notify provider forms batch delete.
      * @param bundleName BundleName.
-     * @param bundleName AbilityName.
+     * @param abilityName AbilityName.
+     * @param moduleName ModuleName.
      * @param formIds form id list.
      * @return Returns ERR_OK on success, others on failure.
      */
     ErrCode NotifyProviderFormsBatchDelete(const std::string &bundleName, const std::string &abilityName,
-        const std::set<int64_t> &formIds, const int32_t userId);
+        const std::string &moduleName, const std::set<int64_t> &formIds, const int32_t userId);
     /**
      * @brief Acquire form state.
      * @param state form state.
