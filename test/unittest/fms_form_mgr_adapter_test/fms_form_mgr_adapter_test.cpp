@@ -1271,8 +1271,10 @@ HWTEST_F(FmsFormMgrAdapterTest, FormMgrAdapter_072, TestSize.Level0)
     formRecord.formVisibleNotify = true;
     formRecord.bundleName = "aa";
     formRecord.abilityName = "bb";
+    formRecord.moduleName = "";
     std::map<std::string, std::vector<int64_t>> eventMaps;
-    std::string providerKey = formRecord.bundleName + Constants::NAME_DELIMITER + formRecord.abilityName;
+    std::string providerKey = formRecord.bundleName + Constants::NAME_DELIMITER + formRecord.abilityName +
+        Constants::NAME_DELIMITER + formRecord.moduleName;
     std::vector<int64_t> matchedFormIds;
     matchedFormIds.emplace_back(matchedFormId);
     eventMaps.emplace(providerKey, matchedFormIds);

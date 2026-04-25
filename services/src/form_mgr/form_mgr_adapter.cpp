@@ -1389,6 +1389,9 @@ ErrCode FormMgrAdapter::HandleCastTempForm(const int64_t formId, const FormRecor
     Want want;
     want.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     want.SetElementName(record.bundleName, record.abilityName);
+    if (!record.moduleName.empty()) {
+        want.SetModuleName(record.moduleName);
+    }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(want, castTempConnection);
     if (errorCode != ERR_OK) {
         HILOG_ERROR("ConnectServiceAbility failed");
@@ -1935,7 +1938,10 @@ ErrCode FormMgrAdapter::HandleEventNotify(const std::string &providerKey, const 
     HILOG_INFO("call");
     size_t position = providerKey.find(Constants::NAME_DELIMITER);
     std::string bundleName = providerKey.substr(0, position);
-    std::string abilityName = providerKey.substr(position + strlen(Constants::NAME_DELIMITER));
+    size_t secondPosition = providerKey.find(Constants::NAME_DELIMITER, position + 1);
+    std::string abilityName = providerKey.substr(position + strlen(Constants::NAME_DELIMITER),
+        secondPosition - position - strlen(Constants::NAME_DELIMITER));
+    std::string moduleName = providerKey.substr(secondPosition + strlen(Constants::NAME_DELIMITER));
     sptr<IAbilityConnection> formEventNotifyConnection = new (std::nothrow) FormEventNotifyConnection(formIdsByProvider,
         formVisibleType, bundleName, abilityName, GetCallingUserId());
     if (formEventNotifyConnection == nullptr) {
@@ -1945,6 +1951,9 @@ ErrCode FormMgrAdapter::HandleEventNotify(const std::string &providerKey, const 
     Want connectWant;
     connectWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     connectWant.SetElementName(bundleName, abilityName);
+    if (!moduleName.empty()) {
+        connectWant.SetModuleName(moduleName);
+    }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(connectWant, formEventNotifyConnection);
     if (errorCode != ERR_OK) {
         HILOG_ERROR("ConnectServiceAbility failed");
@@ -3214,7 +3223,8 @@ bool FormMgrAdapter::CreateHandleEventMap(const int64_t matchedFormId, const For
         return false;
     }
 
-    std::string providerKey = formRecord.bundleName + Constants::NAME_DELIMITER + formRecord.abilityName;
+    std::string providerKey = formRecord.bundleName + Constants::NAME_DELIMITER + formRecord.abilityName +
+        Constants::NAME_DELIMITER + formRecord.moduleName;
     auto iter = eventMaps.find(providerKey);
     if (iter == eventMaps.end()) {
         std::vector<int64_t> formEventsByProvider {matchedFormId};
@@ -3440,6 +3450,7 @@ int FormMgrAdapter::AcquireFormState(const Want &want, const sptr<IRemoteObject>
     }
     std::string bundleName = want.GetElement().GetBundleName();
     std::string abilityName = want.GetElement().GetAbilityName();
+    std::string moduleName = want.GetElement().GetModuleName();
 
     std::string provider;
     ErrCode errCode = AcquireFormStateCheck(bundleName, abilityName, want, provider);
@@ -3451,7 +3462,8 @@ int FormMgrAdapter::AcquireFormState(const Want &want, const sptr<IRemoteObject>
     FormItemInfo info;
     FormDataMgr::GetInstance().CreateFormStateRecord(provider, info, callerToken, callingUid);
 
-    HILOG_DEBUG("bundleName:%{public}s, abilityName:%{public}s", bundleName.c_str(), abilityName.c_str());
+    HILOG_DEBUG("bundleName:%{public}s, abilityName:%{public}s, moduleName:%{public}s", bundleName.c_str(),
+        abilityName.c_str(), moduleName.c_str());
     int32_t userId = FormUtil::GetCallerUserId(callingUid);
     sptr<IAbilityConnection> connection =
         new (std::nothrow) FormAcquireStateConnection(bundleName, abilityName, want, provider, userId);
@@ -3462,6 +3474,9 @@ int FormMgrAdapter::AcquireFormState(const Want &want, const sptr<IRemoteObject>
     Want targetWant;
     targetWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     targetWant.SetElementName(bundleName, abilityName);
+    if (!moduleName.empty()) {
+        targetWant.SetModuleName(moduleName);
+    }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(targetWant, connection);
     if (errorCode != ERR_OK) {
         HILOG_ERROR("ConnectServiceAbility failed");
@@ -3482,8 +3497,10 @@ int FormMgrAdapter::AcquireFormData(int64_t formId, int64_t requestCode, const s
     }
     std::string bundleName = formRecord.bundleName;
     std::string abilityName = formRecord.abilityName;
+    std::string moduleName = formRecord.moduleName;
 
-    HILOG_DEBUG("bundleName:%{public}s, abilityName:%{public}s", bundleName.c_str(), abilityName.c_str());
+    HILOG_DEBUG("bundleName:%{public}s, abilityName:%{public}s, moduleName:%{public}s", bundleName.c_str(),
+        abilityName.c_str(), moduleName.c_str());
     int32_t callingUid = IPCSkeleton::GetCallingUid();
     int32_t userId = FormUtil::GetCallerUserId(callingUid);
     FormItemInfo info;
@@ -3497,6 +3514,9 @@ int FormMgrAdapter::AcquireFormData(int64_t formId, int64_t requestCode, const s
     Want targetWant;
     targetWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     targetWant.SetElementName(bundleName, abilityName);
+    if (!moduleName.empty()) {
+        targetWant.SetModuleName(moduleName);
+    }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(targetWant, connection);
     if (errorCode != ERR_OK) {
         HILOG_ERROR("ConnectServiceAbility failed");

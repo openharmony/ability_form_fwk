@@ -2245,8 +2245,10 @@ void FormDataMgr::BatchDeleteNoHostTempForms(int32_t callingUid, std::map<FormId
         std::set<int64_t> &formIdsSet = noHostTempForm.second;
         std::string bundleName = formIdKey.bundleName;
         std::string abilityName = formIdKey.abilityName;
+        std::string moduleName = formIdKey.moduleName;
         int32_t userId = FormUtil::GetCallerUserId(callingUid);
-        FormProviderMgr::GetInstance().NotifyProviderFormsBatchDelete(bundleName, abilityName, formIdsSet, userId);
+        FormProviderMgr::GetInstance().NotifyProviderFormsBatchDelete(bundleName, abilityName, moduleName,
+            formIdsSet, userId);
         for (int64_t formId: formIdsSet) {
             foundFormsMap.emplace(formId, true);
             StopRenderingForm(formId);

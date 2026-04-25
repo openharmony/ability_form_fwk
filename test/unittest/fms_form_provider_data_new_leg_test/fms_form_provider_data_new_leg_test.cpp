@@ -638,10 +638,11 @@ HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_005, TestSize.Level0)
     FormProviderMgr formProviderMgr;
     std::string bundleName = "";
     std::string abilityName = "";
+    std::string moduleName = "";
     std::set<int64_t> formIds;
     int32_t userId = 100;
     EXPECT_EQ(ERR_APPEXECFWK_FORM_INVALID_PARAM,
-        formProviderMgr.NotifyProviderFormsBatchDelete(bundleName, abilityName, formIds, userId));
+        formProviderMgr.NotifyProviderFormsBatchDelete(bundleName, abilityName, moduleName, formIds, userId));
     GTEST_LOG_(INFO) << "FormProviderMgr_005 end";
 }
 
@@ -656,10 +657,11 @@ HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_006, TestSize.Level0)
     FormProviderMgr formProviderMgr;
     std::string bundleName = "";
     std::string abilityName = "aa";
+    std::string moduleName = "";
     std::set<int64_t> formIds;
     int32_t userId = 100;
     EXPECT_EQ(ERR_APPEXECFWK_FORM_INVALID_PARAM,
-        formProviderMgr.NotifyProviderFormsBatchDelete(bundleName, abilityName, formIds, userId));
+        formProviderMgr.NotifyProviderFormsBatchDelete(bundleName, abilityName, moduleName, formIds, userId));
     GTEST_LOG_(INFO) << "FormProviderMgr_006 end";
 }
 
@@ -674,11 +676,12 @@ HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_007, TestSize.Level0)
     FormProviderMgr formProviderMgr;
     std::string bundleName = "bb";
     std::string abilityName = "aa";
+    std::string moduleName = "";
     std::set<int64_t> formIds;
     int32_t userId = 100;
     MockConnectServiceAbility(false);
     EXPECT_EQ(ERR_APPEXECFWK_FORM_BIND_PROVIDER_FAILED,
-        formProviderMgr.NotifyProviderFormsBatchDelete(bundleName, abilityName, formIds, userId));
+        formProviderMgr.NotifyProviderFormsBatchDelete(bundleName, abilityName, moduleName, formIds, userId));
     GTEST_LOG_(INFO) << "FormProviderMgr_007 end";
 }
 
@@ -898,10 +901,12 @@ HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_020, TestSize.Level1)
     FormProviderMgr formProviderMgr;
     std::string bundleName = "bb";
     std::string abilityName = "aa";
+    std::string moduleName = "";
     std::set<int64_t> formIds;
     int32_t userId = 100;
     MockConnectServiceAbility(true);
-    EXPECT_EQ(ERR_OK, formProviderMgr.NotifyProviderFormsBatchDelete(bundleName, abilityName, formIds, userId));
+    EXPECT_EQ(ERR_OK, formProviderMgr.NotifyProviderFormsBatchDelete(bundleName, abilityName, moduleName, formIds,
+        userId));
     GTEST_LOG_(INFO) << "FormProviderMgr_020 end";
 }
 
