@@ -97,6 +97,7 @@ public:
     ErrCode EnableForms(const std::string &bundleName, const int32_t userId, const bool enable);
     ErrCode ProtectLockForms(const std::string &bundleName, int32_t userId, const bool protect);
     ErrCode RecoverForms(const std::vector<int64_t> &formIds, const Want &want);
+    int32_t RecycleForms(const std::vector<int64_t> &formIds, const Want &want, bool isCheckCallingUid);
     ErrCode SwitchLockForms(const std::string &bundleName, int32_t userId, const bool lock);
     ErrCode BatchNotifyFormsConfigurationUpdate(const AppExecFwk::Configuration &configuration);
 

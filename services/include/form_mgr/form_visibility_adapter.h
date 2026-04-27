@@ -62,8 +62,6 @@ public:
 
     int32_t SetFormsRecyclable(const std::vector<int64_t> &formIds);
 
-    int32_t RecycleForms(const std::vector<int64_t> &formIds, const Want &want, bool isCheckCallingUid);
-
     int32_t NotifyFormLocked(const int64_t &formId, bool isLocked);
 
     void PaddingNotifyVisibleFormsMap(const int32_t formVisibleType, int64_t formId,

@@ -602,65 +602,6 @@ int32_t FormVisibilityAdapter::SetFormsRecyclable(const std::vector<int64_t> &fo
     return ERR_OK;
 }
 
-int32_t FormVisibilityAdapter::RecycleForms(const std::vector<int64_t> &formIds,
-    const Want &want, bool isCheckCallingUid)
-{
-    FormRecord record;
-    std::vector<int64_t> validFormIds;
-    int callingUid = IPCSkeleton::GetCallingUid();
-    for (int64_t formId : formIds) {
-        if (formId <= 0) {
-            HILOG_ERROR("form id is negative");
-            continue;
-        }
-
-        int64_t matchedFormId = FormDataMgr::GetInstance().FindMatchedFormId(formId);
-        if (!FormDataMgr::GetInstance().GetFormRecord(matchedFormId, record)) {
-            HILOG_WARN("form %{public}" PRId64 " not exist", formId);
-            continue;
-        }
-        if (record.formTempFlag) {
-            HILOG_WARN("form %{public}" PRId64 " is temp form", formId);
-            continue;
-        }
-        if (!record.isDynamic) {
-            HILOG_WARN("form %{public}" PRId64 " is static form", formId);
-            continue;
-        }
-        if (record.uiSyntax != FormType::ETS) {
-            HILOG_WARN("form %{public}" PRId64 " not ETS form", formId);
-            continue;
-        }
-        if (record.lowMemoryRecycleStatus != LowMemoryRecycleStatus::RECYCLABLE) {
-            HILOG_WARN("form %{public}" PRId64 " is not RECYCLABLE", formId);
-            continue;
-        }
-        if (FormStatus::GetInstance().IsFormProcessRecycle(formId)) {
-            HILOG_WARN("form %{public}" PRId64 " is already RECYCLED", formId);
-            continue;
-        }
-        if (isCheckCallingUid && std::find(record.formUserUids.begin(), record.formUserUids.end(), callingUid) ==
-            record.formUserUids.end()) {
-            HILOG_WARN("form %{public}" PRId64 " not owned by %{public}d", formId, callingUid);
-            continue;
-        }
-        if (!isCheckCallingUid && callingUid < Constants::CALLING_UID_TRANSFORM_DIVISOR) {
-            callingUid = *(record.formUserUids.begin());
-        }
-        validFormIds.emplace_back(matchedFormId);
-        HILOG_INFO("formId:%{public}" PRId64 " recyclable", formId);
-    }
-
-    if (validFormIds.empty()) {
-        HILOG_WARN("empty validFormIds");
-        return ERR_APPEXECFWK_FORM_INVALID_PARAM;
-    }
-
-    FormDataMgr::GetInstance().SetExpectRecycledStatus(validFormIds, true);
-    FormDataMgr::GetInstance().RecycleForms(validFormIds, callingUid, want);
-    return ERR_OK;
-}
-
 int32_t FormVisibilityAdapter::NotifyFormLocked(const int64_t &formId, bool isLocked)
 {
     FormRecord formRecord;

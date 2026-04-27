@@ -301,7 +301,7 @@ int32_t FormMgrAdapterFacade::RecycleForms(const std::vector<int64_t> &formIds, 
     bool isCheckCallingUid)
 {
     HILOG_INFO("FormMgrAdapterFacade::RecycleForms called, formIds size:%{public}zu", formIds.size());
-    return FormVisibilityAdapter::GetInstance().RecycleForms(formIds, want, isCheckCallingUid);
+    return FormLifecycleAdapter::GetInstance().RecycleForms(formIds, want, isCheckCallingUid);
 }
 
 int32_t FormMgrAdapterFacade::NotifyFormLocked(const int64_t &formId, bool isLocked)
