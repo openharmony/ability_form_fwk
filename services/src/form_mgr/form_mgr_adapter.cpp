@@ -1942,7 +1942,7 @@ ErrCode FormMgrAdapter::HandleEventNotify(const std::string &providerKey, const 
         return ERR_APPEXECFWK_FORM_COMMON_CODE;
     }
     std::string bundleName = providerKey.substr(0, position);
-    size_t delimiterLength = Constants::NAME_DELIMITER.size();
+    size_t delimiterLength = std::strlen(Constants::NAME_DELIMITER);
     size_t secondPosition = providerKey.find(Constants::NAME_DELIMITER, position + delimiterLength);
     if (secondPosition == std::string::npos) {
         HILOG_ERROR("No second delimiter found");
