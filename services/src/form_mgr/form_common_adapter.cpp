@@ -775,7 +775,6 @@ void FormCommonAdapter::UpdateFormCloudUpdateDuration(const std::string &bundleN
     }
 
     auto durationArray = FormUtil::ParseFormUpdateLevels(additionalInfo);
-
     if (durationArray.empty()) {
         HILOG_INFO("No valid formUpdateLevel in additionalInfo");
         formDataMgr_->RemoveFormCloudUpdateDuration(bundleName);
