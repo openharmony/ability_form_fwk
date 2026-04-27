@@ -331,7 +331,7 @@ void FormPublishAdapter::IncreaseAddFormRequestTimeOutTask(const int64_t formId)
             formId));
     };
     serialQueue_->ScheduleDelayTask(std::make_pair(static_cast<int64_t>(AddFormTaskType::ADD_FORM_TIMER), formId),
-        ADD_FORM_REQUEST_TIMTOUT_PERIOD, timerTask);
+        ADD_FORM_REQUEST_TIMEOUT_PERIOD, timerTask);
 }
 
 void FormPublishAdapter::CancelAddFormRequestTimeOutTask(const int64_t formId, const int result)
