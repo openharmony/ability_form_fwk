@@ -295,7 +295,7 @@ ani_enum_item CreateSceneAnimationTriggerType(ani_env *env, AppExecFwk::SceneAni
     status = env->Enum_GetEnumItemByIndex(triggerTypeEnum, static_cast<ani_size>(((int)triggerType) - 1), &item);
     if (status != ANI_OK) {
         HILOG_INFO("Cannot get enum item");
-        return nullptr;  
+        return nullptr;
     }
     return item;
 }
