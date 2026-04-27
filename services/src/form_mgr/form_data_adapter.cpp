@@ -14,9 +14,7 @@
  */
 #include "form_mgr/form_data_adapter.h"
 
-#include <algorithm>
-#include <cinttypes>
-#include <regex>
+#include <chrono>
 
 #include "ability_manager_errors.h"
 #include "bundle_info.h"
@@ -60,16 +58,11 @@
 #include "form_refresh/strategy/refresh_cache_mgr.h"
 #include "form_render/form_render_mgr.h"
 
+#include "form_mgr/form_adapter_constants.h"
+
 namespace OHOS {
 namespace AppExecFwk {
-namespace {
-constexpr int32_t SYSTEM_UID = 1000;
-constexpr int32_t API_11 = 11;
-constexpr int DATA_FIELD = 1;
-constexpr int FORM_UPDATE_LEVEL_VALUE_MAX_LENGTH = 3; // update level is 1~336, so max length is 3.
-constexpr const char *POINT_ETS = ".ets";
-constexpr int32_t MAX_RECONNECT_NUMS = 4;
-}
+using namespace FormAdapterConstants;
 
 FormDataAdapter::FormDataAdapter()
 {
@@ -656,16 +649,16 @@ ErrCode FormDataAdapter::UpdateFormByCondition(int32_t type)
         return ERR_APPEXECFWK_FORM_NOT_EXIST_ID;
     }
 
-    std::string reportStr = "";
+    std::string reportStr;
+    reportStr.reserve(formInfos.size() * 50); // Pre-allocate for batch concatenation
 
     std::vector<RefreshData> batch;
-    for (FormRecord& formRecord : formInfos) {
+    for (const FormRecord& formRecord : formInfos) {
         RefreshData data;
         data.formId = formRecord.formId;
         data.record = formRecord;
         batch.push_back(data);
-        std::string str = formRecord.bundleName + "_" + formRecord.formName;
-        reportStr += str;
+        reportStr.append(formRecord.bundleName).append("_").append(formRecord.formName);
     }
     FormRefreshMgr::GetInstance().BatchRequestRefresh(TYPE_NETWORK, StaggerStrategyType::VISIBLE_DELAY, batch);
     std::string subStr = reportStr.substr(0, std::min((int)reportStr.size(), 30));
@@ -767,22 +760,7 @@ int64_t FormDataAdapter::GetUpdateDurationFromAdditionalInfo(const std::string &
         return 0;
     }
 
-    std::regex regex(R"(formUpdateLevel:(\d+))");
-    std::smatch searchResult;
-    std::string::const_iterator iterStart = additionalInfo.begin();
-    std::string::const_iterator iterEnd = additionalInfo.end();
-    std::vector<int> durationArray;
-    while (std::regex_search(iterStart, iterEnd, searchResult, regex)) {
-        iterStart = searchResult[0].second;
-        if (searchResult[DATA_FIELD].str().length() > FORM_UPDATE_LEVEL_VALUE_MAX_LENGTH) {
-            continue;
-        }
-        int val = FormUtil::ConvertStringToInt(searchResult[DATA_FIELD].str());
-        if (val >= Constants::MIN_CONFIG_DURATION && val <= Constants::MAX_CONFIG_DURATION) {
-            durationArray.emplace_back(val);
-        }
-    }
-
+    auto durationArray = FormUtil::ParseFormUpdateLevels(additionalInfo);
     if (durationArray.empty()) {
         return 0;
     }

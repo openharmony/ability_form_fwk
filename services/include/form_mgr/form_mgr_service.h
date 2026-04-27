@@ -16,6 +16,8 @@
 #ifndef OHOS_FORM_FWK_FORM_MGR_SERVICE_H
 #define OHOS_FORM_FWK_FORM_MGR_SERVICE_H
 
+#include <string_view>
+
 #include <singleton.h>
 #include <system_ability.h>
 
@@ -989,7 +991,7 @@ private:
     ErrCode Init();
 
     ErrCode CheckFormPermission(
-        const std::string &permission = AppExecFwk::Constants::PERMISSION_REQUIRE_FORM, bool checkSA = false);
+        std::string_view permission = AppExecFwk::Constants::PERMISSION_REQUIRE_FORM, bool checkSA = false);
 
     bool CheckAcrossLocalAccountsPermission() const;
 

@@ -1146,21 +1146,23 @@ ErrCode FormLifecycleAdapter::BatchNotifyFormsConfigurationUpdate(const AppExecF
     HILOG_INFO("getRecords visible size:%{public}zu, invisible size:%{public}zu",
         visibleFormRecords.size(), invisibleFormRecords.size());
     Want reqWant;
-    for (auto formRecord : visibleFormRecords) {
-        if (notified.find(formRecord.bundleName + formRecord.abilityName) != notified.end()) {
+    for (const auto &formRecord : visibleFormRecords) {
+        std::string key = formRecord.bundleName + formRecord.abilityName;
+        if (notified.find(key) != notified.end()) {
             continue;
         }
-        notified.insert(formRecord.bundleName + formRecord.abilityName);
+        notified.insert(std::move(key));
         FormProviderMgr::GetInstance().ConnectForConfigUpdate(configuration, formRecord, reqWant);
     }
-    for (auto formRecord : invisibleFormRecords) {
-        if (notified.find(formRecord.bundleName + formRecord.abilityName) != notified.end()) {
+    for (const auto &formRecord : invisibleFormRecords) {
+        std::string key = formRecord.bundleName + formRecord.abilityName;
+        if (notified.find(key) != notified.end()) {
             continue;
         }
-        notified.insert(formRecord.bundleName + formRecord.abilityName);
+        notified.insert(std::move(key));
         FormProviderMgr::GetInstance().ConnectForConfigUpdate(configuration, formRecord, reqWant);
     }
-return ERR_OK;
+    return ERR_OK;
 }
 
 // Implementation of AddRequestPublishForm

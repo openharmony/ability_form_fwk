@@ -14,6 +14,7 @@
  */
 
 #include "form_mgr/form_debug_adapter.h"
+#include "form_mgr/form_adapter_constants.h"
 
 #include "accesstoken_kit.h"
 #include "app_state_data.h"
@@ -37,6 +38,7 @@
 
 namespace OHOS {
 namespace AppExecFwk {
+using namespace FormAdapterConstants;
 
 FormDebugAdapter::FormDebugAdapter()
 {

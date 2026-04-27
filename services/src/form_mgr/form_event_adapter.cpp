@@ -42,19 +42,14 @@
 #include "form_provider/connection/form_background_connection.h"
 #include "form_provider/form_provider_mgr.h"
 
+#include "form_mgr/form_adapter_constants.h"
+
 namespace OHOS {
 namespace AppExecFwk {
+using namespace FormAdapterConstants;
 namespace {
-// Form click event type constants (string type, same as FormMgrAdapter)
-constexpr const char *EMPTY_BUNDLE = "";
-constexpr const char *FORM_CLICK_ROUTER = "router";
-constexpr const char *FORM_CLICK_MESSAGE = "message";
-constexpr const char *FORM_CLICK_CALL = "call";
-
-// Max number for JS form ID check
+// Local-only constants (different value from form_mgr_adapter.cpp)
 constexpr int64_t MAX_NUMBER_OF_JS = 100000000000000L;
-
-// Free install calling uid parameter key
 constexpr const char* PARAM_FREE_INSTALL_CALLING_UID = "ohos.extra.param.key.free_install_calling_uid";
 } // namespace
 

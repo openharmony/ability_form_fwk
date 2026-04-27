@@ -73,8 +73,8 @@ ErrCode FormVisibilityAdapter::NotifyWhetherVisibleForms(const std::vector<int64
     int64_t matchedFormId = 0;
     int callingUid = IPCSkeleton::GetCallingUid();
     int32_t userId = FormUtil::GetCallerUserId(callingUid);
-    std::map<std::string, std::vector<int64_t>> eventMaps = {};
-    std::map<std::string, std::vector<FormInstance>> formInstanceMaps;
+    std::unordered_map<std::string, std::vector<int64_t>> eventMaps = {};
+    std::unordered_map<std::string, std::vector<FormInstance>> formInstanceMaps;
     std::vector<int64_t> checkFormIds;
     std::vector<FormRecord> needRefreshRecords;
 
@@ -189,7 +189,7 @@ void FormVisibilityAdapter::SetVisibleChange(const int64_t formId, const int32_t
 }
 
 void FormVisibilityAdapter::PaddingNotifyVisibleFormsMap(const int32_t formVisibleType, int64_t formId,
-    std::map<std::string, std::vector<FormInstance>> &formInstanceMaps)
+    std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps)
 {
     std::string specialFlag = "#";
     bool isVisibility = (formVisibleType == static_cast<int32_t>(FormVisibilityType::VISIBLE));
@@ -201,9 +201,10 @@ void FormVisibilityAdapter::PaddingNotifyVisibleFormsMap(const int32_t formVisib
         return;
     }
     std::lock_guard<std::mutex> lock(formObserversMutex_);
-    for (auto formObserver : formObservers_) {
-        if (formObserver.first == formHostName + specialFlag + std::to_string(isVisibility) ||
-            formObserver.first == formAllHostName + specialFlag + std::to_string(isVisibility)) {
+    std::string visibleKey = formHostName + specialFlag + std::to_string(isVisibility);
+    std::string allHostKey = formAllHostName + specialFlag + std::to_string(isVisibility);
+    for (const auto &formObserver : formObservers_) {
+        if (formObserver.first == visibleKey || formObserver.first == allHostKey) {
             auto observer = formInstanceMaps.find(formObserver.first);
             if (observer == formInstanceMaps.end()) {
                 std::vector<FormInstance> formInstances;
@@ -218,21 +219,23 @@ void FormVisibilityAdapter::PaddingNotifyVisibleFormsMap(const int32_t formVisib
 }
 
 void FormVisibilityAdapter::HandlerNotifyWhetherVisibleForms(const std::vector<int64_t> &formIds,
-    std::map<std::string, std::vector<FormInstance>> formInstanceMaps,
-    std::map<std::string, std::vector<int64_t>> eventMaps, const int32_t formVisibleType,
+    const std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps,
+    const std::unordered_map<std::string, std::vector<int64_t>> &eventMaps, const int32_t formVisibleType,
     const sptr<IRemoteObject> &callerToken)
 {
     HILOG_INFO("start, formVisibleType:%{public}d", formVisibleType);
-    FilterDataByVisibleType(formInstanceMaps, eventMaps, formVisibleType);
-    std::map<std::string, std::vector<sptr<IRemoteObject>>> formObserversTemp;
+    auto localFormInstanceMaps = formInstanceMaps;
+    auto localEventMaps = eventMaps;
+    FilterDataByVisibleType(localFormInstanceMaps, localEventMaps, formVisibleType);
+    std::unordered_map<std::string, std::vector<sptr<IRemoteObject>>> formObserversTemp;
     {
         std::lock_guard<std::mutex> lock(formObserversMutex_);
         formObserversTemp = formObservers_;
     }
     for (auto const &formObserver : formObserversTemp) {
-        NotifyWhetherFormsVisible(formObserver.first, formObserver.second, formInstanceMaps, formVisibleType);
+        NotifyWhetherFormsVisible(formObserver.first, formObserver.second, localFormInstanceMaps, formVisibleType);
     }
-    for (auto iter = eventMaps.begin(); iter != eventMaps.end(); iter++) {
+    for (auto iter = localEventMaps.begin(); iter != localEventMaps.end(); iter++) {
         if (HandleEventNotify(iter->first, iter->second, formVisibleType) != ERR_OK) {
             HILOG_WARN("HandleEventNotify error, key is %{public}s", iter->first.c_str());
         }
@@ -266,7 +269,7 @@ void FormVisibilityAdapter::HandlerNotifyWhetherVisibleForms(const std::vector<i
 
 void FormVisibilityAdapter::NotifyWhetherFormsVisible(const std::string &bundleName,
     const std::vector<sptr<IRemoteObject>> &remoteObjects,
-    std::map<std::string, std::vector<FormInstance>> &formInstanceMaps, const int32_t formVisibleType)
+    std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps, const int32_t formVisibleType)
 {
     HILOG_DEBUG("bundleName:%{public}s, remoteObjects:%{public}d", bundleName.c_str(), (int)remoteObjects.size());
     for (auto remoteObject : remoteObjects) {
@@ -285,8 +288,9 @@ void FormVisibilityAdapter::NotifyWhetherFormsVisible(const std::string &bundleN
     }
 }
 
-void FormVisibilityAdapter::FilterDataByVisibleType(std::map<std::string, std::vector<FormInstance>> &formInstanceMaps,
-    std::map<std::string, std::vector<int64_t>> &eventMaps, const int32_t formVisibleType)
+void FormVisibilityAdapter::FilterDataByVisibleType(
+    std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps,
+    std::unordered_map<std::string, std::vector<int64_t>> &eventMaps, const int32_t formVisibleType)
 {
     HILOG_DEBUG("start");
     std::map<int64_t, FormRecord> restoreFormRecords;
@@ -304,7 +308,7 @@ void FormVisibilityAdapter::FilterDataByVisibleType(std::map<std::string, std::v
 }
 
 void FormVisibilityAdapter::FilterFormInstanceMapsByVisibleType(
-    std::map<std::string, std::vector<FormInstance>> &formInstanceMaps,
+    std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps,
     const int32_t formVisibleType, std::map<int64_t, FormRecord> &restoreFormRecords)
 {
     for (auto iter = formInstanceMaps.begin(); iter != formInstanceMaps.end();) {
@@ -343,7 +347,8 @@ void FormVisibilityAdapter::FilterFormInstanceMapsByVisibleType(
     }
 }
 
-void FormVisibilityAdapter::FilterEventMapsByVisibleType(std::map<std::string, std::vector<int64_t>> &eventMaps,
+void FormVisibilityAdapter::FilterEventMapsByVisibleType(
+    std::unordered_map<std::string, std::vector<int64_t>> &eventMaps,
     const int32_t formVisibleType, std::map<int64_t, FormRecord> &restoreFormRecords)
 {
     for (auto iter = eventMaps.begin(); iter != eventMaps.end();) {
@@ -448,7 +453,7 @@ bool FormVisibilityAdapter::UpdateProviderInfoToHost(const int64_t &matchedFormI
 }
 
 bool FormVisibilityAdapter::CreateHandleEventMap(const int64_t matchedFormId, const FormRecord &formRecord,
-    std::map<std::string, std::vector<int64_t>> &eventMaps)
+    std::unordered_map<std::string, std::vector<int64_t>> &eventMaps)
 {
     if (!formRecord.formVisibleNotify) {
         HILOG_WARN("the config 'formVisibleNotify' is false, formId:%{public}" PRId64 ".",
@@ -494,8 +499,8 @@ ErrCode FormVisibilityAdapter::HandleEventNotify(const std::string &providerKey,
 }
 
 void FormVisibilityAdapter::PostVisibleNotify(const std::vector<int64_t> &formIds,
-    std::map<std::string, std::vector<FormInstance>> &formInstanceMaps,
-    std::map<std::string, std::vector<int64_t>> &eventMaps,
+    std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps,
+    std::unordered_map<std::string, std::vector<int64_t>> &eventMaps,
     const int32_t formVisibleType, int32_t visibleNotifyDelay,
     const sptr<IRemoteObject> &callerToken)
 {
