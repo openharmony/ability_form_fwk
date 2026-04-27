@@ -746,7 +746,7 @@ ErrCode FormProviderMgr::ConnectAmsUpdateSize(const int32_t newDimension,
     Want connectWant;
     connectWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     connectWant.SetElementName(record.bundleName, record.abilityName);
-    if (record.moduleName.empty()) {
+    if (!record.moduleName.empty()) {
         connectWant.SetModuleName(record.moduleName);
     }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(connectWant, formUpdateSizeConnection);

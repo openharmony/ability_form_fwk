@@ -226,7 +226,7 @@ HWTEST_F(FmsFormMgrAdapterTest3, FormMgrAdapter_0250, TestSize.Level0)
     std::map<std::string, std::vector<FormInstance>> formInstanceMaps;
     std::map<std::string, std::vector<int64_t>> eventMaps;
     int32_t formVisibleType = static_cast<int32_t>(FormVisibilityType::VISIBLE);
-    std::string eventMapFirst = "eventMapFirst";
+    std::string eventMapFirst = "bundleName:abilityName:moduleName";
     eventMaps[eventMapFirst] = {0};
     std::string bundleName = "bundleName";
     std::vector<sptr<IRemoteObject>> formObserver;
