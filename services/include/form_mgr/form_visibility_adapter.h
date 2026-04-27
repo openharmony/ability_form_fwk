@@ -16,7 +16,7 @@
 #ifndef OHOS_FORM_FWK_FORM_VISIBILITY_ADAPTER_H
 #define OHOS_FORM_FWK_FORM_VISIBILITY_ADAPTER_H
 
-#include <map>
+#include <unordered_map>
 #include <mutex>
 
 #include "singleton.h"
@@ -67,34 +67,34 @@ public:
     int32_t NotifyFormLocked(const int64_t &formId, bool isLocked);
 
     void PaddingNotifyVisibleFormsMap(const int32_t formVisibleType, int64_t formId,
-        std::map<std::string, std::vector<FormInstance>> &formInstanceMaps);
+        std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps);
 
     void HandlerNotifyWhetherVisibleForms(const std::vector<int64_t> &formIds,
-        std::map<std::string, std::vector<FormInstance>> formInstanceMaps,
-        std::map<std::string, std::vector<int64_t>> eventMaps, const int32_t formVisibleType,
+        const std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps,
+        const std::unordered_map<std::string, std::vector<int64_t>> &eventMaps, const int32_t formVisibleType,
         const sptr<IRemoteObject> &callerToken);
 
 private:
     void SetVisibleChange(const int64_t formId, const int32_t formVisibleType, const int32_t userId);
 
     void PostVisibleNotify(const std::vector<int64_t> &formIds,
-        std::map<std::string, std::vector<FormInstance>> &formInstanceMaps,
-        std::map<std::string, std::vector<int64_t>> &eventMaps,
+        std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps,
+        std::unordered_map<std::string, std::vector<int64_t>> &eventMaps,
         const int32_t formVisibleType, int32_t visibleNotifyDelay,
         const sptr<IRemoteObject> &callerToken);
 
     void NotifyWhetherFormsVisible(const std::string &bundleName,
         const std::vector<sptr<IRemoteObject>> &remoteObjects,
-        std::map<std::string, std::vector<FormInstance>> &formInstanceMaps, const int32_t formVisibleType);
+        std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps, const int32_t formVisibleType);
 
-    void FilterDataByVisibleType(std::map<std::string, std::vector<FormInstance>> &formInstanceMaps,
-        std::map<std::string, std::vector<int64_t>> &eventMaps, const int32_t formVisibleType);
+    void FilterDataByVisibleType(std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps,
+        std::unordered_map<std::string, std::vector<int64_t>> &eventMaps, const int32_t formVisibleType);
 
     void FilterFormInstanceMapsByVisibleType(
-        std::map<std::string, std::vector<FormInstance>> &formInstanceMaps,
+        std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps,
         const int32_t formVisibleType, std::map<int64_t, FormRecord> &restoreFormRecords);
 
-    void FilterEventMapsByVisibleType(std::map<std::string, std::vector<int64_t>> &eventMaps,
+    void FilterEventMapsByVisibleType(std::unordered_map<std::string, std::vector<int64_t>> &eventMaps,
         const int32_t formVisibleType, std::map<int64_t, FormRecord> &restoreFormRecords);
 
     bool isFormShouldUpdateProviderInfoToHost(const int64_t &matchedFormId, const int32_t &userId,
@@ -104,7 +104,7 @@ private:
         const sptr<IRemoteObject> &callerToken, const int32_t &formVisibleType, FormRecord &formRecord);
 
     bool CreateHandleEventMap(const int64_t matchedFormId, const FormRecord &formRecord,
-        std::map<std::string, std::vector<int64_t>> &eventMaps);
+        std::unordered_map<std::string, std::vector<int64_t>> &eventMaps);
 
     ErrCode HandleEventNotify(const std::string &providerKey, const std::vector<int64_t> &formIdsByProvider,
         const int32_t formVisibleType);
@@ -114,7 +114,7 @@ private:
 
     int32_t visibleNotifyDelay_;
     mutable std::mutex formObserversMutex_;
-    std::map<std::string, std::vector<sptr<IRemoteObject>>> formObservers_;
+    std::unordered_map<std::string, std::vector<sptr<IRemoteObject>>> formObservers_;
 };
 
 } // namespace AppExecFwk
