@@ -683,6 +683,8 @@ napi_value CreateSceneAnimationParamsDatas(napi_env env, const FormSceneAnimatio
     napi_set_named_property(env, objContext, "abilityName", CreateJsValue(env, sceneAnimationParamsDatas.abilityName));
     napi_set_named_property(env, objContext, "disabledDesktopBehaviors",
         CreateJsValue(env, sceneAnimationParamsDatas.disabledDesktopBehaviors));
+    napi_set_named_property(env, objContext, "triggerTypes",
+        CreateNativeArray(env, sceneAnimationParamsDatas.triggerTypes));
     return objContext;
 }
 

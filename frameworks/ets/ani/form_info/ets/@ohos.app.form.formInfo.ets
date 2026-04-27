@@ -211,6 +211,10 @@ export default namespace formInfo {
     STANDBY = 8,
   }
 
+  enum SceneAnimationTriggerType {
+    SHAKE = 1,
+  }
+
   export class formInfoInner implements FormInfo {
     public bundleName: string = '';
     public moduleName: string = '';
@@ -356,11 +360,13 @@ export default namespace formInfo {
   interface SceneAnimationParams {
     abilityName: string;
     disabledDesktopBehaviors?: string;
+    triggerTypes?: Array<SceneAnimationTriggerType>;
   }
 
   class SceneAnimationParamsInner implements SceneAnimationParams {
     abilityName: string;
     disabledDesktopBehaviors?: string;
+    triggerTypes?: Array<SceneAnimationTriggerType>;
   }
 
   type GetFormRectInfoCallback = (formId: string) => Promise<Rect>;
