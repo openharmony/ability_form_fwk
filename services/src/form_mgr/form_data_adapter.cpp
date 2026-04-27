@@ -64,6 +64,10 @@ namespace OHOS {
 namespace AppExecFwk {
 using namespace FormAdapterConstants;
 
+namespace {
+constexpr int32_t ESTIMATED_REPORT_STR_SIZE_PER_FORM = 50;
+}
+
 FormDataAdapter::FormDataAdapter()
 {
     HILOG_DEBUG("FormDataAdapter created");
@@ -650,7 +654,7 @@ ErrCode FormDataAdapter::UpdateFormByCondition(int32_t type)
     }
 
     std::string reportStr;
-    reportStr.reserve(formInfos.size() * 50); // Pre-allocate for batch concatenation
+    reportStr.reserve(formInfos.size() * ESTIMATED_REPORT_STR_SIZE_PER_FORM);
 
     std::vector<RefreshData> batch;
     for (const FormRecord& formRecord : formInfos) {
