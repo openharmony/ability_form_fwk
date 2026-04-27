@@ -281,20 +281,20 @@ bool CreateFormCustomizeDataRecord(ani_env *env, ani_object &recordObject,
 ani_enum_item CreateSceneAnimationTriggerType(ani_env *env, AppExecFwk::SceneAnimationTriggerType triggerType)
 {
     if (env == nullptr) {
-        HILOG_ERROR("env is nullptr");
+        HILOG_ERROR("env is nullptr.");
         return nullptr;
     }
     ani_enum triggerTypeEnum;
     ani_status status = env->FindEnum(TRIGGER_TYPE_CLASS_NAME, &triggerTypeEnum);
     if (status != ANI_OK) {
-        HILOG_INFO("Cannot find FormState enum");
+        HILOG_ERROR("Cannot find SceneAnimationTriggerType enum.");
         return nullptr;
     }
 
     ani_enum_item item;
-    status = env->Enum_GetEnumItemByIndex(triggerTypeEnum, static_cast<ani_size>(((int)triggerType) - 1), &item);
+    status = env->Enum_GetEnumItemByIndex(triggerTypeEnum, static_cast<ani_size>(triggerType) - 1, &item);
     if (status != ANI_OK) {
-        HILOG_INFO("Cannot get enum item");
+        HILOG_ERROR("Cannot get enum item.");
         return nullptr;
     }
     return item;
@@ -303,7 +303,6 @@ ani_enum_item CreateSceneAnimationTriggerType(ani_env *env, AppExecFwk::SceneAni
 ani_array CreateTriggerTypesAniArray(ani_env *env,
     const std::vector<AppExecFwk::SceneAnimationTriggerType> &triggerTypes)
 {
-    HILOG_ERROR("lxg CreateTriggerTypesAniArray");
     ani_array array = nullptr;
     ani_ref undefined_ref;
     if (triggerTypes.empty()) {
