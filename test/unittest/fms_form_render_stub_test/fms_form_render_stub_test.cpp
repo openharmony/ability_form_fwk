@@ -360,12 +360,12 @@ public:
     {
         return ERR_OK;
     }
-    ErrCode RegisterFormAddObserverByBundle(const std::string &bundleName,
+    ErrCode RegisterFormAddObserverByBundle(const std::string bundleName,
         const sptr<IRemoteObject> &callerToken) override
     {
         return ERR_OK;
     }
-    ErrCode RegisterFormRemoveObserverByBundle(const std::string &bundleName,
+    ErrCode RegisterFormRemoveObserverByBundle(const std::string bundleName,
         const sptr<IRemoteObject> &callerToken) override
     {
         return ERR_OK;

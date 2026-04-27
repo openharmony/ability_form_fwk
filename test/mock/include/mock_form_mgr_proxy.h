@@ -74,9 +74,9 @@ public:
     MOCK_METHOD2(GetRunningFormInfos, ErrCode(bool isUnusedIncluded, std::vector<RunningFormInfo> &runningFormInfos));
     MOCK_METHOD3(GetRunningFormInfosByBundleName,
         ErrCode(const std::string &bundleName, bool isUnusedIncluded, std::vector<RunningFormInfo> &runningFormInfos));
-    MOCK_METHOD2(RegisterFormAddObserverByBundle, ErrCode(const std::string &bundleName,
+    MOCK_METHOD2(RegisterFormAddObserverByBundle, ErrCode(const std::string bundleName,
         const sptr<IRemoteObject> &callerToken));
-    MOCK_METHOD2(RegisterFormRemoveObserverByBundle, ErrCode(const std::string &bundleName,
+    MOCK_METHOD2(RegisterFormRemoveObserverByBundle, ErrCode(const std::string bundleName,
         const sptr<IRemoteObject> &callerToken));
     MOCK_METHOD3(UpdateProxyForm, ErrCode(const int64_t formId, const FormProviderData &formProviderData,
         const std::vector<FormDataProxy> &formDataProxies));
