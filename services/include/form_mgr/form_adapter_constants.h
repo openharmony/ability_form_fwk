@@ -50,7 +50,7 @@ namespace FormAdapterConstants {
         "persist.sys.fms.support.ecologicalrulemgrservice";
 
     // Add form request timeout
-    constexpr int ADD_FORM_REQUEST_TIMTOUT_PERIOD = 3000;
+    constexpr int ADD_FORM_REQUEST_TIMEOUT_PERIOD = 3000;
     constexpr const char *FORM_ADD_FORM_TIMER_TASK_QUEUE = "FormMgrTimerTaskQueue";
 
     // Data proxy
@@ -61,7 +61,7 @@ namespace FormAdapterConstants {
     constexpr int32_t MAX_RECONNECT_NUMS = 4;
 
     // Add form task type
-    enum class AddFormTaskType : int64_t {
+    enum class AddFormTaskType : int32_t {
         ADD_FORM_TIMER,
     };
 } // namespace FormAdapterConstants
