@@ -1937,11 +1937,20 @@ ErrCode FormMgrAdapter::HandleEventNotify(const std::string &providerKey, const 
 {
     HILOG_INFO("call");
     size_t position = providerKey.find(Constants::NAME_DELIMITER);
+    if (position == std::string::npos) {
+        HILOG_ERROR("No first delimiter found");
+        return ERR_APPEXECFWK_FORM_COMMON_CODE;
+    }
     std::string bundleName = providerKey.substr(0, position);
-    size_t secondPosition = providerKey.find(Constants::NAME_DELIMITER, position + 1);
-    std::string abilityName = providerKey.substr(position + strlen(Constants::NAME_DELIMITER),
-        secondPosition - position - strlen(Constants::NAME_DELIMITER));
-    std::string moduleName = providerKey.substr(secondPosition + strlen(Constants::NAME_DELIMITER));
+    size_t delimiterLength = Constants::NAME_DELIMITER.size();
+    size_t secondPosition = providerKey.find(Constants::NAME_DELIMITER, position + delimiterLength);
+    if (secondPosition == std::string::npos) {
+        HILOG_ERROR("No second delimiter found");
+        return ERR_APPEXECFWK_FORM_COMMON_CODE;
+    }
+    std::string abilityName = providerKey.substr(position + delimiterLength,
+        secondPosition - position - delimiterLength);
+    std::string moduleName = providerKey.substr(secondPosition + delimiterLength);
     sptr<IAbilityConnection> formEventNotifyConnection = new (std::nothrow) FormEventNotifyConnection(formIdsByProvider,
         formVisibleType, bundleName, abilityName, GetCallingUserId());
     if (formEventNotifyConnection == nullptr) {
