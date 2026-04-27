@@ -47,7 +47,7 @@ bool DoSomethingInterestingWithMyAPI(const char* data, size_t size)
     std::string moduleName(data, size);
     std::vector<int64_t> matchedFormIds;
     matchedFormIds.emplace_back(matchedFormId);
-    std::string providerKey = bundleName + ":" + abilityName + ":" + moduleName;
+    std::string providerKey = bundleName + "::" + abilityName + "::" + moduleName;
     eventMaps.emplace(providerKey, matchedFormIds);
     formMgrAdapter.CreateHandleEventMap(matchedFormId, formRecord, eventMaps);
     sptr<IRemoteObject> callerToken = nullptr;

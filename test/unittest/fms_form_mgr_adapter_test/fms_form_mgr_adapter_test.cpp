@@ -834,7 +834,7 @@ HWTEST_F(FmsFormMgrAdapterTest, FormMgrAdapter_042, TestSize.Level0)
 {
     GTEST_LOG_(INFO) << "FormMgrAdapter_042 start";
     FormMgrAdapter formMgrAdapter;
-    std::string providerKey = "bundleName:abilityName:moduleName";
+    std::string providerKey = "bundleName::abilityName::moduleName";
     std::vector<int64_t> formIdsByProvider;
     int32_t formVisibleType = 1;
     MockConnectServiceAbility(true);
@@ -852,7 +852,7 @@ HWTEST_F(FmsFormMgrAdapterTest, FormMgrAdapter_043, TestSize.Level0)
 {
     GTEST_LOG_(INFO) << "FormMgrAdapter_043 start";
     FormMgrAdapter formMgrAdapter;
-    std::string providerKey = "bundleName:abilityName:moduleName";
+    std::string providerKey = "bundleName::abilityName::moduleName";
     std::vector<int64_t> formIdsByProvider;
     int32_t formVisibleType = 1;
     MockConnectServiceAbility(false);
