@@ -562,7 +562,7 @@ bool FormMgrAdapterFacade::HasFormVisible(const uint32_t tokenId)
     return g_hasFormVisible;
 }
 
-int32_t FormMgrAdapterFacade::EnableForms(const std::string bundleName, const int32_t userId, const bool enable)
+int32_t FormMgrAdapterFacade::EnableForms(const std::string &bundleName, const int32_t userId, const bool enable)
 {
     return g_enableForms;
 }
