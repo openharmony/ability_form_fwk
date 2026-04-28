@@ -44,16 +44,11 @@
 #include "form_mgr_errors.h"
 #include "fms_log_wrapper.h"
 
+#include "form_mgr/form_adapter_constants.h"
+
 namespace OHOS {
 namespace AppExecFwk {
-namespace {
-constexpr int32_t SYSTEM_UID = 1000;
-constexpr int32_t API_11 = 11;
-constexpr int DATA_FIELD = 1;
-constexpr int32_t FORM_UPDATE_LEVEL_VALUE_MAX_LENGTH = 3;
-constexpr const char *POINT_ETS = ".ets";
-constexpr const char *FORM_DATA_PROXY_IGNORE_VISIBILITY = "ohos.extension.form_data_proxy_ignore_visibility";
-}
+using namespace FormAdapterConstants;
 
 FormCommonAdapter::FormCommonAdapter()
     : formDataMgr_(&FormDataMgr::GetInstance()),
@@ -444,7 +439,7 @@ ErrCode FormCommonAdapter::GetFormInfoByFormRecord(const FormRecord &record, For
     return ERR_APPEXECFWK_FORM_COMMON_CODE;
 }
 
-int32_t FormCommonAdapter::GetCallerType(std::string bundleName)
+int32_t FormCommonAdapter::GetCallerType(const std::string &bundleName)
 {
     HILOG_DEBUG("GetCallerType called, bundleName: %{public}s", bundleName.c_str());
     sptr<IBundleMgr> iBundleMgr = FormBmsHelper::GetInstance().GetBundleMgr();
@@ -779,22 +774,7 @@ void FormCommonAdapter::UpdateFormCloudUpdateDuration(const std::string &bundleN
         return;
     }
 
-    std::regex regex(R"(formUpdateLevel:(\d+))");
-    std::smatch searchResult;
-    std::string::const_iterator iterStart = additionalInfo.begin();
-    std::string::const_iterator iterEnd = additionalInfo.end();
-    std::vector<int> durationArray;
-    while (std::regex_search(iterStart, iterEnd, searchResult, regex)) {
-        iterStart = searchResult[0].second;
-        if (searchResult[DATA_FIELD].str().length() > FORM_UPDATE_LEVEL_VALUE_MAX_LENGTH) {
-            continue;
-        }
-        int val = FormUtil::ConvertStringToInt(searchResult[DATA_FIELD].str());
-        if (val >= Constants::MIN_CONFIG_DURATION && val <= Constants::MAX_CONFIG_DURATION) {
-            durationArray.emplace_back(val);
-        }
-    }
-
+    auto durationArray = FormUtil::ParseFormUpdateLevels(additionalInfo);
     if (durationArray.empty()) {
         HILOG_INFO("No valid formUpdateLevel in additionalInfo");
         formDataMgr_->RemoveFormCloudUpdateDuration(bundleName);

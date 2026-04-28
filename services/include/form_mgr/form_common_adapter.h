@@ -184,7 +184,7 @@ public:
      * @brief Get caller type
      * @param bundleName caller's bundle name
      */
-    virtual int32_t GetCallerType(std::string bundleName);
+    virtual int32_t GetCallerType(const std::string &bundleName);
 
     /**
      * @brief Get calling user ID
@@ -270,7 +270,7 @@ protected:
     // Observer related member variables
     mutable std::mutex formObserversMutex_;
     mutable std::mutex deathRecipientsMutex_;
-    std::map<std::string, std::vector<sptr<IRemoteObject>>> formObservers_;
+    std::unordered_map<std::string, std::vector<sptr<IRemoteObject>>> formObservers_;
     std::map<sptr<IRemoteObject>, sptr<IRemoteObject::DeathRecipient>> deathRecipients_;
 };
 

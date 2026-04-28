@@ -36,14 +36,6 @@
 namespace OHOS {
 namespace AppExecFwk {
 
-namespace {
-constexpr int32_t DEFAULT_USER_ID = 100;
-constexpr int32_t BUNDLE_NAME_INDEX = 0;
-constexpr int32_t USER_ID_INDEX = 1;
-constexpr int32_t INSTANCE_SEQ_INDEX = 2;
-constexpr const char *BUNDLE_INFO_SEPARATOR = "_";
-}
-
 class FormDebugAdapter final : public DelayedRefSingleton<FormDebugAdapter> {
     DECLARE_DELAYED_REF_SINGLETON(FormDebugAdapter)
 

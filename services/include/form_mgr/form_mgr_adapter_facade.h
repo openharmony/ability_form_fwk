@@ -16,6 +16,9 @@
 #ifndef OHOS_FORM_FWK_FORM_MGR_ADAPTER_FACADE_H
 #define OHOS_FORM_FWK_FORM_MGR_ADAPTER_FACADE_H
 
+#include <string_view>
+#include <unordered_map>
+
 #include "configuration.h"
 #include "form_info.h"
 #include "form_info_filter.h"
@@ -89,7 +92,7 @@ public:
 
     int ReleaseRenderer(int64_t formId, const std::string &compId);
 
-    int32_t EnableForms(const std::string bundleName, const int32_t userId, const bool enable);
+    int32_t EnableForms(const std::string &bundleName, const int32_t userId, const bool enable);
 
     ErrCode ProtectLockForms(const std::string &bundleName, int32_t userId, const bool protect);
 
@@ -167,12 +170,12 @@ public:
         const sptr<IRemoteObject> &callerToken);
 
     void HandlerNotifyWhetherVisibleForms(const std::vector<int64_t> &formIds,
-        std::map<std::string, std::vector<FormInstance>> formInstanceMaps,
-        std::map<std::string, std::vector<int64_t>> eventMaps, const int32_t formVisibleType,
+        const std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps,
+        const std::unordered_map<std::string, std::vector<int64_t>> &eventMaps, const int32_t formVisibleType,
         const sptr<IRemoteObject> &callerToken);
 
     void PaddingNotifyVisibleFormsMap(const int32_t formVisibleType, int64_t formId,
-        std::map<std::string, std::vector<FormInstance>> &formInstanceMaps);
+        std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps);
 
     int32_t SetFormsRecyclable(const std::vector<int64_t> &formIds);
 
@@ -226,10 +229,10 @@ public:
 
     ErrCode HandleFormRemoveObserver(const RunningFormInfo runningFormInfo);
 
-    ErrCode RegisterFormAddObserverByBundle(const std::string bundleName,
+    ErrCode RegisterFormAddObserverByBundle(const std::string &bundleName,
         const sptr<IRemoteObject> &callerToken);
 
-    ErrCode RegisterFormRemoveObserverByBundle(const std::string bundleName,
+    ErrCode RegisterFormRemoveObserverByBundle(const std::string &bundleName,
         const sptr<IRemoteObject> &callerToken);
 
     ErrCode RegisterAddObserver(const std::string &bundleName, const sptr<IRemoteObject> &callerToken);
