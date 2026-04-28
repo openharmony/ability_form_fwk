@@ -458,7 +458,6 @@ bool FormVisibilityAdapter::CreateHandleEventMap(const int64_t matchedFormId, co
             matchedFormId);
         return false;
     }
-
     std::string providerKey = formRecord.bundleName + Constants::NAME_DELIMITER + formRecord.abilityName +
         Constants::NAME_DELIMITER + formRecord.moduleName;
     auto iter = eventMaps.find(providerKey);
