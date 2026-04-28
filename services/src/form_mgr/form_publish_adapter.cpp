@@ -42,17 +42,11 @@
 #include "form_provider/form_provider_mgr.h"
 #include "form_refresh/form_refresh_mgr.h"
 
+#include "form_mgr/form_adapter_constants.h"
+
 namespace OHOS {
 namespace AppExecFwk {
-
-namespace {
-constexpr const char *FORM_SUPPORT_ECOLOGICAL_RULEMGRSERVICE = "persist.sys.fms.support.ecologicalrulemgrservice";
-constexpr int ADD_FORM_REQUEST_TIMTOUT_PERIOD = 3000;
-constexpr const char *FORM_ADD_FORM_TIMER_TASK_QUEUE = "FormMgrTimerTaskQueue";
-enum class AddFormTaskType : int64_t {
-    ADD_FORM_TIMER,
-};
-} // namespace
+using namespace FormAdapterConstants;
 
 FormPublishAdapter::FormPublishAdapter()
 {
@@ -127,7 +121,7 @@ bool FormPublishAdapter::IsValidPublishEvent(const sptr<IBundleMgr> &iBundleMgr,
     return IsErmsSupportPublishForm(bundleName, wants);
 }
 
-bool FormPublishAdapter::IsErmsSupportPublishForm(std::string bundleName, std::vector<Want> wants)
+bool FormPublishAdapter::IsErmsSupportPublishForm(const std::string &bundleName, std::vector<Want> wants)
 {
     bool isSupport = true;
     std::string supportErms = OHOS::system::GetParameter(FORM_SUPPORT_ECOLOGICAL_RULEMGRSERVICE, "true");
@@ -149,7 +143,7 @@ bool FormPublishAdapter::IsErmsSupportPublishForm(std::string bundleName, std::v
     return isSupport;
 }
 
-int32_t FormPublishAdapter::GetCallerType(std::string bundleName)
+int32_t FormPublishAdapter::GetCallerType(const std::string &bundleName)
 {
     sptr<IBundleMgr> iBundleMgr = FormBmsHelper::GetInstance().GetBundleMgr();
     if (iBundleMgr == nullptr) {
@@ -337,7 +331,7 @@ void FormPublishAdapter::IncreaseAddFormRequestTimeOutTask(const int64_t formId)
             formId));
     };
     serialQueue_->ScheduleDelayTask(std::make_pair(static_cast<int64_t>(AddFormTaskType::ADD_FORM_TIMER), formId),
-        ADD_FORM_REQUEST_TIMTOUT_PERIOD, timerTask);
+        ADD_FORM_REQUEST_TIMEOUT_PERIOD, timerTask);
 }
 
 void FormPublishAdapter::CancelAddFormRequestTimeOutTask(const int64_t formId, const int result)

@@ -92,12 +92,12 @@ private:
     bool IsActionAllowToPublish(const std::string &action);
     bool CheckIsSystemAppByBundleName(const sptr<IBundleMgr> &iBundleMgr,
         const int32_t &userId, const std::string &bundleName);
-    bool IsErmsSupportPublishForm(std::string bundleName, std::vector<Want> wants);
+    bool IsErmsSupportPublishForm(const std::string &bundleName, std::vector<Want> wants);
     bool CheckSnapshotWant(const Want &want);
     void IncreaseAddFormRequestTimeOutTask(const int64_t formId);
     ErrCode RequestPublishFormToHost(Want &want);
     ErrCode RequestPublishFormToHost(Want &want, int32_t userId);
-    int32_t GetCallerType(std::string bundleName);
+    int32_t GetCallerType(const std::string &bundleName);
     bool GetBundleName(std::string &bundleName, bool needCheckFormPermission = true);
 
     std::unique_ptr<FormSerialQueue> serialQueue_;

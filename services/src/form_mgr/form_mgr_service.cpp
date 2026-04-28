@@ -918,7 +918,7 @@ ErrCode FormMgrService::Init()
     return ERR_OK;
 }
 
-ErrCode FormMgrService::CheckFormPermission(const std::string &permission, bool checkSA)
+ErrCode FormMgrService::CheckFormPermission(std::string_view permission, bool checkSA)
 {
     HILOG_DEBUG("call");
 

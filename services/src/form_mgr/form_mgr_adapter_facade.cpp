@@ -150,7 +150,7 @@ int FormMgrAdapterFacade::ReleaseRenderer(int64_t formId, const std::string &com
     return FormLifecycleAdapter::GetInstance().ReleaseRenderer(formId, compId);
 }
 
-int32_t FormMgrAdapterFacade::EnableForms(const std::string bundleName, const int32_t userId, const bool enable)
+int32_t FormMgrAdapterFacade::EnableForms(const std::string &bundleName, const int32_t userId, const bool enable)
 {
     HILOG_INFO("FormMgrAdapterFacade::EnableForms called, bundleName:%{public}s, userId:%{public}d, enable:%{public}d",
         bundleName.c_str(), userId, enable);
@@ -274,8 +274,8 @@ int FormMgrAdapterFacade::NotifyFormsEnableUpdate(const std::vector<int64_t> &fo
 }
 
 void FormMgrAdapterFacade::HandlerNotifyWhetherVisibleForms(const std::vector<int64_t> &formIds,
-    std::map<std::string, std::vector<FormInstance>> formInstanceMaps,
-    std::map<std::string, std::vector<int64_t>> eventMaps, const int32_t formVisibleType,
+    const std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps,
+    const std::unordered_map<std::string, std::vector<int64_t>> &eventMaps, const int32_t formVisibleType,
     const sptr<IRemoteObject> &callerToken)
 {
     HILOG_INFO("FormMgrAdapterFacade::HandlerNotifyWhetherVisibleForms called, "
@@ -285,7 +285,7 @@ void FormMgrAdapterFacade::HandlerNotifyWhetherVisibleForms(const std::vector<in
 }
 
 void FormMgrAdapterFacade::PaddingNotifyVisibleFormsMap(const int32_t formVisibleType, int64_t formId,
-    std::map<std::string, std::vector<FormInstance>> &formInstanceMaps)
+    std::unordered_map<std::string, std::vector<FormInstance>> &formInstanceMaps)
 {
     HILOG_INFO("FormMgrAdapterFacade::PaddingNotifyVisibleFormsMap called, formId:%{public}" PRId64, formId);
     FormVisibilityAdapter::GetInstance().PaddingNotifyVisibleFormsMap(formVisibleType, formId, formInstanceMaps);
@@ -301,7 +301,7 @@ int32_t FormMgrAdapterFacade::RecycleForms(const std::vector<int64_t> &formIds, 
     bool isCheckCallingUid)
 {
     HILOG_INFO("FormMgrAdapterFacade::RecycleForms called, formIds size:%{public}zu", formIds.size());
-    return FormVisibilityAdapter::GetInstance().RecycleForms(formIds, want, isCheckCallingUid);
+    return FormLifecycleAdapter::GetInstance().RecycleForms(formIds, want, isCheckCallingUid);
 }
 
 int32_t FormMgrAdapterFacade::NotifyFormLocked(const int64_t &formId, bool isLocked)
@@ -422,7 +422,7 @@ ErrCode FormMgrAdapterFacade::GetFormInstancesByFilter(const FormInstancesFilter
     return FormQueryAdapter::GetInstance().GetFormInstancesByFilter(formInstancesFilter, formInstances);
 }
 
-ErrCode FormMgrAdapterFacade::RegisterFormAddObserverByBundle(const std::string bundleName,
+ErrCode FormMgrAdapterFacade::RegisterFormAddObserverByBundle(const std::string &bundleName,
     const sptr<IRemoteObject> &callerToken)
 {
     HILOG_INFO("FormMgrAdapterFacade::RegisterFormAddObserverByBundle called, bundleName:%{public}s",
@@ -430,7 +430,7 @@ ErrCode FormMgrAdapterFacade::RegisterFormAddObserverByBundle(const std::string 
     return FormObserverAdapter::GetInstance().RegisterFormAddObserverByBundle(bundleName, callerToken);
 }
 
-ErrCode FormMgrAdapterFacade::RegisterFormRemoveObserverByBundle(const std::string bundleName,
+ErrCode FormMgrAdapterFacade::RegisterFormRemoveObserverByBundle(const std::string &bundleName,
     const sptr<IRemoteObject> &callerToken)
 {
     HILOG_INFO("FormMgrAdapterFacade::RegisterFormRemoveObserverByBundle called, bundleName:%{public}s",
