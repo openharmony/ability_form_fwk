@@ -304,7 +304,6 @@ ani_array CreateTriggerTypesAniArray(ani_env *env,
     const std::vector<AppExecFwk::SceneAnimationTriggerType> &triggerTypes)
 {
     ani_array array = nullptr;
-    ani_ref undefined_ref;
     if (triggerTypes.empty()) {
         HILOG_ERROR("triggerTypes is empty.");
         return array;
@@ -313,6 +312,7 @@ ani_array CreateTriggerTypesAniArray(ani_env *env,
         HILOG_ERROR("env is nullptr.");
         return array;
     }
+    ani_ref undefined_ref;
     if (env->GetUndefined(&undefined_ref) != ANI_OK) {
         HILOG_ERROR("GetUndefined failed.");
         return array;
