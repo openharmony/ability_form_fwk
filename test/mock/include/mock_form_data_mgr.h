@@ -36,6 +36,13 @@ public:
     virtual bool GetUpdatedForm(const FormRecord &record, const std::vector<FormInfo> &targetForms,
         FormInfo &updatedForm) = 0;
     virtual bool SetRecordNeedFreeInstall(int64_t formId, bool isNeedFreeInstall) = 0;
+    virtual bool UpdateFormRecord(const int64_t formId, const FormRecord &formRecord) = 0;
+    virtual ErrCode HandleFormAddObserver(const std::string &hostBundleName,
+        const int64_t formId, const int32_t userId) = 0;
+    virtual bool HasFormCloudUpdateDuration(const std::string &bundleName) = 0;
+    virtual int GetFormCloudUpdateDuration(const std::string &bundleName) = 0;
+    virtual void UpdateFormCloudUpdateDuration(const std::string &bundleName, int duration) = 0;
+    virtual void RemoveFormCloudUpdateDuration(const std::string &bundleName) = 0;
 };
 
 class MockFormDataMgr : public AbstractMockFormDataMgr {
@@ -50,6 +57,13 @@ public:
     MOCK_METHOD3(GetUpdatedForm, bool(const FormRecord &record, const std::vector<FormInfo> &targetForms,
         FormInfo &updatedForm));
     MOCK_METHOD2(SetRecordNeedFreeInstall, bool(int64_t formId, bool isNeedFreeInstall));
+    MOCK_METHOD2(UpdateFormRecord, bool(const int64_t formId, const FormRecord &formRecord));
+    MOCK_METHOD3(HandleFormAddObserver, ErrCode(const std::string &hostBundleName,
+        const int64_t formId, const int32_t userId));
+    MOCK_METHOD1(HasFormCloudUpdateDuration, bool(const std::string &bundleName));
+    MOCK_METHOD1(GetFormCloudUpdateDuration, int(const std::string &bundleName));
+    MOCK_METHOD2(UpdateFormCloudUpdateDuration, void(const std::string &bundleName, int duration));
+    MOCK_METHOD1(RemoveFormCloudUpdateDuration, void(const std::string &bundleName));
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS

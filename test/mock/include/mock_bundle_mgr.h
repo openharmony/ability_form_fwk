@@ -28,6 +28,7 @@ public:
     MockBundleMgrStub() {};
     virtual ~MockBundleMgrStub() = default;
     MOCK_METHOD4(GetApplicationInfoV9, ErrCode(const std::string &, int32_t, int32_t, ApplicationInfo &));
+    MOCK_METHOD4(GetApplicationInfo, bool(const std::string &, int32_t, int32_t, ApplicationInfo &));
     MOCK_METHOD4(GetBundleInfo, bool(const std::string &, int32_t, BundleInfo &, int32_t));
     MOCK_METHOD4(GetBundleInfoV9,
         ErrCode(const std::string &bundleName, int32_t flags, BundleInfo &bundleInfo, int32_t userId));
