@@ -18,6 +18,7 @@
 
 #include "fms_log_wrapper.h"
 #include "data_center/form_data_mgr.h"
+#include "form_mgr_errors.h"
 
 namespace OHOS {
 namespace AppExecFwk {
@@ -67,6 +68,59 @@ bool FormDataMgr::SetRecordNeedFreeInstall(int64_t formId, bool isNeedFreeInstal
         return AppExecFwk::MockFormDataMgr::obj->SetRecordNeedFreeInstall(formId, isNeedFreeInstall);
     }
     return false;
+}
+
+bool FormDataMgr::UpdateFormRecord(const int64_t formId, const FormRecord &formRecord)
+{
+    GTEST_LOG_(INFO) << "UpdateFormRecord called";
+    if (AppExecFwk::MockFormDataMgr::obj) {
+        return AppExecFwk::MockFormDataMgr::obj->UpdateFormRecord(formId, formRecord);
+    }
+    return false;
+}
+
+ErrCode FormDataMgr::HandleFormAddObserver(const std::string &hostBundleName,
+    const int64_t formId, const int32_t userId)
+{
+    GTEST_LOG_(INFO) << "HandleFormAddObserver called";
+    if (AppExecFwk::MockFormDataMgr::obj) {
+        return AppExecFwk::MockFormDataMgr::obj->HandleFormAddObserver(hostBundleName, formId, userId);
+    }
+    return ERR_APPEXECFWK_FORM_COMMON_CODE;
+}
+
+bool FormDataMgr::HasFormCloudUpdateDuration(const std::string &bundleName) const
+{
+    GTEST_LOG_(INFO) << "HasFormCloudUpdateDuration called";
+    if (AppExecFwk::MockFormDataMgr::obj) {
+        return AppExecFwk::MockFormDataMgr::obj->HasFormCloudUpdateDuration(bundleName);
+    }
+    return false;
+}
+
+int FormDataMgr::GetFormCloudUpdateDuration(const std::string &bundleName) const
+{
+    GTEST_LOG_(INFO) << "GetFormCloudUpdateDuration called";
+    if (AppExecFwk::MockFormDataMgr::obj) {
+        return AppExecFwk::MockFormDataMgr::obj->GetFormCloudUpdateDuration(bundleName);
+    }
+    return 0;
+}
+
+void FormDataMgr::UpdateFormCloudUpdateDuration(const std::string &bundleName, int duration)
+{
+    GTEST_LOG_(INFO) << "UpdateFormCloudUpdateDuration called";
+    if (AppExecFwk::MockFormDataMgr::obj) {
+        AppExecFwk::MockFormDataMgr::obj->UpdateFormCloudUpdateDuration(bundleName, duration);
+    }
+}
+
+void FormDataMgr::RemoveFormCloudUpdateDuration(const std::string &bundleName)
+{
+    GTEST_LOG_(INFO) << "RemoveFormCloudUpdateDuration called";
+    if (AppExecFwk::MockFormDataMgr::obj) {
+        AppExecFwk::MockFormDataMgr::obj->RemoveFormCloudUpdateDuration(bundleName);
+    }
 }
 }  // namespace AppExecFwk
 }  // namespace OHOS
