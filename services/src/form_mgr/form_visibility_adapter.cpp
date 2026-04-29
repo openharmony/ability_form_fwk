@@ -460,8 +460,8 @@ bool FormVisibilityAdapter::CreateHandleEventMap(const int64_t matchedFormId, co
             matchedFormId);
         return false;
     }
-
-    std::string providerKey = formRecord.bundleName + Constants::NAME_DELIMITER + formRecord.abilityName;
+    std::string providerKey = formRecord.bundleName + Constants::NAME_DELIMITER + formRecord.abilityName +
+        Constants::NAME_DELIMITER + formRecord.moduleName;
     auto iter = eventMaps.find(providerKey);
     if (iter == eventMaps.end()) {
         std::vector<int64_t> formEventsByProvider {matchedFormId};
@@ -477,8 +477,20 @@ ErrCode FormVisibilityAdapter::HandleEventNotify(const std::string &providerKey,
 {
     HILOG_INFO("call");
     size_t position = providerKey.find(Constants::NAME_DELIMITER);
+    if (position == std::string::npos) {
+        HILOG_ERROR("No first delimiter found");
+        return ERR_APPEXECFWK_FORM_COMMON_CODE;
+    }
     std::string bundleName = providerKey.substr(0, position);
-    std::string abilityName = providerKey.substr(position + strlen(Constants::NAME_DELIMITER));
+    size_t delimiterLength = std::strlen(Constants::NAME_DELIMITER);
+    size_t secondPosition = providerKey.find(Constants::NAME_DELIMITER, position + delimiterLength);
+    if (secondPosition == std::string::npos) {
+        HILOG_ERROR("No second delimiter found");
+        return ERR_APPEXECFWK_FORM_COMMON_CODE;
+    }
+    std::string abilityName = providerKey.substr(position + delimiterLength,
+        secondPosition - position - delimiterLength);
+    std::string moduleName = providerKey.substr(secondPosition + delimiterLength);
     sptr<IAbilityConnection> formEventNotifyConnection = new (std::nothrow) FormEventNotifyConnection(formIdsByProvider,
         formVisibleType, bundleName, abilityName, FormCommonAdapter::GetInstance().GetCallingUserId());
     if (formEventNotifyConnection == nullptr) {
@@ -489,6 +501,9 @@ ErrCode FormVisibilityAdapter::HandleEventNotify(const std::string &providerKey,
     Want connectWant;
     connectWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     connectWant.SetElementName(bundleName, abilityName);
+    if (!moduleName.empty()) {
+        connectWant.SetModuleName(moduleName);
+    }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(connectWant, formEventNotifyConnection);
     if (errorCode != ERR_OK) {
         HILOG_ERROR("ConnectServiceAbility failed");

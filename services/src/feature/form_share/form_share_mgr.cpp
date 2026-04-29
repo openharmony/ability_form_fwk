@@ -76,6 +76,9 @@ int32_t FormShareMgr::ShareForm(int64_t formId, const std::string &deviceId, con
     Want want;
     want.SetElementName(formRecord.bundleName, formRecord.abilityName);
     want.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
+    if (!formRecord.moduleName.empty()) {
+        want.SetModuleName(formRecord.moduleName);
+    }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(want, formShareConnection);
     if (errorCode != ERR_OK) {
         HILOG_ERROR("ConnectServiceAbility failed");

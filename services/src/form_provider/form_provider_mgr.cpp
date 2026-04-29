@@ -279,6 +279,9 @@ ErrCode FormProviderMgr::ConnectForConfigUpdate(const AppExecFwk::Configuration 
     }
     Want connectWant;
     connectWant.SetElementName(record.bundleName, record.abilityName);
+    if (!record.moduleName.empty()) {
+        connectWant.SetModuleName(record.moduleName);
+    }
 
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(connectWant, abilityConnection);
     if (errorCode != ERR_OK) {
@@ -316,6 +319,9 @@ ErrCode FormProviderMgr::ConnectAmsForRefresh(const int64_t formId, const FormRe
     Want connectWant;
     connectWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     connectWant.SetElementName(record.bundleName, record.abilityName);
+    if (!record.moduleName.empty()) {
+        connectWant.SetModuleName(record.moduleName);
+    }
 
     if (record.needFreeInstall) {
         return RebindByFreeInstall(record, connectWant, formRefreshConnection);
@@ -384,10 +390,12 @@ ErrCode FormProviderMgr::ConnectAmsForRefreshPermission(const int64_t formId, Wa
     Want connectWant;
     connectWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     connectWant.SetElementName(record.bundleName, record.abilityName);
+    if (!record.moduleName.empty()) {
+        connectWant.SetModuleName(record.moduleName);
+    }
 
     if (record.needFreeInstall) {
         connectWant.AddFlags(Want::FLAG_INSTALL_ON_DEMAND | Want::FLAG_INSTALL_WITH_BACKGROUND_MODE);
-        connectWant.SetModuleName(record.moduleName);
     }
 
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(connectWant, formRefreshConnection);
@@ -428,6 +436,9 @@ ErrCode FormProviderMgr::NotifyProviderFormDelete(const int64_t formId, const Fo
     Want want;
     want.SetElementName(formRecord.bundleName, formRecord.abilityName);
     want.SetFlags(Want::FLAG_ABILITY_FORM_ENABLED);
+    if (!formRecord.moduleName.empty()) {
+        want.SetModuleName(formRecord.moduleName);
+    }
 
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(want, formDeleteConnection);
     if (errorCode != ERR_OK) {
@@ -445,7 +456,8 @@ ErrCode FormProviderMgr::NotifyProviderFormDelete(const int64_t formId, const Fo
  * @return Returns ERR_OK on success, others on failure.
  */
 ErrCode FormProviderMgr::NotifyProviderFormsBatchDelete(const std::string &bundleName,
-    const std::string &abilityName, const std::set<int64_t> &formIds, const int32_t userId)
+    const std::string &abilityName, const std::string &moduleName, const std::set<int64_t> &formIds,
+    const int32_t userId)
 {
     if (abilityName.empty()) {
         HILOG_ERROR("empty abilityName");
@@ -468,6 +480,9 @@ ErrCode FormProviderMgr::NotifyProviderFormsBatchDelete(const std::string &bundl
     Want want;
     want.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     want.SetElementName(bundleName, abilityName);
+    if (!moduleName.empty()) {
+        want.SetModuleName(moduleName);
+    }
 
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(want, batchDeleteConnection);
     if (errorCode != ERR_OK) {
@@ -576,6 +591,9 @@ int FormProviderMgr::MessageEvent(const int64_t formId, const FormRecord &record
     Want connectWant;
     connectWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     connectWant.SetElementName(record.bundleName, record.abilityName);
+    if (!record.moduleName.empty()) {
+        connectWant.SetModuleName(record.moduleName);
+    }
 
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbilityWithUserId(connectWant,
         formMsgEventConnection, record.providerUserId);
@@ -610,6 +628,9 @@ int FormProviderMgr::MessageEvent(const int64_t formId, const FormRecord &record
     Want connectWant;
     connectWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     connectWant.SetElementName(record.bundleName, record.abilityName);
+    if (!record.moduleName.empty()) {
+        connectWant.SetModuleName(record.moduleName);
+    }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(connectWant, formLocationConnection);
     if (errorCode != ERR_OK) {
         HILOG_ERROR("ConnectServiceAbility failed");
@@ -725,6 +746,9 @@ ErrCode FormProviderMgr::ConnectAmsUpdateSize(const int32_t newDimension,
     Want connectWant;
     connectWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     connectWant.SetElementName(record.bundleName, record.abilityName);
+    if (!record.moduleName.empty()) {
+        connectWant.SetModuleName(record.moduleName);
+    }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(connectWant, formUpdateSizeConnection);
     if (errorCode != ERR_OK) {
         HILOG_ERROR("ConnectServiceAbility failed");

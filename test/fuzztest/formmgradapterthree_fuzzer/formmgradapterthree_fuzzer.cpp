@@ -43,9 +43,12 @@ bool DoSomethingInterestingWithMyAPI(const char* data, size_t size)
     FormRecord formRecord;
     std::map<std::string, std::vector<int64_t>> eventMaps;
     std::string bundleName(data, size);
+    std::string abilityName(data, size);
+    std::string moduleName(data, size);
     std::vector<int64_t> matchedFormIds;
     matchedFormIds.emplace_back(matchedFormId);
-    eventMaps.emplace(bundleName, matchedFormIds);
+    std::string providerKey = bundleName + "::" + abilityName + "::" + moduleName;
+    eventMaps.emplace(providerKey, matchedFormIds);
     formMgrAdapter.CreateHandleEventMap(matchedFormId, formRecord, eventMaps);
     sptr<IRemoteObject> callerToken = nullptr;
     int32_t formVisibleType = static_cast<int32_t>(GetU32Data(data));
@@ -55,7 +58,6 @@ bool DoSomethingInterestingWithMyAPI(const char* data, size_t size)
     formIds.emplace_back(matchedFormId);
     int32_t numFormsDeleted = static_cast<int32_t>(GetU32Data(data));
     formMgrAdapter.DeleteInvalidForms(formIds, callerToken, numFormsDeleted);
-    std::string abilityName(data, size);
     Want want;
     std::string provider(data, size);
     formMgrAdapter.AcquireFormStateCheck(bundleName, abilityName, want, provider);
@@ -69,7 +71,6 @@ bool DoSomethingInterestingWithMyAPI(const char* data, size_t size)
     std::vector<FormInfo> formInfos;
     formInfos.emplace_back(formInfo);
     formMgrAdapter.GetFormsInfoByApp(bundleName, formInfos);
-    std::string moduleName(data, size);
     formMgrAdapter.GetFormsInfoByModule(bundleName, moduleName, formInfos);
     return true;
 }

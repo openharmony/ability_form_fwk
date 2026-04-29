@@ -1343,6 +1343,9 @@ ErrCode FormLifecycleAdapter::HandleCastTempForm(const int64_t formId, const For
     Want want;
     want.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     want.SetElementName(formRecord.bundleName, formRecord.abilityName);
+    if (!formRecord.moduleName.empty()) {
+        want.SetModuleName(formRecord.moduleName);
+    }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(want, castTempConnection);
     if (errorCode != ERR_OK) {
         HILOG_ERROR("ConnectServiceAbility failed");
