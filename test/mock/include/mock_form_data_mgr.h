@@ -18,8 +18,10 @@
 
 #include <cstdint>
 #include <memory>
+#include <vector>
 #include "gmock/gmock.h"
 #include "data_center/form_record/form_record.h"
+#include "form_info.h"
 #include "want.h"
 
 namespace OHOS {
@@ -30,6 +32,10 @@ public:
     virtual bool GetFormRecord(const int64_t formId, FormRecord &formRecord) = 0;
     virtual void CheckForms(const std::vector<int64_t> &formIds) = 0;
     virtual void MergeFormWant(const Want &newWant, Want &oldWant) = 0;
+    virtual void SetNeedRefresh(const int64_t formId, const bool needRefresh) = 0;
+    virtual bool GetUpdatedForm(const FormRecord &record, const std::vector<FormInfo> &targetForms,
+        FormInfo &updatedForm) = 0;
+    virtual bool SetRecordNeedFreeInstall(int64_t formId, bool isNeedFreeInstall) = 0;
 };
 
 class MockFormDataMgr : public AbstractMockFormDataMgr {
@@ -40,6 +46,10 @@ public:
     MOCK_METHOD2(GetFormRecord, bool(const int64_t formId, FormRecord &formRecord));
     MOCK_METHOD1(CheckForms, void(const std::vector<int64_t> &formIds));
     MOCK_METHOD2(MergeFormWant, void(const Want &newWant, Want &oldWant));
+    MOCK_METHOD2(SetNeedRefresh, void(const int64_t formId, const bool needRefresh));
+    MOCK_METHOD3(GetUpdatedForm, bool(const FormRecord &record, const std::vector<FormInfo> &targetForms,
+        FormInfo &updatedForm));
+    MOCK_METHOD2(SetRecordNeedFreeInstall, bool(int64_t formId, bool isNeedFreeInstall));
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS
