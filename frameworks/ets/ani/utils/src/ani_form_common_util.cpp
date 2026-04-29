@@ -51,6 +51,7 @@ constexpr const char *ENUMNAME_FORMLOCATION = "@ohos.app.form.formInfo.formInfo.
 constexpr const char *ETS_FUNINTERACTIONPARAMS_NAME = "@ohos.app.form.formInfo.formInfo.FunInteractionParamsInner";
 constexpr const char *ETS_SCENEANIMATIONPARAMS_NAME = "@ohos.app.form.formInfo.formInfo.SceneAnimationParamsInner";
 constexpr const char *FORM_STATE_CLASS_NAME = "@ohos.app.form.formInfo.formInfo.FormState";
+constexpr const char *TRIGGER_TYPE_CLASS_NAME = "@ohos.app.form.formInfo.formInfo.SceneAnimationTriggerType";
 
 ani_class GetAniClass(ani_env *env, const char *className)
 {
@@ -277,6 +278,62 @@ bool CreateFormCustomizeDataRecord(ani_env *env, ani_object &recordObject,
     return true;
 }
 
+ani_enum_item CreateSceneAnimationTriggerType(ani_env *env, AppExecFwk::SceneAnimationTriggerType triggerType)
+{
+    if (env == nullptr) {
+        HILOG_ERROR("env is nullptr.");
+        return nullptr;
+    }
+    ani_enum triggerTypeEnum;
+    ani_status status = env->FindEnum(TRIGGER_TYPE_CLASS_NAME, &triggerTypeEnum);
+    if (status != ANI_OK) {
+        HILOG_ERROR("Cannot find SceneAnimationTriggerType enum.");
+        return nullptr;
+    }
+
+    ani_enum_item item;
+    status = env->Enum_GetEnumItemByIndex(triggerTypeEnum, static_cast<ani_size>(triggerType) - 1, &item);
+    if (status != ANI_OK) {
+        HILOG_ERROR("Cannot get enum item.");
+        return nullptr;
+    }
+    return item;
+}
+
+ani_array CreateTriggerTypesAniArray(ani_env *env,
+    const std::vector<AppExecFwk::SceneAnimationTriggerType> &triggerTypes)
+{
+    ani_array array = nullptr;
+    if (triggerTypes.empty()) {
+        HILOG_ERROR("triggerTypes is empty.");
+        return array;
+    }
+    if (env == nullptr) {
+        HILOG_ERROR("env is nullptr.");
+        return array;
+    }
+    ani_ref undefined_ref;
+    if (env->GetUndefined(&undefined_ref) != ANI_OK) {
+        HILOG_ERROR("GetUndefined failed.");
+        return array;
+    }
+    if (env->Array_New(triggerTypes.size(), undefined_ref, &array) != ANI_OK) {
+        HILOG_ERROR("Array_New failed.");
+        return array;
+    }
+    ani_size index = 0;
+    for (auto triggerType : triggerTypes) {
+        ani_enum_item valueAni = CreateSceneAnimationTriggerType(env, triggerType);
+        ani_status status = env->Array_Set(array, index, static_cast<ani_ref>(valueAni));
+        if (status != ANI_OK) {
+            HILOG_ERROR("Array_Set failed, status code: %{public}d", status);
+            break;
+        }
+        index++;
+    }
+    return array;
+}
+
 void SetFormInfoArrayProperties(ani_env *env, ani_object formInfoAni, const AppExecFwk::FormInfo &formInfo)
 {
     if (env == nullptr) {
@@ -338,6 +395,10 @@ void SetFormInfoSceneAnimationParams(ani_env *env, ani_object formInfoAni,
     SetStringProperty(env, sceneAnimationParamsAni, "abilityName", formSceneAnimationParams.abilityName);
     SetStringProperty(env, sceneAnimationParamsAni, "disabledDesktopBehaviors",
         formSceneAnimationParams.disabledDesktopBehaviors);
+    ani_array triggerTypesAni = CreateTriggerTypesAniArray(env, formSceneAnimationParams.triggerTypes);
+    if (triggerTypesAni != nullptr) {
+        env->Object_SetPropertyByName_Ref(sceneAnimationParamsAni, "triggerTypes", triggerTypesAni);
+    }
     env->Object_SetPropertyByName_Ref(formInfoAni, "sceneAnimationParams", sceneAnimationParamsAni);
 }
 

@@ -253,6 +253,15 @@ napi_value CreateJsFormShape(napi_env engine)
     return objValue;
 }
 
+napi_value CreateJsSceneAnimationTriggerType(napi_env engine)
+{
+    napi_value objValue = nullptr;
+    napi_create_object(engine, &objValue);
+    napi_set_named_property(
+        engine, objValue, "SHAKE", CreateJsValue(engine, AppExecFwk::SceneAnimationTriggerType::SHAKE));
+    return objValue;
+}
+
 napi_value FormInfoInit(napi_env engine, napi_value exportObj)
 {
     HILOG_INFO("call");
@@ -270,6 +279,7 @@ napi_value FormInfoInit(napi_env engine, napi_value exportObj)
     napi_set_named_property(engine, exportObj, "PublishFormErrorCode", CreateJsPublishFormErrorCode(engine));
     napi_set_named_property(engine, exportObj, "FormShape", CreateJsFormShape(engine));
     napi_set_named_property(engine, exportObj, "FormUpdateReason", CreateJsFormUpdateReason(engine));
+    napi_set_named_property(engine, exportObj, "SceneAnimationTriggerType", CreateJsSceneAnimationTriggerType(engine));
     HILOG_INFO("end");
     return exportObj;
 }
