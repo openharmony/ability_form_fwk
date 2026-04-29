@@ -101,6 +101,7 @@ group("fuzztest") {
     "formrenderservicemgrthree_fuzzer:fuzztest",
     "formrenderservicemgrtwo_fuzzer:fuzztest",
     "formrenderstub_fuzzer:fuzztest",
+    "formrenderstatusmgr_fuzzer:fuzztest",
     "formrenderstatustaskmgr_fuzzer:fuzztest",
     "formsandboxrendermgrinner_fuzzer:fuzztest",
     "formsharemgr_fuzzer:fuzztest",
