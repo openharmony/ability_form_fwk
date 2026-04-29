@@ -219,6 +219,7 @@ int FormQueryAdapter::AcquireFormState(const Want &want, const sptr<IRemoteObjec
     }
     std::string bundleName = want.GetElement().GetBundleName();
     std::string abilityName = want.GetElement().GetAbilityName();
+    std::string moduleName = want.GetElement().GetModuleName();
 
     std::string provider;
     ErrCode errCode = AcquireFormStateCheck(bundleName, abilityName, want, provider);
@@ -230,7 +231,8 @@ int FormQueryAdapter::AcquireFormState(const Want &want, const sptr<IRemoteObjec
     FormItemInfo info;
     FormDataMgr::GetInstance().CreateFormStateRecord(provider, info, callerToken, callingUid);
 
-    HILOG_DEBUG("bundleName:%{public}s, abilityName:%{public}s", bundleName.c_str(), abilityName.c_str());
+    HILOG_DEBUG("bundleName:%{public}s, abilityName:%{public}s, moduleName:%{public}s", bundleName.c_str(),
+        abilityName.c_str(), moduleName.c_str());
     int32_t userId = FormUtil::GetCallerUserId(callingUid);
     sptr<IAbilityConnection> connection =
         new (std::nothrow) FormAcquireStateConnection(bundleName, abilityName, want, provider, userId);
@@ -241,6 +243,9 @@ int FormQueryAdapter::AcquireFormState(const Want &want, const sptr<IRemoteObjec
     Want targetWant;
     targetWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     targetWant.SetElementName(bundleName, abilityName);
+    if (!moduleName.empty()) {
+        targetWant.SetModuleName(moduleName);
+    }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(targetWant, connection);
     if (errorCode != ERR_OK) {
         HILOG_ERROR("ConnectServiceAbility failed");
@@ -261,8 +266,10 @@ int FormQueryAdapter::AcquireFormData(int64_t formId, int64_t requestCode, const
     }
     std::string bundleName = formRecord.bundleName;
     std::string abilityName = formRecord.abilityName;
+    std::string moduleName = formRecord.moduleName;
 
-    HILOG_DEBUG("bundleName:%{public}s, abilityName:%{public}s", bundleName.c_str(), abilityName.c_str());
+    HILOG_DEBUG("bundleName:%{public}s, abilityName:%{public}s, moduleName:%{public}s",
+        bundleName.c_str(), abilityName.c_str(), moduleName.c_str());
     int32_t callingUid = IPCSkeleton::GetCallingUid();
     int32_t userId = FormUtil::GetCallerUserId(callingUid);
     FormItemInfo info;
@@ -276,6 +283,9 @@ int FormQueryAdapter::AcquireFormData(int64_t formId, int64_t requestCode, const
     Want targetWant;
     targetWant.AddFlags(Want::FLAG_ABILITY_FORM_ENABLED);
     targetWant.SetElementName(bundleName, abilityName);
+    if (!moduleName.empty()) {
+        targetWant.SetModuleName(moduleName);
+    }
     ErrCode errorCode = FormAmsHelper::GetInstance().ConnectServiceAbility(targetWant, connection);
     if (errorCode != ERR_OK) {
         HILOG_ERROR("ConnectServiceAbility failed");

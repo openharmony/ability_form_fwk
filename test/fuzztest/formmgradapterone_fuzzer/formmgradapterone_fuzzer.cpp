@@ -47,7 +47,10 @@ bool DoSomethingInterestingWithMyAPI(const char* data, size_t size)
     formMgrAdapter.AllotFormByInfo(info, callerToken, wantParams, formInfo);
     formMgrAdapter.AddNewFormRecord(info, formId, callerToken, wantParams, formInfo);
     formMgrAdapter.AddFormTimer(record);
-    std::string providerKey(data, size);
+    std::string bundleName(data, size);
+    std::string abilityName(data, size);
+    std::string moduleName(data, size);
+    std::string providerKey = bundleName + "::" + abilityName + "::" + moduleName;
     std::vector<int64_t> formIdsByProvider;
     formIdsByProvider.emplace_back(formId);
     int32_t formVisibleType = static_cast<int32_t>(GetU32Data(data));

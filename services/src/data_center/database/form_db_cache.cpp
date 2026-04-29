@@ -246,7 +246,7 @@ ErrCode FormDbCache::GetNoHostDBForms(const int uid, std::map<FormIdKey,
         if (dbInfo.Contains(uid)) {
             dbInfo.Remove(uid);
             if (dbInfo.formUserUids.empty()) {
-                FormIdKey formIdKey(dbInfo.bundleName, dbInfo.abilityName);
+                FormIdKey formIdKey(dbInfo.bundleName, dbInfo.abilityName, dbInfo.moduleName);
                 auto itIdsSet = noHostFormDBList.find(formIdKey);
                 if (itIdsSet == noHostFormDBList.end()) {
                     std::set<int64_t> formIdsSet;
@@ -333,7 +333,7 @@ void FormDbCache::GetNoHostInvalidDBForms(int32_t userId, int32_t callingUid, st
         HILOG_WARN("found invalid form:%{public}" PRId64, formId);
         formRecord.formUserUids.erase(iter);
         if (formRecord.formUserUids.empty()) {
-            FormIdKey formIdKey(formRecord.bundleName, formRecord.abilityName);
+            FormIdKey formIdKey(formRecord.bundleName, formRecord.abilityName, formRecord.moduleName);
             auto itIdsSet = noHostDBFormsMap.find(formIdKey);
             if (itIdsSet == noHostDBFormsMap.end()) {
                 std::set<int64_t> formIdsSet;
@@ -365,8 +365,10 @@ void FormDbCache::BatchDeleteNoHostDBForms(int32_t callingUid, std::map<FormIdKe
         FormIdKey formIdKey = element.first;
         std::string bundleName = formIdKey.bundleName;
         std::string abilityName = formIdKey.abilityName;
+        std::string moduleName = formIdKey.moduleName;
         int32_t userId = FormUtil::GetCallerUserId(callingUid);
-        FormProviderMgr::GetInstance().NotifyProviderFormsBatchDelete(bundleName, abilityName, formIds, userId);
+        FormProviderMgr::GetInstance().NotifyProviderFormsBatchDelete(bundleName, abilityName, moduleName,
+            formIds, userId);
         for (const int64_t formId : formIds) {
             foundFormsMap.emplace(formId, true);
             FormDBInfo dbInfo;

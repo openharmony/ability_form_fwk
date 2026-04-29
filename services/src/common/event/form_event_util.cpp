@@ -374,9 +374,10 @@ void FormEventUtil::BatchDeleteNoHostTempForms(const int uid, std::map<FormIdKey
         FormIdKey formIdKey = element.first;
         std::string bundleName = formIdKey.bundleName;
         std::string abilityName = formIdKey.abilityName;
+        std::string moduleName = formIdKey.moduleName;
         int32_t userId = FormUtil::GetCallerUserId(uid);
-        int result = FormProviderMgr::GetInstance().NotifyProviderFormsBatchDelete(bundleName, abilityName, formIds,
-            userId);
+        int result = FormProviderMgr::GetInstance().NotifyProviderFormsBatchDelete(bundleName, abilityName, moduleName,
+            formIds, userId);
         if (result != ERR_OK) {
             HILOG_ERROR("NotifyProviderFormsBatchDelete fail bundle:%{public}s ability:%{public}s",
                 bundleName.c_str(), abilityName.c_str());
@@ -612,9 +613,10 @@ void FormEventUtil::BatchDeleteNoHostDBForms(const int uid, std::map<FormIdKey, 
         FormIdKey formIdKey = element.first;
         std::string bundleName = formIdKey.bundleName;
         std::string abilityName = formIdKey.abilityName;
+        std::string moduleName = formIdKey.moduleName;
         int32_t userId = FormUtil::GetCallerUserId(uid);
-        int result = FormProviderMgr::GetInstance().NotifyProviderFormsBatchDelete(bundleName, abilityName, formIds,
-            userId);
+        int result = FormProviderMgr::GetInstance().NotifyProviderFormsBatchDelete(bundleName, abilityName, moduleName,
+            formIds, userId);
         if (result != ERR_OK) {
             HILOG_ERROR("NotifyProviderFormsBatchDelete fail bundle:%{public}s ability:%{public}s",
                 bundleName.c_str(), abilityName.c_str());
