@@ -29,6 +29,7 @@ bool FormDataMgr::GetFormRecord(const int64_t formId, FormRecord &formRecord) co
     if (AppExecFwk::MockFormDataMgr::obj) {
         return AppExecFwk::MockFormDataMgr::obj->GetFormRecord(formId, formRecord);
     }
+    formRecord = FormRecord();
     return false;
 }
 
@@ -38,6 +39,34 @@ void FormDataMgr::CheckForms(const std::vector<int64_t> &formIds)
     if (AppExecFwk::MockFormDataMgr::obj) {
         AppExecFwk::MockFormDataMgr::obj->CheckForms(formIds);
     }
+}
+
+bool FormDataMgr::GetUpdatedForm(const FormRecord &record, const std::vector<FormInfo> &targetForms,
+    FormInfo &updatedForm)
+{
+    GTEST_LOG_(INFO) << "GetUpdatedForm called";
+    if (AppExecFwk::MockFormDataMgr::obj) {
+        return AppExecFwk::MockFormDataMgr::obj->GetUpdatedForm(record, targetForms, updatedForm);
+    }
+    updatedForm = FormInfo();
+    return false;
+}
+
+void FormDataMgr::SetNeedRefresh(const int64_t formId, const bool needRefresh)
+{
+    GTEST_LOG_(INFO) << "SetNeedRefresh called";
+    if (AppExecFwk::MockFormDataMgr::obj) {
+        AppExecFwk::MockFormDataMgr::obj->SetNeedRefresh(formId, needRefresh);
+    }
+}
+
+bool FormDataMgr::SetRecordNeedFreeInstall(int64_t formId, bool isNeedFreeInstall)
+{
+    GTEST_LOG_(INFO) << "SetRecordNeedFreeInstall called";
+    if (AppExecFwk::MockFormDataMgr::obj) {
+        return AppExecFwk::MockFormDataMgr::obj->SetRecordNeedFreeInstall(formId, isNeedFreeInstall);
+    }
+    return false;
 }
 }  // namespace AppExecFwk
 }  // namespace OHOS
