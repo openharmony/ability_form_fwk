@@ -63,6 +63,15 @@ public:
     void SetBundleProtectStatus(const std::string &bundleName, bool isProtect);
 
     /**
+     * @brief Check whether the lock service has been initialized.
+     * @return True if initialized, false otherwise.
+     */
+    bool IsLockServiceInitialized() const
+    {
+        return isLockServiceInitialized_.load();
+    }
+
+    /**
      * @brief Initializing the app lock service.
      */
     void InitLockService();
