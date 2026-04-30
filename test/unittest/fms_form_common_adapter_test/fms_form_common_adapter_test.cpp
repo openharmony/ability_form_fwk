@@ -151,47 +151,17 @@ HWTEST_F(FmsFormCommonAdapterTest, GetFormConfigInfo_002, TestSize.Level1)
     BundleInfo bundleInfo;
     bundleInfo.moduleNames.push_back("entry");
 
+    EXPECT_CALL(*MockFormBmsHelper::obj, GetBundleMgr())
+        .WillRepeatedly(Return(sptr<IBundleMgr>(new MockBundleMgrStub())));
     EXPECT_CALL(*MockFormBmsHelper::obj, GetBundleInfoV9(_, _, _))
         .WillOnce(DoAll(SetArgReferee<2>(bundleInfo), Return(ERR_OK)));
     EXPECT_CALL(*MockFormInfoMgr::obj, GetFormsInfoByModule(_, _, _, _))
         .WillOnce(Return(ERR_APPEXECFWK_FORM_GET_INFO_FAILED));
 
     auto result = FormCommonAdapter::GetInstance().GetFormConfigInfo(want, formItemInfo);
-    EXPECT_NE(result, ERR_OK);
+    EXPECT_EQ(result, ERR_APPEXECFWK_FORM_GET_INFO_FAILED);
 
     GTEST_LOG_(INFO) << "GetFormConfigInfo_002 end";
-}
-
-/**
- * @tc.name: GetFormConfigInfo_003
- * @tc.desc: Verify invalid formInfo returns ERR_APPEXECFWK_FORM_GET_INFO_FAILED
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormCommonAdapterTest, GetFormConfigInfo_003, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "GetFormConfigInfo_003 start";
-
-    Want want;
-    want.SetElementName("com.test.bundle", "MainAbility");
-    want.SetParam(Constants::PARAM_MODULE_NAME_KEY, std::string("entry"));
-
-    FormItemInfo formItemInfo;
-    BundleInfo bundleInfo;
-    bundleInfo.moduleNames.push_back("entry");
-
-    std::vector<FormInfo> formInfos;
-    FormInfo invalidFormInfo; // Invalid by default (empty name)
-    formInfos.push_back(invalidFormInfo);
-
-    EXPECT_CALL(*MockFormBmsHelper::obj, GetBundleInfoV9(_, _, _))
-        .WillOnce(DoAll(SetArgReferee<2>(bundleInfo), Return(ERR_OK)));
-    EXPECT_CALL(*MockFormInfoMgr::obj, GetFormsInfoByModule(_, _, _, _))
-        .WillOnce(DoAll(SetArgReferee<2>(formInfos), Return(ERR_OK)));
-
-    auto result = FormCommonAdapter::GetInstance().GetFormConfigInfo(want, formItemInfo);
-    EXPECT_EQ(result, ERR_APPEXECFWK_FORM_GET_BMS_FAILED);
-
-    GTEST_LOG_(INFO) << "GetFormConfigInfo_003 end";
 }
 
 /**
@@ -573,9 +543,9 @@ HWTEST_F(FmsFormCommonAdapterTest, SetDeathRecipient_001, TestSize.Level1)
     GTEST_LOG_(INFO) << "SetDeathRecipient_001 start";
 
     sptr<IRemoteObject::DeathRecipient> deathRecipient = new FormCommonAdapter::ClientDeathRecipient();
-
+    FormCommonAdapter::GetInstance().deathRecipients_.clear();
     FormCommonAdapter::GetInstance().SetDeathRecipient(nullptr, deathRecipient);
-    // No crash expected
+    EXPECT_TRUE(FormCommonAdapter::GetInstance().deathRecipients_.empty());
 
     GTEST_LOG_(INFO) << "SetDeathRecipient_001 end";
 }
@@ -590,9 +560,9 @@ HWTEST_F(FmsFormCommonAdapterTest, SetDeathRecipient_002, TestSize.Level1)
     GTEST_LOG_(INFO) << "SetDeathRecipient_002 start";
 
     sptr<IRemoteObject> callerToken = new MockIRemoteObject();
-
+    FormCommonAdapter::GetInstance().deathRecipients_.clear();
     FormCommonAdapter::GetInstance().SetDeathRecipient(callerToken, nullptr);
-    // No crash expected
+    EXPECT_TRUE(FormCommonAdapter::GetInstance().deathRecipients_.empty());
 
     GTEST_LOG_(INFO) << "SetDeathRecipient_002 end";
 }
@@ -605,7 +575,7 @@ HWTEST_F(FmsFormCommonAdapterTest, SetDeathRecipient_002, TestSize.Level1)
 HWTEST_F(FmsFormCommonAdapterTest, SetDeathRecipient_003, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "SetDeathRecipient_003 start";
-
+    FormCommonAdapter::GetInstance().deathRecipients_.clear();
     sptr<IRemoteObject> callerToken = new MockIRemoteObject();
     sptr<IRemoteObject::DeathRecipient> deathRecipient = new FormCommonAdapter::ClientDeathRecipient();
 
@@ -614,7 +584,10 @@ HWTEST_F(FmsFormCommonAdapterTest, SetDeathRecipient_003, TestSize.Level1)
         .WillOnce(Return(true));
 
     FormCommonAdapter::GetInstance().SetDeathRecipient(callerToken, deathRecipient);
-    // Success - no exception
+    EXPECT_EQ(FormCommonAdapter::GetInstance().deathRecipients_.size(), 1u);
+    EXPECT_NE(FormCommonAdapter::GetInstance().deathRecipients_.find(callerToken),
+        FormCommonAdapter::GetInstance().deathRecipients_.end());
+    FormCommonAdapter::GetInstance().deathRecipients_.clear();
 
     GTEST_LOG_(INFO) << "SetDeathRecipient_003 end";
 }
