@@ -985,7 +985,8 @@ ErrCode FormLifecycleAdapter::EnableForms(const std::string &bundleName, const i
 ErrCode FormLifecycleAdapter::ProtectLockForms(const std::string &bundleName, int32_t userId, const bool protect)
 {
     HILOG_INFO("ProtectLockForms entry");
-    if (FormBundleLockMgr::GetInstance().IsBundleProtect(bundleName, userId) == protect) {
+    if (FormBundleLockMgr::GetInstance().IsLockServiceInitialized() &&
+        FormBundleLockMgr::GetInstance().IsBundleProtect(bundleName, userId) == protect) {
         HILOG_INFO("No need to change protect status, bundleName = %{public}s, protect = %{public}d",
             bundleName.c_str(), protect);
         return ERR_OK;
