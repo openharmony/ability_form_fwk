@@ -694,6 +694,9 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_0104, TestSize.Level1)
     formMgrService.HiDumpFormInfoByFormId(args0, formInfo);
     std::string args1 = "1";
     formMgrService.HiDumpFormInfoByFormId(args1, formInfo);
+    std::string overflowArgs = "9223372036854775808";
+    formMgrService.HiDumpFormInfoByFormId(overflowArgs, formInfo);
+    EXPECT_EQ(formInfo, "error: form ID is invalid.");
 
     GTEST_LOG_(INFO) << "FormMgrService_0104 end";
 }

@@ -15,6 +15,7 @@
 
 #include "form_mgr/form_mgr_service.h"
 
+#include <charconv>
 #include <chrono>
 #include <ctime>
 #include <iomanip>
@@ -1727,8 +1728,11 @@ void FormMgrService::HiDumpFormInfoByFormId(const std::string &args, std::string
         result = "error: request a form ID.";
         return;
     }
-    int64_t formId = atoll(args.c_str());
-    if (formId == 0) {
+    int64_t formId = 0;
+    const char *first = args.data();
+    const char *last = first + args.size();
+    auto parseResult = std::from_chars(first, last, formId);
+    if (parseResult.ec != std::errc{} || parseResult.ptr != last || formId <= 0) {
         result = "error: form ID is invalid.";
         return;
     }
