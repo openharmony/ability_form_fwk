@@ -209,9 +209,6 @@ private:
     int32_t HandleRenderForm(const int64_t formId, const FormProviderInfo &formProviderInfo,
         const Want &want, int32_t callerUserId);
 private:
-    static std::mutex mutex_;
-    static sptr<FormSupplyCallback> instance_;
-
     mutable std::mutex conMutex_;
     std::map<int32_t, sptr<FormAbilityConnection>> connections_;
     DISALLOW_COPY_AND_MOVE(FormSupplyCallback);

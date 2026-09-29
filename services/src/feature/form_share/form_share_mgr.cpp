@@ -378,7 +378,8 @@ void FormShareMgr::OnInstallFinished(const std::shared_ptr<FormFreeInstallOperat
 
     FormShareInfo info;
     {
-        std::shared_lock<std::shared_mutex> guard(shareInfoMapMutex_);
+        // Writing isFreeInstall needs exclusive access, not shared.
+        std::unique_lock<std::shared_mutex> guard(shareInfoMapMutex_);
         auto it = shareInfo_.find(formShareInfoKey);
         if (it == shareInfo_.end()) {
             HILOG_ERROR("invalid formShareInfo");
@@ -547,20 +548,23 @@ void FormShareMgr::SendResponse(int64_t requestCode, int32_t result)
 {
     HILOG_DEBUG("FormMgrService SendResponse call, requestCode:%{public}" PRId64 " result:%{public}d",
         requestCode, result);
-    std::unique_lock<std::shared_mutex> guard(requestMapMutex_);
-    auto iter = requestMap_.find(requestCode);
-    if (iter == requestMap_.end()) {
-        HILOG_DEBUG("No form shared request");
-        return;
+    sptr<IFormHost> remoteFormHost;
+    {
+        std::unique_lock<std::shared_mutex> guard(requestMapMutex_);
+        auto iter = requestMap_.find(requestCode);
+        if (iter == requestMap_.end()) {
+            HILOG_DEBUG("No form shared request");
+            return;
+        }
+        remoteFormHost = iface_cast<IFormHost>(iter->second);
+        requestMap_.erase(requestCode);
     }
-
-    sptr<IFormHost> remoteFormHost = iface_cast<IFormHost>(iter->second);
     if (remoteFormHost == nullptr) {
         HILOG_ERROR("get formHostProxy failed");
         return;
     }
+    // TF_SYNC IPC; must stay outside requestMapMutex_ or a blocked host pins the lock.
     remoteFormHost->OnShareFormResponse(requestCode, result);
-    requestMap_.erase(requestCode);
 }
 
 bool FormShareMgr::IsShareForm(const Want &want)

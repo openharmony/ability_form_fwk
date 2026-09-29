@@ -629,14 +629,7 @@ void EtsFormHostInit(ani_env *env)
 
 sptr<EtsFormRouterProxyMgr> EtsFormRouterProxyMgr::GetInstance()
 {
-    static std::once_flag initFlag;
-    static sptr<EtsFormRouterProxyMgr> instance;
-    std::call_once(initFlag, []() {
-        instance = sptr<EtsFormRouterProxyMgr>(new (std::nothrow) EtsFormRouterProxyMgr());
-        if (instance == nullptr) {
-            HILOG_ERROR("create EtsFormRouterProxyMgr failed");
-        }
-    });
+    static sptr<EtsFormRouterProxyMgr> instance(new EtsFormRouterProxyMgr());
     return instance;
 }
 

@@ -131,8 +131,6 @@ public:
 
     ErrCode RouterEvent(const int64_t formId, const OHOS::AAFwk::Want &want);
 private:
-    static std::mutex mutex_;
-    static sptr<EtsFormRouterProxyMgr> instance_;
     mutable std::mutex FormRouterProxyCallbackMutex_;
     std::map<int64_t, std::shared_ptr<FormRouterProxyCallbackClient>> formRouterProxyCallbackMap_;
     ani_ref overflowRegisterCallback_ = nullptr;

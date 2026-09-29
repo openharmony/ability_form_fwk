@@ -468,7 +468,7 @@ ErrCode FormDataAdapter::AcquireProviderFormInfoAsync(const int64_t formId,
         return ERR_OK;
     }
 
-    if (FormRenderMgr::GetInstance().GetIsSecondMounted()) {
+    if (FormRenderMgr::GetInstance().GetIsVerified()) {
         HILOG_INFO("The authentication status is true");
         return InnerAcquireProviderFormInfoAsync(formId, info, wantParams);
     }

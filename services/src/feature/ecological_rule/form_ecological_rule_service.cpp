@@ -64,7 +64,15 @@ sptr<IFormEcologicalRule> FormEcologicalRuleClient::ConnectService()
     }
 
     deathRecipient_ = new (std::nothrow) FormEcologicalRuleDeathRecipient();
-    systemAbility->AddDeathRecipient(deathRecipient_);
+    if (deathRecipient_ == nullptr) {
+        HILOG_ERROR("create death recipient failed");
+        return nullptr;
+    }
+    if (!systemAbility->AddDeathRecipient(deathRecipient_)) {
+        HILOG_ERROR("add death recipient failed");
+        deathRecipient_ = nullptr;
+        return nullptr;
+    }
 
     sptr<IFormEcologicalRule> it = iface_cast<IFormEcologicalRule>(systemAbility);
     if (it == nullptr) {

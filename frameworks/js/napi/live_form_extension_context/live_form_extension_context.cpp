@@ -99,7 +99,7 @@ ErrCode LiveFormExtensionContext::SetUIExtCustomDensity(float layoutScale)
 
 ErrCode LiveFormExtensionContext::StartAbilityByFms(const AAFwk::Want &want, const std::string &formId)
 {
-    HILOG_INFO("StartAbilityByFms want: %{public}s", want.ToString().c_str());
+    HILOG_INFO("StartAbilityByFms want: %{private}s", want.ToString().c_str());
     AAFwk::Want wantToHost;
     wantToHost.SetAction(Constants::FORM_PAGE_ACTION);
     ElementName elementName = want.GetElement();
@@ -109,7 +109,7 @@ ErrCode LiveFormExtensionContext::StartAbilityByFms(const AAFwk::Want &want, con
     wantToHost.SetParam(Constants::PARMA_REQUEST_METHOD, REQUEST_METHOD);
     wantToHost.SetParam(Constants::PARAM_LIVE_FORM_ID_KEY, formId);
  
-    HILOG_INFO("StartAbilityByFms wantToHost: %{public}s", wantToHost.ToString().c_str());
+    HILOG_INFO("StartAbilityByFms wantToHost: %{private}s", wantToHost.ToString().c_str());
     ErrCode err = AppExecFwk::FormMgr::GetInstance().StartAbilityByFms(wantToHost);
     if (err != ERR_OK) {
         HILOG_ERROR("StartAbilityByFms fail, ret = %{public}d", err);

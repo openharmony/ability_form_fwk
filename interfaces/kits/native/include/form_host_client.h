@@ -229,8 +229,6 @@ public:
     void OnCheckForm(const std::vector<int64_t> &formIds) override;
 
 private:
-    static std::mutex instanceMutex_;
-    static sptr<FormHostClient> instance_;
     mutable std::mutex callbackMutex_;
     mutable std::mutex formStateCallbackMutex_;
     mutable std::mutex uninstallCallbackMutex_;

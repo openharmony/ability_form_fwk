@@ -109,6 +109,11 @@ ErrCode FormCommonAdapter::GetFormConfigInfo(const Want& want, FormItemInfo &for
 
     int renderingMode = want.GetParams().GetIntParam(Constants::PARAM_FORM_RENDERINGMODE_KEY,
         static_cast<int>(Constants::RenderingMode::FULL_COLOR));
+    if (renderingMode < static_cast<int>(Constants::RenderingMode::FULL_COLOR) ||
+            renderingMode > static_cast<int>(Constants::RenderingMode::SINGLE_COLOR)) {
+        HILOG_ERROR("renderingMode not RenderingMode enum,renderingMode = %{public}d", renderingMode);
+        return ERR_APPEXECFWK_FORM_INVALID_PARAM;
+    }
     formItemInfo.SetRenderingMode((Constants::RenderingMode)renderingMode);
 
     SetFormEnableAndLockState(formInfo, formItemInfo, formLocation);

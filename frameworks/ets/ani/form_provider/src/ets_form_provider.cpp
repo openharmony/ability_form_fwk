@@ -906,16 +906,7 @@ void UnregisterPublishFormCrossBundleControl(ani_env* env, ani_object callback)
 
 sptr<EtsFormProviderProxyMgr> EtsFormProviderProxyMgr::GetInstance()
 {
-    static std::once_flag initFlag;
-    static sptr<EtsFormProviderProxyMgr> instance;
-
-    std::call_once(initFlag, []() {
-        instance = sptr<EtsFormProviderProxyMgr>(new (std::nothrow) EtsFormProviderProxyMgr());
-        if (instance == nullptr) {
-            HILOG_ERROR("create EtsFormProviderProxyMgr failed");
-        }
-    });
-
+    static sptr<EtsFormProviderProxyMgr> instance(new EtsFormProviderProxyMgr());
     return instance;
 }
 

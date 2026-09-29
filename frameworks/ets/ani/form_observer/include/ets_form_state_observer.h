@@ -19,7 +19,6 @@
 #include <map>
 #include <mutex>
 #include <vector>
-#include <singleton.h>
 
 #include "ani.h"
 #include "ets_native_reference.h"
@@ -100,8 +99,7 @@ private:
     ani_env* env_ = nullptr;
 };
 
-class EtsFormStateObserver : public JsFormStateObserverStub,
-                            public DelayedRefSingleton<EtsFormStateObserver> {
+class EtsFormStateObserver : public JsFormStateObserverStub {
 public:
     EtsFormStateObserver() = default;
 
@@ -152,8 +150,6 @@ public:
     ErrCode ClearFormClickCallback(const std::string &type, const std::string &bundleName, const ani_object &callback);
 
 private:
-    static std::mutex mutex_;
-    static sptr<EtsFormStateObserver> instance_;
     mutable std::mutex addFormCallbackMutex_;
     mutable std::mutex removeFormCallbackMutex_;
     mutable std::mutex formIsvisibleCallbackMutex_;

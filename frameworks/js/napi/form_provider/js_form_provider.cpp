@@ -168,6 +168,10 @@ static std::string GetStringByProp(napi_env env, napi_value value, const std::st
         HILOG_ERROR("prop[%{public}s] get size error", prop.c_str());
         return result;
     }
+    if (size > static_cast<size_t>(AppExecFwk::Constants::MAX_FORM_PROVIDER_DATA_BUFFER_SIZE)) {
+        HILOG_ERROR("prop[%{public}s] size exceed limit", prop.c_str());
+        return "";
+    }
     result.resize(size + 1);
     if (napi_get_value_string_utf8(env, propValue, result.data(), (size + 1), &size) != napi_ok) {
         HILOG_ERROR("prop[%{public}s] get value error", prop.c_str());
@@ -925,9 +929,9 @@ napi_value JsFormProvider::OnActivateSceneAnimation(napi_env env, size_t argc, n
         return CreateJsUndefined(env);
     }
 
-    int64_t formId;
+    int64_t formId = 0;
     if (!ConvertFormId(env, argv[PARAM0], formId)) {
-        HILOG_ERROR("Convert formId failed, formId:%{public}" PRId64 ".", formId);
+        HILOG_ERROR("Convert formId failed.");
         NapiFormUtil::ThrowParamError(env, "The formId is invalid");
         return CreateJsUndefined(env);
     }
@@ -1387,9 +1391,6 @@ napi_value JsFormProvider::OnUnregisterPublishFormCrossBundleControl(napi_env en
     return CreateJsValue(env, result);
 }
 
-sptr<JsFormProviderProxyMgr> JsFormProviderProxyMgr::instance_ = nullptr;
-std::mutex JsFormProviderProxyMgr::mutex_;
-
 JsFormProviderProxyMgr::~JsFormProviderProxyMgr()
 {
     std::lock_guard<std::mutex> lock(crossBundleControlMutex_);
@@ -1402,16 +1403,8 @@ JsFormProviderProxyMgr::~JsFormProviderProxyMgr()
 
 sptr<JsFormProviderProxyMgr> JsFormProviderProxyMgr::GetInstance()
 {
-    if (instance_ == nullptr) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        if (instance_ == nullptr) {
-            instance_ = new (std::nothrow) JsFormProviderProxyMgr();
-            if (instance_ == nullptr) {
-                HILOG_ERROR("create JsFormProviderProxyMgr failed");
-            }
-        }
-    }
-    return instance_;
+    static sptr<JsFormProviderProxyMgr> instance(new JsFormProviderProxyMgr());
+    return instance;
 }
 
 bool JsFormProviderProxyMgr::RegisterPublishFormCrossBundleControl(napi_env env, napi_ref callbackRef)
@@ -1423,15 +1416,22 @@ bool JsFormProviderProxyMgr::RegisterPublishFormCrossBundleControl(napi_env env,
         return false;
     }
     if (crossBundleControlCallback_ != nullptr) {
-        napi_delete_reference(env, crossBundleControlCallback_);
+        // Delete with the saved env: the old reference may come from a different napi_env.
+        napi_delete_reference(crossBundleControlEnv_, crossBundleControlCallback_);
         crossBundleControlCallback_ = nullptr;
     }
     crossBundleControlCallback_ = callbackRef;
     crossBundleControlEnv_ = env;
-    napi_value callback;
-    napi_get_reference_value(env, callbackRef, &callback);
-    napi_valuetype valueType;
-    napi_typeof(env, callback, &valueType);
+    napi_value callback = nullptr;
+    napi_valuetype valueType = napi_undefined;
+    if (napi_get_reference_value(env, callbackRef, &callback) != napi_ok || callback == nullptr ||
+        napi_typeof(env, callback, &valueType) != napi_ok) {
+        HILOG_ERROR("resolve callback failed");
+        napi_delete_reference(env, crossBundleControlCallback_);
+        crossBundleControlCallback_ = nullptr;
+        crossBundleControlEnv_ = nullptr;
+        return false;
+    }
     if (valueType != napi_function) {
         HILOG_ERROR("callback is not a function");
         napi_delete_reference(env, crossBundleControlCallback_);

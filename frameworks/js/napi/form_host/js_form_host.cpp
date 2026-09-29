@@ -2993,20 +2993,10 @@ void FormRouterProxyCallbackClient::ProcessFormRouterProxy(const Want &want)
     });
 }
 
-sptr<JsFormRouterProxyMgr> JsFormRouterProxyMgr::instance_ = nullptr;
-std::mutex JsFormRouterProxyMgr::mutex_;
 sptr<JsFormRouterProxyMgr> JsFormRouterProxyMgr::GetInstance()
 {
-    if (instance_ == nullptr) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        if (instance_ == nullptr) {
-            instance_ = new (std::nothrow) JsFormRouterProxyMgr();
-            if (instance_ == nullptr) {
-                HILOG_ERROR("create JsFormRouterProxyMgr failed");
-            }
-        }
-    }
-    return instance_;
+    static sptr<JsFormRouterProxyMgr> instance(new JsFormRouterProxyMgr());
+    return instance;
 }
 
 ErrCode JsFormRouterProxyMgr::RouterEvent(int64_t formId, const Want &want)

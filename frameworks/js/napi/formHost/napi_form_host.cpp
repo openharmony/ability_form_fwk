@@ -138,7 +138,6 @@ static napi_value GetFormIds(napi_env env, napi_value value, ErrCode &errCode, s
 
 napi_value ParseFormStateInfo(napi_env env, FormStateInfo &stateInfo)
 {
-    AbilityRuntime::HandleScope scopeGuard(env);
     napi_value formStateInfoObject = nullptr;
     napi_create_object(env, &formStateInfoObject);
     napi_value jsValue = WrapWant(env, stateInfo.want);
@@ -352,10 +351,17 @@ std::mutex formUninstallCallbackMapMutex_;
 
 void FormUninstallCallback(const std::vector<int64_t> &formIds)
 {
-    std::lock_guard<std::mutex> lock(formUninstallCallbackMapMutex_);
-    for (auto &iter : g_formUninstallCallbackMap) {
+    // Snapshot under lock: the JS callback may call off() which re-enters this mutex.
+    std::vector<std::shared_ptr<FormUninstallCallbackClient>> callbacks;
+    {
+        std::lock_guard<std::mutex> lock(formUninstallCallbackMapMutex_);
+        for (auto &iter : g_formUninstallCallbackMap) {
+            callbacks.push_back(iter.second);
+        }
+    }
+    for (auto &callback : callbacks) {
         for (int64_t formId : formIds) {
-            iter.second->ProcessFormUninstall(formId);
+            callback->ProcessFormUninstall(formId);
         }
     }
 }
@@ -786,6 +792,7 @@ napi_value NotifyFormsVisibleCallback(napi_env env, napi_value callbackFunc,
         if (asyncCallbackInfo->callback != nullptr) {
             napi_delete_reference(env, asyncCallbackInfo->callback);
         }
+        delete asyncCallbackInfo;
         return nullptr;
     }
     return NapiGetResult(env, 1);

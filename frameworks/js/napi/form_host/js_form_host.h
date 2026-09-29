@@ -91,8 +91,6 @@ public:
     void UnregisterFormWantCallbackListener();
 
 private:
-    static std::mutex mutex_;
-    static sptr<JsFormRouterProxyMgr> instance_;
     mutable std::mutex FormRouterProxyCallbackMutex_;
 
     std::map<int64_t, std::shared_ptr<FormRouterProxyCallbackClient>> formRouterProxyCallbackMap_;

@@ -39,16 +39,16 @@ enum HiSysEventPointType {
 };
 
 struct FormRecordReportInfo {
-    int32_t dailyRefreshTimes;
-    int32_t invisibleRefreshTimes;
-    int32_t hfRefreshBlockTimes;
-    int32_t invisibleRefreshBlockTimes;
-    int32_t highLoadRefreshBlockTimes;
-    int32_t activeRecoverRefreshTimes;
-    int32_t passiveRecoverRefreshTimes;
-    int32_t hfRecoverRefreshTimes;
-    int32_t offloadRecoverRefreshTimes;
-    int32_t disableFormRefreshTimes;
+    int32_t dailyRefreshTimes = 0;
+    int32_t invisibleRefreshTimes = 0;
+    int32_t hfRefreshBlockTimes = 0;
+    int32_t invisibleRefreshBlockTimes = 0;
+    int32_t highLoadRefreshBlockTimes = 0;
+    int32_t activeRecoverRefreshTimes = 0;
+    int32_t passiveRecoverRefreshTimes = 0;
+    int32_t hfRecoverRefreshTimes = 0;
+    int32_t offloadRecoverRefreshTimes = 0;
+    int32_t disableFormRefreshTimes = 0;
     int32_t actualProxyRefreshTimes = 0;
 };
 

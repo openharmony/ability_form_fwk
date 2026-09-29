@@ -76,8 +76,8 @@ protected:
 private:
     FormRecord formRecord_;
     WantParams wantParams_;
-    std::mutex formRecordMutex_;
-    int32_t failedTimes = 0;
+    std::mutex connectionDataMutex_;
+    std::atomic<int32_t> failedTimes {0};
     DISALLOW_COPY_AND_MOVE(FormRenderConnection);
 };
 } // namespace AppExecFwk
