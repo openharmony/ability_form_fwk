@@ -3671,6 +3671,11 @@ HWTEST_F(FmsFormCommonAdapterTest, GetFormConfigInfo_009, TestSize.Level1)
     auto result = FormCommonAdapter::GetInstance().GetFormConfigInfo(want, formItemInfo);
     EXPECT_EQ(result, ERR_APPEXECFWK_FORM_INVALID_PARAM);
 
+    // Below lower bound takes the short-circuit path of the same check.
+    want.SetParam(Constants::PARAM_FORM_RENDERINGMODE_KEY, -1);
+    result = FormCommonAdapter::GetInstance().GetFormConfigInfo(want, formItemInfo);
+    EXPECT_EQ(result, ERR_APPEXECFWK_FORM_INVALID_PARAM);
+
     GTEST_LOG_(INFO) << "GetFormConfigInfo_009 end";
 }
 
