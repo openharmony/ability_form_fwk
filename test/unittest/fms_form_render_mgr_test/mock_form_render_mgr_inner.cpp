@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2026 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,6 +16,7 @@
 #include "form_render/form_render_mgr_inner.h"
 
 #include "form_mgr_errors.h"
+#include "inner/mock_form_render_mgr_inner.h"
 
 namespace {
     bool g_mockRenderForm = true;
@@ -95,6 +96,19 @@ ErrCode FormRenderMgrInner::AddConnection(int64_t formId, sptr<FormRenderConnect
         return ERR_OK;
     }
     return ERR_APPEXECFWK_FORM_INVALID_PARAM;
+}
+
+MockFormRenderMgrInnerTask& MockInnerTask()
+{
+    static MockFormRenderMgrInnerTask instance;
+    return instance;
+}
+
+// Link-time substitution under -Wl,--allow-multiple-definition: forward to
+// gmock so tests can assert call times with EXPECT_CALL.
+void FormRenderMgrInner::PostSetRenderGroupEnableFlagTask(int64_t formId, bool isEnable)
+{
+    MockInnerTask().PostSetRenderGroupEnableFlagTask(formId, isEnable);
 }
 }  // namespace AppExecFwk
 }  // namespace OHOS

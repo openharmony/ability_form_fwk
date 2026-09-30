@@ -3609,6 +3609,71 @@ HWTEST_F(FmsFormCommonAdapterTest, GetFormConfigInfo_008, TestSize.Level1)
     GTEST_LOG_(INFO) << "GetFormConfigInfo_008 end";
 }
 
+/**
+ * @tc.name: GetFormConfigInfo_009
+ * @tc.desc: Verify GetFormConfigInfo returns error when renderingMode is out of enum range
+ * @tc.type: FUNC
+ */
+HWTEST_F(FmsFormCommonAdapterTest, GetFormConfigInfo_009, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "GetFormConfigInfo_009 start";
+
+    Want want;
+    want.SetElementName("com.test.bundle", "MainAbility");
+    want.SetParam(Constants::PARAM_MODULE_NAME_KEY, std::string("entry"));
+    want.SetParam(Constants::PARAM_FORM_NAME_KEY, std::string("widget"));
+    want.SetParam(Constants::FORM_LOCATION_KEY, static_cast<int>(Constants::FormLocation::DESKTOP));
+    want.SetParam(Constants::PARAM_FORM_RENDERINGMODE_KEY,
+        static_cast<int>(Constants::RenderingMode::SINGLE_COLOR) + 1);
+
+    FormItemInfo formItemInfo;
+    BundleInfo bundleInfo;
+    bundleInfo.name = "com.test.bundle";
+    bundleInfo.moduleNames.push_back("entry");
+    bundleInfo.applicationInfo.isSystemApp = false;
+    bundleInfo.applicationInfo.uid = TEST_CALLING_UID;
+
+    FormInfo formInfo;
+    formInfo.name = "widget";
+    formInfo.abilityName = "MainAbility";
+    formInfo.moduleName = "entry";
+    formInfo.supportDimensions.push_back(TEST_DIMENSION_ID);
+    formInfo.defaultDimension = TEST_DIMENSION_ID;
+    formInfo.src = "pages/index";
+    formInfo.type = FormType::JS;
+    formInfo.uiSyntax = FormType::JS;
+    std::vector<FormInfo> formInfos;
+    formInfos.push_back(formInfo);
+
+    EXPECT_CALL(*MockFormBmsHelper::obj, GetBundleInfoV9(_, _, _))
+        .WillRepeatedly(DoAll(SetArgReferee<2>(bundleInfo), Return(ERR_OK)));
+    EXPECT_CALL(*MockFormInfoMgr::obj, GetFormsInfoByModule(_, _, _, _))
+        .WillRepeatedly(DoAll(SetArgReferee<2>(formInfos), Return(ERR_OK)));
+    EXPECT_CALL(*MockFormBmsHelper::obj, GetCallerBundleName(_))
+        .WillRepeatedly(DoAll(SetArgReferee<0>("com.test.host"), Return(ERR_OK)));
+    EXPECT_CALL(*MockFormDistributedMgr::obj, IsBundleDistributed(_, _))
+        .WillRepeatedly(Return(false));
+    EXPECT_CALL(*MockFormDistributedMgr::obj, GetUiModuleName(_, _))
+        .WillRepeatedly(Return(""));
+    EXPECT_CALL(*MockFormBundleForbidMgr::obj, IsBundleForbidden(_))
+        .WillRepeatedly(Return(false));
+    EXPECT_CALL(*MockFormBundleLockMgr::obj, IsBundleProtect(_, _, _))
+        .WillRepeatedly(Return(false));
+    EXPECT_CALL(*MockFormDbCache::obj, GetDBRecord(_, _))
+        .WillRepeatedly(Return(ERR_APPEXECFWK_FORM_COMMON_CODE));
+    EXPECT_CALL(*MockFormInfoMgr::obj, IsMultiAppForm(_))
+        .WillRepeatedly(Return(false));
+    EXPECT_CALL(*MockIPCSkeleton::obj, GetCallingUid())
+        .WillRepeatedly(Return(TEST_CALLING_UID));
+    EXPECT_CALL(*MockFormBmsHelper::obj, GetBundleMgr())
+        .WillRepeatedly(Return(sptr<IBundleMgr>(new MockBundleMgrStub())));
+
+    auto result = FormCommonAdapter::GetInstance().GetFormConfigInfo(want, formItemInfo);
+    EXPECT_EQ(result, ERR_APPEXECFWK_FORM_INVALID_PARAM);
+
+    GTEST_LOG_(INFO) << "GetFormConfigInfo_009 end";
+}
+
 // ========== Missing Branch Coverage: IsDimensionValid edge cases ==========
 
 /**

@@ -90,6 +90,25 @@ HWTEST_F(FmsFormDistributedClientTest, ShareForm_0200, TestSize.Level0)
 }
 
 /**
+ * @tc.name: ShareForm_0300
+ * @tc.desc: ShareForm with empty DMS reply returns DISTRIBUTED_SCHEDULE_FAILED
+ * @tc.type: ShareForm
+ */
+HWTEST_F(FmsFormDistributedClientTest, ShareForm_0300, TestSize.Level0)
+{
+    GTEST_LOG_(INFO) << "FmsFormDistributedClientTest ShareForm_0300 start";
+    std::string remoteDeviceId = "15010038475446345206751dbcda572b";
+    FormShareInfo formShareInfo;
+    FormDistributedClientTestClass formDmsClient;
+    formDmsClient.dmsProxy_ = new OHOS::DistributedSchedule::DistributedSchedService();
+    MockStartRemoteShareFormWriteReply(false);
+    EXPECT_EQ(formDmsClient.ShareForm(remoteDeviceId, formShareInfo),
+        ERR_APPEXECFWK_FORM_DISTRIBUTED_SCHEDULE_FAILED);
+    MockStartRemoteShareFormWriteReply(true);
+    GTEST_LOG_(INFO) << "FmsFormDistributedClientTest ShareForm_0300 end";
+}
+
+/**
  * @tc.name: GetDmsServiceProxy_0100
  * @tc.desc: Mobile that can run ohos test framework
  * @tc.type: GetDmsServiceProxy

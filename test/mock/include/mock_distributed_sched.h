@@ -26,6 +26,9 @@
 #include "mission/distributed_mission_info.h"
 #endif
 
+// Toggle whether mock StartRemoteShareFormInner writes result into reply.
+void MockStartRemoteShareFormWriteReply(bool enable);
+
 namespace OHOS {
 namespace DistributedSchedule {
 class DistributedSchedStub : public IRemoteStub<IDistributedSched> {
