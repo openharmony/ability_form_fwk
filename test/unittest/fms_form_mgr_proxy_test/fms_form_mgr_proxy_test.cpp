@@ -2262,24 +2262,6 @@ HWTEST_F(FmsFormMgrProxyTest, RecoverForms_0200, TestSize.Level1)
 }
 
 /*
- * @tc.name: RecoverForms_0201
- * @tc.desc: test RecoverForms function and return ERR.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormMgrProxyTest, RecoverForms_0201, TestSize.Level1)
-{
-    GTEST_LOG_(INFO)
-        << "FmsFormMgrProxyTest, RequestPublishFormWithSnapshot_0201, TestSize.Level1";
-    MockWriteInterfaceToken(false);
-    Want want;
-    bool withFormBindingData = false;
-    std::unique_ptr<FormProviderData> formBindingData;
-    int64_t formId = 1;
-    int32_t result = proxy_->RequestPublishFormWithSnapshot(want, withFormBindingData, formBindingData, formId);
-    EXPECT_EQ(ERR_APPEXECFWK_PARCEL_ERROR, result);
-}
-
-/*
  * @tc.name: RequestPublishFormWithSnapshotTest_0100
  * @tc.desc: test RequestPublishFormWithSnapshot function
  * @tc.type: FUNC

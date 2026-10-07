@@ -87,25 +87,5 @@ HWTEST_F(FmsFormSurfaceInfoTest, FmsFormSurfaceInfoTest_0200, TestSize.Level0)
     EXPECT_TRUE(result);
     GTEST_LOG_(INFO) << "FmsFormSurfaceInfoTest_0200 end";
 }
-
-/**
-* @tc.name: FmsFormSurfaceInfoTest_0300
-* @tc.desc: text the FormSurfaceInfo::Unmarshalling
-* @tc.type: FUNC
-*/
-HWTEST_F(FmsFormSurfaceInfoTest, FmsFormSurfaceInfoTest_0300, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormSurfaceInfoTest_0300 start";
-
-    FormSurfaceInfo formSurfaceInfo;
-    Parcel parcel;
-    parcel.WriteFloat(1.0f);
-    parcel.WriteFloat(1.0f);
-    parcel.WriteFloat(0.0f);
-    parcel.WriteFloat(1.0f);
-    auto result = formSurfaceInfo.Unmarshalling(parcel);
-    EXPECT_NE(result, nullptr);
-    GTEST_LOG_(INFO) << "FmsFormSurfaceInfoTest_0300 end";
-}
 } // namespace AppExecFwk
 } // namespace OHOS

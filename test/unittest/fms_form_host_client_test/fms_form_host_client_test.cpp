@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2026 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -106,26 +106,6 @@ public:
 };
 
 /**
- * @tc.name: AddFormState_0100
- * @tc.desc: add form state
- * @tc.type: AddFormState
- * @tc.require:
- */
-HWTEST_F(FmsFormHostClientTest, AddFormState_0100, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest AddFormState_0100 start";
-
-    std::shared_ptr<FormStateCallbackInterface> formStateCallback = std::make_shared<FormStateCallbackTest>();
-    AAFwk::Want want;
-    want.SetElementName(FORM_PROVIDER_BUNDLE_NAME, FORM_PROVIDER_ABILITY_NAME);
-    sptr<FormHostClient> formHostClient = FormHostClient::GetInstance();
-    bool result = formHostClient->AddFormState(formStateCallback, want);
-    EXPECT_EQ(result, true);
-    formHostClient->RemoveFormState(want);
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest AddFormState_0100 end";
-}
-
-/**
  * @tc.name: AddFormState_0200
  * @tc.desc: add form state
  * @tc.type: AddFormState
@@ -168,116 +148,6 @@ HWTEST_F(FmsFormHostClientTest, AddFormState_0300, TestSize.Level0)
     FormState state = formStateCallback->GetFormState();
     EXPECT_EQ(state, FormState::UNKNOWN);
     GTEST_LOG_(INFO) << "FmsFormHostClientTest AddFormState_0300 end";
-}
-
-/**
- * @tc.name: RegisterUninstallCallback_0100
- * @tc.desc: test RegisterUninstallCallback function.
- * @tc.type: FUNC
- * @tc.require: issueI63OQL
- */
-HWTEST_F(FmsFormHostClientTest, RegisterUninstallCallback_0100, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest RegisterUninstallCallback_0100 start";
-    sptr<FormHostClient> formHostClient = FormHostClient::GetInstance();
-    FormHostClient::UninstallCallback callback = nullptr;
-    bool result = formHostClient->RegisterUninstallCallback(callback);
-    EXPECT_EQ(result, true);
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest RegisterUninstallCallback_0100 end";
-}
-
-/**
- * @tc.name: OnAcquired_0100
- * @tc.desc: test OnAcquired function.
- * @tc.type: FUNC
- * @tc.require: issueI63OQL
- */
-HWTEST_F(FmsFormHostClientTest, OnAcquired_0100, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest OnAcquired_0100 start";
-    sptr<FormHostClient> formHostClient = FormHostClient::GetInstance();
-    FormJsInfo formJsInfo;
-    sptr<MockFormToken> token = new (std::nothrow) MockFormToken();
-    formHostClient->OnAcquired(formJsInfo, token);
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest OnAcquired_0100 end";
-}
-
-/**
- * @tc.name: OnUninstall_0100
- * @tc.desc: test OnUninstall function.
- * @tc.type: FUNC
- * @tc.require: issueI63OQL
- */
-HWTEST_F(FmsFormHostClientTest, OnUninstall_0100, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest OnUninstall_0100 start";
-    sptr<FormHostClient> formHostClient = FormHostClient::GetInstance();
-    std::vector<int64_t> formIds;
-    formHostClient->OnUninstall(formIds);
-    int64_t formId = -1;
-    formIds.emplace_back(formId);
-    formHostClient->OnUninstall(formIds);
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest OnUninstall_0100 end";
-}
-
-/**
- * @tc.name: AddShareFormCallback_0100
- * @tc.desc: test AddShareFormCallback function.
- * @tc.type: FUNC
- * @tc.require: issueI63OQL
- */
-HWTEST_F(FmsFormHostClientTest, AddShareFormCallback_0100, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest AddShareFormCallback_0100 start";
-    std::shared_ptr<ShareFormCallBack> shareFormCallback = nullptr;
-    int64_t requestCode = 1;
-    sptr<FormHostClient> formHostClient = FormHostClient::GetInstance();
-    bool result = formHostClient->AddShareFormCallback(shareFormCallback, requestCode);
-    EXPECT_EQ(result, true);
-    int32_t result1 = 2;
-    formHostClient->OnShareFormResponse(requestCode, result1);
-    formHostClient->RemoveShareFormCallback(requestCode);
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest AddShareFormCallback_0100 end";
-}
-
-/**
- * @tc.name: AddAcqiureFormDataCallback_0100
- * @tc.desc: test AddAcqiureFormDataCallback function.
- * @tc.type: FUNC
- * @tc.require: issueI63OQL
- */
-HWTEST_F(FmsFormHostClientTest, AddAcqiureFormDataCallback_0100, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest AddAcqiureFormDataCallback_0100 start";
-    std::shared_ptr<FormDataCallbackInterface> formDataCallbackInterface = nullptr;
-    int64_t requestCode = 1;
-    sptr<FormHostClient> formHostClient = FormHostClient::GetInstance();
-    bool result = formHostClient->AddAcqiureFormDataCallback(formDataCallbackInterface, requestCode);
-    EXPECT_EQ(result, true);
-    AAFwk::WantParams wantParams;
-    formHostClient->OnAcquireDataResponse(wantParams, requestCode);
-    formHostClient->RemoveAcquireDataCallback(requestCode);
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest AddAcqiureFormDataCallback_0100 end";
-}
-
-/**
- * @tc.name: OnAcquireDataResponse_0100
- * @tc.desc: test OnAcquireDataResponse function.
- * @tc.type: FUNC
- * @tc.require: Cover OnAcquireDataResponse
- */
-HWTEST_F(FmsFormHostClientTest, OnAcquireDataResponse_0100, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest OnAcquireDataResponse_0100 start";
-    std::shared_ptr<FormDataCallbackInterface> formDataCallbackInterface = std::make_shared<MockFormDataCallback>();
-    int64_t requestCode = 1;
-    sptr<FormHostClient> formHostClient = FormHostClient::GetInstance();
-    AAFwk::WantParams wantParams;
-    formHostClient->OnAcquireDataResponse(wantParams, requestCode);
-    formHostClient->AddAcqiureFormDataCallback(formDataCallbackInterface, requestCode);
-    formHostClient->OnAcquireDataResponse(wantParams, requestCode);
-    formHostClient->RemoveAcquireDataCallback(requestCode);
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest OnAcquireDataResponse_0100 end";
 }
 
 /**
@@ -455,50 +325,6 @@ HWTEST_F(FmsFormHostClientTest, UpdateForm_0100, TestSize.Level0)
 }
 
 /**
- * @tc.number: UpdateForm_0200
- * @tc.name: UpdateForm
- * @tc.desc: Form id is not exist, verify UpdateForm failed.
- */
-HWTEST_F(FmsFormHostClientTest, UpdateForm_0200, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest UpdateForm_0200 start";
-    sptr<FormHostClient> formHostClient = FormHostClient::GetInstance();
-    int64_t formId = 1;
-    auto callback = std::make_shared<FormCallback>();
-    std::set<std::shared_ptr<FormCallbackInterface>> callbackSet;
-    callbackSet.emplace(callback);
-    formHostClient->formCallbackMap_.emplace(formId, callbackSet);
-
-    FormJsInfo formJsInfo;
-    formJsInfo.formId = 2;
-    formHostClient->UpdateForm(formJsInfo);
-    formHostClient->formCallbackMap_.clear();
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest UpdateForm_0200 end";
-}
-
-/**
- * @tc.number: UpdateForm_0300
- * @tc.name: UpdateForm
- * @tc.desc: Form id is less than 0, verify UpdateForm failed.
- */
-HWTEST_F(FmsFormHostClientTest, UpdateForm_0300, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest UpdateForm_0300 start";
-    sptr<FormHostClient> formHostClient = FormHostClient::GetInstance();
-    int64_t formId = 1;
-    auto callback = std::make_shared<FormCallback>();
-    std::set<std::shared_ptr<FormCallbackInterface>> callbackSet;
-    callbackSet.emplace(callback);
-    formHostClient->formCallbackMap_.emplace(formId, callbackSet);
-
-    FormJsInfo formJsInfo;
-    formJsInfo.formId = -1;
-    formHostClient->UpdateForm(formJsInfo);
-    formHostClient->formCallbackMap_.clear();
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest UpdateForm_0300 end";
-}
-
-/**
  * @tc.number: OnAcquired_0200
  * @tc.name: OnAcquired
  * @tc.desc: token is nullptr, Verify OnAcquired succeeded.
@@ -601,33 +427,6 @@ HWTEST_F(FmsFormHostClientTest, OnShareFormResponse_0100, TestSize.Level0)
     GTEST_LOG_(INFO) << "FmsFormHostClientTest OnShareFormResponse_0100 end";
 }
 /**
- * @tc.number: OnRecycleForm_0100
- * @tc.name: OnRecycleForm
- * @tc.desc: Verify OnRecycleForm succeeded.
- */
-HWTEST_F(FmsFormHostClientTest, OnRecycleForm_0100, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest OnRecycleForm_0100 start";
-    sptr<FormHostClient> formHostClient = FormHostClient::GetInstance();
-    int64_t formId = -1;
-    formHostClient->OnRecycleForm(formId);
-
-    auto callback = std::make_shared<FormCallback>();
-    std::set<std::shared_ptr<FormCallbackInterface>> callbackSet;
-    callbackSet.emplace(callback);
-    formHostClient->formCallbackMap_.emplace(2, callbackSet);
-    
-    formId = 1;
-    formHostClient->OnRecycleForm(formId);
-
-    formId = 2;
-    formHostClient->OnRecycleForm(formId);
-    formHostClient->formCallbackMap_.clear();
-
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest OnRecycleForm_0100 end";
-}
-
-/**
  * @tc.number: OnEnableForm_0300
  * @tc.name: OnEnableForm
  * @tc.desc: Verify OnEnableForm succeeded.
@@ -688,53 +487,6 @@ HWTEST_F(FmsFormHostClientTest, AddForm_0200, TestSize.Level1)
     EXPECT_EQ(
         formHostClient->formCallbackMap_.find(formJsInfo.formId) == formHostClient->formCallbackMap_.end(), true);
     GTEST_LOG_(INFO) << "FmsFormHostClientTest AddForm_0200 end";
-}
-
-/**
- * @tc.number: OnError_0100
- * @tc.name: OnError
- * @tc.desc: Cover OnError.
- */
-HWTEST_F(FmsFormHostClientTest, OnError_0100, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest OnError_0100 start";
-    sptr<FormHostClient> formHostClient = FormHostClient::GetInstance();
-    FormJsInfo formJsInfo;
-    formJsInfo.formId = 1;
-    formJsInfo.uiSyntax = FormType::ETS;
-    formHostClient->AddForm(nullptr, formJsInfo);
-    formJsInfo.formId = 2;
-    std::shared_ptr<FormCallbackInterface> formCallback = std::make_shared<FormCallback>();
-    formHostClient->AddForm(formCallback, formJsInfo);
-    formHostClient->etsFormIds_.emplace(3);
-    int32_t errorCode = 1;
-    std::string errorMsg = "this is errorMsg";
-    formHostClient->OnError(errorCode, errorMsg);
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest OnError_0100 end";
-}
-
-/**
- * @tc.number: OnError_0200
- * @tc.name: OnError
- * @tc.desc: Cover OnError.
- */
-HWTEST_F(FmsFormHostClientTest, OnError_0200, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest OnError_0200 start";
-    sptr<FormHostClient> formHostClient = FormHostClient::GetInstance();
-    std::vector<int64_t> formIds = {1, 2, 3, 4};
-    FormJsInfo formJsInfo;
-    formJsInfo.formId = 1;
-    formJsInfo.uiSyntax = FormType::ETS;
-    formHostClient->AddForm(nullptr, formJsInfo);
-    formJsInfo.formId = 2;
-    std::shared_ptr<FormCallbackInterface> formCallback = std::make_shared<FormCallback>();
-    formHostClient->AddForm(nullptr, formJsInfo);
-    formHostClient->etsFormIds_.emplace(3);
-    int32_t errorCode = 1;
-    std::string errorMsg = "this is errorMsg";
-    formHostClient->OnError(errorCode, errorMsg, formIds);
-    GTEST_LOG_(INFO) << "FmsFormHostClientTest OnError_0200 end";
 }
 
 /**

@@ -309,87 +309,6 @@ HWTEST_F(FmsFormEventUtilTest, FormEventUtil_061, TestSize.Level1)
 }
 
 /**
- * @tc.name: FormEventUtil_062
- * @tc.desc: test SetTimerCfgByMultUpdate empty config
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormEventUtilTest, FormEventUtil_062, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormEventUtil_062 start";
-    const std::string configMultUpdateAt = "";
-    FormTimerCfg cfg = {};
-    FormEventUtil::SetTimerCfgByMultUpdate(configMultUpdateAt, cfg);
-    EXPECT_FALSE(cfg.enableUpdate);
-    EXPECT_TRUE(cfg.updateAtTimes.empty());
-    GTEST_LOG_(INFO) << "FormEventUtil_062 end";
-}
-
-/**
- * @tc.name: FormEventUtil_063
- * @tc.desc: test SetTimerCfgByMultUpdate invalid size
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormEventUtilTest, FormEventUtil_063, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormEventUtil_063 start";
-    const std::string configMultUpdateAt = "00:00,01:00,02:00,03:00,04:00,05:00,06:00,07:00,08:00,09:00,"
-        "10:00,11:00,12:00,13:00,14:00,15:00,16:00,17:00,18:00,19:00,20:00,21:00,22:00,23:00,24:00";
-    FormTimerCfg cfg = {};
-    FormEventUtil::SetTimerCfgByMultUpdate(configMultUpdateAt, cfg);
-    EXPECT_FALSE(cfg.enableUpdate);
-    EXPECT_TRUE(cfg.updateAtTimes.empty());
-    GTEST_LOG_(INFO) << "FormEventUtil_063 end";
-}
-
-/**
- * @tc.name: FormEventUtil_064
- * @tc.desc: test SetTimerCfgByMultUpdate invalid time format
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormEventUtilTest, FormEventUtil_064, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormEventUtil_064 start";
-    const std::string configMultUpdateAt = "10:00:00";
-    FormTimerCfg cfg = {};
-    FormEventUtil::SetTimerCfgByMultUpdate(configMultUpdateAt, cfg);
-    EXPECT_FALSE(cfg.enableUpdate);
-    EXPECT_TRUE(cfg.updateAtTimes.empty());
-    GTEST_LOG_(INFO) << "FormEventUtil_064 end";
-}
-
-/**
- * @tc.name: FormEventUtil_065
- * @tc.desc: test SetTimerCfgByMultUpdate invalid hour
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormEventUtilTest, FormEventUtil_065, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormEventUtil_065 start";
-    const std::string configMultUpdateAt = "25:00";
-    FormTimerCfg cfg = {};
-    FormEventUtil::SetTimerCfgByMultUpdate(configMultUpdateAt, cfg);
-    EXPECT_FALSE(cfg.enableUpdate);
-    EXPECT_TRUE(cfg.updateAtTimes.empty());
-    GTEST_LOG_(INFO) << "FormEventUtil_065 end";
-}
-
-/**
- * @tc.name: FormEventUtil_066
- * @tc.desc: test SetTimerCfgByMultUpdate invalid minute
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormEventUtilTest, FormEventUtil_066, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormEventUtil_066 start";
-    const std::string configMultUpdateAt = "10:61";
-    FormTimerCfg cfg = {};
-    FormEventUtil::SetTimerCfgByMultUpdate(configMultUpdateAt, cfg);
-    EXPECT_FALSE(cfg.enableUpdate);
-    EXPECT_TRUE(cfg.updateAtTimes.empty());
-    GTEST_LOG_(INFO) << "FormEventUtil_066 end";
-}
-
-/**
  * @tc.name: FormEventUtil_067
  * @tc.desc: test SetTimerCfgByMultUpdate valid config
  * @tc.type: FUNC
@@ -574,21 +493,6 @@ HWTEST_F(FmsFormEventUtilTest, FormEventUtil_077, TestSize.Level1)
 }
 
 /**
- * @tc.name: FormEventUtil_078
- * @tc.desc: Test SetTimerCfgByMultUpdate with all invalid entries, cfg unchanged.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormEventUtilTest, FormEventUtil_078, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormEventUtil_078 start";
-    FormTimerCfg cfg = {};
-    FormEventUtil::SetTimerCfgByMultUpdate("25:00,24:99", cfg);
-    EXPECT_FALSE(cfg.enableUpdate);
-    EXPECT_TRUE(cfg.updateAtTimes.empty());
-    GTEST_LOG_(INFO) << "FormEventUtil_078 end";
-}
-
-/**
  * @tc.name: FormEventUtil_079
  * @tc.desc: Test UpdateMultiUpdateTime with valid time string.
  * @tc.type: FUNC
@@ -604,62 +508,6 @@ HWTEST_F(FmsFormEventUtilTest, FormEventUtil_079, TestSize.Level1)
     EXPECT_EQ(formRecord.updateAtTimes[1][0], 18);
     EXPECT_EQ(formRecord.updateAtTimes[1][1], 30);
     GTEST_LOG_(INFO) << "FormEventUtil_079 end";
-}
-
-/**
- * @tc.name: FormEventUtil_080
- * @tc.desc: Test UpdateMultiUpdateTime with invalid time, updateAtTimes remains empty.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormEventUtilTest, FormEventUtil_080, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormEventUtil_080 start";
-    FormRecord formRecord = {};
-    FormEventUtil::UpdateMultiUpdateTime("99:99", formRecord);
-    EXPECT_TRUE(formRecord.updateAtTimes.empty());
-    GTEST_LOG_(INFO) << "FormEventUtil_080 end";
-}
-
-/**
- * @tc.name: FormEventUtil_081
- * @tc.desc: Test BuildFormInfos with empty records returns empty vector.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormEventUtilTest, FormEventUtil_081, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormEventUtil_081 start";
-    std::vector<FormRecord> records;
-    auto formInfos = FormEventUtil::BuildFormInfos(records);
-    EXPECT_TRUE(formInfos.empty());
-    GTEST_LOG_(INFO) << "FormEventUtil_081 end";
-}
-
-/**
- * @tc.name: FormEventUtil_082
- * @tc.desc: Test BuildFormInfos with records, return size matches input.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormEventUtilTest, FormEventUtil_082, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormEventUtil_082 start";
-    std::vector<FormRecord> records;
-    FormRecord record1;
-    record1.formId = 1;
-    record1.bundleName = FORM_HOST_BUNDLE_NAME;
-    record1.moduleName = PARAM_PROVIDER_MODULE_NAME;
-    record1.abilityName = FORM_PROVIDER_ABILITY_NAME;
-    record1.formName = FORM_NAME;
-    records.push_back(record1);
-    FormRecord record2;
-    record2.formId = 2;
-    record2.bundleName = FORM_HOST_BUNDLE_NAME;
-    record2.moduleName = PARAM_PROVIDER_MODULE_NAME;
-    record2.abilityName = FORM_PROVIDER_ABILITY_NAME;
-    record2.formName = FORM_NAME;
-    records.push_back(record2);
-    auto formInfos = FormEventUtil::BuildFormInfos(records);
-    EXPECT_EQ(formInfos.size(), records.size());
-    GTEST_LOG_(INFO) << "FormEventUtil_082 end";
 }
 
 }

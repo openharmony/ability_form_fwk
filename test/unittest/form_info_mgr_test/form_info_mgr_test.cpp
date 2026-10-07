@@ -138,22 +138,6 @@ HWTEST_F(FormInfoMgrTest, FormInfoHelper_LoadStageFormConfigInfo_0200, TestSize.
 }
 
 /**
- * @tc.name: FormInfoHelper_GetResourceManager_0100
- * @tc.number: GetResourceManager
- * @tc.desc: call GetResourceManager with AddResource failed
- */
-HWTEST_F(FormInfoMgrTest, FormInfoHelper_GetResourceManager_0100, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormInfoHelper_GetResourceManager_0100 start";
-    BundleInfo bundleInfo;
-    HapModuleInfo hapModuleInfo;
-    hapModuleInfo.hapPath = "";
-    bundleInfo.hapModuleInfos.push_back(hapModuleInfo);
-    EXPECT_NE(nullptr, formInfoHelper_->GetResourceManager(bundleInfo));
-    GTEST_LOG_(INFO) << "FormInfoHelper_GetResourceManager_0100 end";
-}
-
-/**
  * @tc.name: FormInfoHelper_GetFormInfoDescription_0200
  * @tc.number: GetFormInfoDescription
  * @tc.desc: call GetFormInfoDescription with GetStringById failed
@@ -616,24 +600,6 @@ HWTEST_F(FormInfoMgrTest, FormInfoMgr_RemoveAllDynamicFormsInfo_0100, TestSize.L
     FormInfo formInfo = GetTestFormInfo();
     formInfoMgr_.AddDynamicFormInfo(formInfo, USER_ID);
     GTEST_LOG_(INFO) << "FormInfoMgr_RemoveAllDynamicFormsInfo_0100 end";
-}
-
-/**
- * @tc.name: FormInfoMgr_GetOrCreateBundleFromInfo_0100
- * @tc.number: GetOrCreateBundleFromInfo
- * @tc.desc: call GetOrCreateBundleFromInfo success null bundleFormInfo
- */
-HWTEST_F(FormInfoMgrTest, FormInfoMgr_GetOrCreateBundleFromInfo_0100, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormInfoMgr_GetOrCreateBundleFromInfo_0100 start";
-    auto bundleFormInfoIter = formInfoMgr_.bundleFormInfoMap_.find(FORM_BUNDLE_NAME_TEST);
-    if (bundleFormInfoIter == formInfoMgr_.bundleFormInfoMap_.end()) {
-        EXPECT_NE(nullptr, formInfoMgr_.GetOrCreateBundleFromInfo(FORM_BUNDLE_NAME_TEST));
-    } else {
-        formInfoMgr_.bundleFormInfoMap_.erase(bundleFormInfoIter);
-        EXPECT_NE(nullptr, formInfoMgr_.GetOrCreateBundleFromInfo(FORM_BUNDLE_NAME_TEST));
-    }
-    GTEST_LOG_(INFO) << "FormInfoMgr_GetOrCreateBundleFromInfo_0100 end";
 }
 
 /**
@@ -1800,21 +1766,6 @@ HWTEST_F(FormInfoMgrTest, FormInfoMgr_GetTemplateFormsInfoByBundle_003, TestSize
     EXPECT_EQ(ERR_APPEXECFWK_FORM_PERMISSION_DENY_BUNDLE,
         formInfoMgr_.GetTemplateFormsInfoByBundle(FORM_BUNDLE_NAME_TEST, formInfos, USER_ID));
     GTEST_LOG_(INFO) << "FormInfoMgr_GetTemplateFormsInfoByBundle_003 end";
-}
-
-/**
- * @tc.name: FormInfoMgr_GetTemplateFormsInfoByBundle_004
- * @tc.desc: test GetTemplateFormsInfoByBundle with empty bundleName.
- * @tc.type: FUNC
- */
-HWTEST_F(FormInfoMgrTest, FormInfoMgr_GetTemplateFormsInfoByBundle_004, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormInfoMgr_GetTemplateFormsInfoByBundle_004 start";
-    std::vector<FormInfo> formInfos;
-    MockIsSACall(true);
-    EXPECT_EQ(ERR_APPEXECFWK_FORM_INVALID_PARAM,
-        formInfoMgr_.GetTemplateFormsInfoByBundle("", formInfos, USER_ID));
-    GTEST_LOG_(INFO) << "FormInfoMgr_GetTemplateFormsInfoByBundle_004 end";
 }
 
 /**

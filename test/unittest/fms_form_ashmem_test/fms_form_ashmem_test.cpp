@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2026 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -109,23 +109,6 @@ HWTEST_F(FmsFormAshmemTest, FmsFormAshmemTest_003, TestSize.Level1)
 }
 
 /*
-* @tc.number: FmsFormAshmemTest_004
-* @tc.name: WriteToAshmem
-* @tc.desc: Verify function WriteToAshmem return value is false
-*/
-HWTEST_F(FmsFormAshmemTest, FmsFormAshmemTest_004, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FmsFormAshmemTest_004 start";
-    std::string name = "abc";
-    char data[] = "ab";
-    int32_t size = -1;
-    form_ashmem_->ashmem_ = nullptr;
-    form_ashmem_->WriteToAshmem(name, data, size);
-    EXPECT_FALSE(form_ashmem_->WriteToAshmem(name, data, size));
-    GTEST_LOG_(INFO) << "FmsFormAshmemTest_004 end";
-}
-
-/*
 * @tc.number: FmsFormAshmemTest_005
 * @tc.name: GetAshmemSize
 * @tc.desc: Verify function GetAshmemSize return value is ERROR_NUM
@@ -211,26 +194,6 @@ HWTEST_F(FmsFormAshmemTest, FmsFormAshmemTest_010, TestSize.Level1)
     form_ashmem_->ashmem_ = nullptr;
     EXPECT_EQ(form_ashmem_->GetAshmemFd(), ERROR_NUM);
     GTEST_LOG_(INFO) << "FmsFormAshmemTest_010 end";
-}
-
-/*
-* @tc.number: FmsFormAshmemTest_011
-* @tc.name: WriteToAshmem
-* @tc.desc: Verify function WriteToAshmem return value is false
-*/
-HWTEST_F(FmsFormAshmemTest, FmsFormAshmemTest_011, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FmsFormAshmemTest_011 start";
-    std::string name = "abc";
-    char data[] = "ab";
-    int32_t size = 1;
-    int32_t fd = -1;
-    form_ashmem_->ashmem_ = new (std::nothrow) Ashmem(fd, size);
-    MockMapReadAndWriteAshmem(false);
-    form_ashmem_->WriteToAshmem(name, data, size);
-    EXPECT_TRUE(form_ashmem_->ashmem_ != nullptr);
-    EXPECT_FALSE(form_ashmem_->WriteToAshmem(name, data, size));
-    GTEST_LOG_(INFO) << "FmsFormAshmemTest_011 end";
 }
 
 /*

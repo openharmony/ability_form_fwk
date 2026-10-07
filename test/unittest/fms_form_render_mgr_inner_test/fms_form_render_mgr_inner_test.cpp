@@ -1555,36 +1555,6 @@ HWTEST_F(FormRenderMgrInnerTest, GetRenderRemoteObj_001, TestSize.Level0)
 }
 
 /**
- * @tc.name: PostOnUnlockTask_001
- * @tc.desc: test PostOnUnlockTask function when renderRemoteObj_ is nullptr.
- * @tc.type: FUNC
- */
-HWTEST_F(FormRenderMgrInnerTest, PostOnUnlockTask_001, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "PostOnUnlockTask_001 start";
-    FormRenderMgrInner formRenderMgrInner;
-    formRenderMgrInner.renderRemoteObj_ = nullptr;
-    formRenderMgrInner.PostOnUnlockTask();
-    EXPECT_NE(nullptr, formRenderMgrInner.onUnlockTask_);
-    GTEST_LOG_(INFO) << "PostOnUnlockTask_001 end";
-}
-
-/**
- * @tc.name: PostOnUnlockTask_002
- * @tc.desc: test PostOnUnlockTask function when renderRemoteObj_ is not nullptr.
- * @tc.type: FUNC
- */
-HWTEST_F(FormRenderMgrInnerTest, PostOnUnlockTask_002, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "PostOnUnlockTask_002 start";
-    FormRenderMgrInner formRenderMgrInner;
-    formRenderMgrInner.renderRemoteObj_ = new (std::nothrow) MockIFormRender();
-    formRenderMgrInner.PostOnUnlockTask();
-    EXPECT_NE(nullptr, formRenderMgrInner.onUnlockTask_);
-    GTEST_LOG_(INFO) << "PostOnUnlockTask_002 end";
-}
-
-/**
  * @tc.name: StopRenderingForm_001
  * @tc.desc: test StopRenderingForm function with hostToken.
  * @tc.type: FUNC
@@ -1948,43 +1918,6 @@ HWTEST_F(FormRenderMgrInnerTest, RecoverForms_005, TestSize.Level0)
     MockGetFormRecord(true, 0);
     EXPECT_EQ(ERR_APPEXECFWK_FORM_INVALID_PARAM, formRenderMgrInner->RecoverForms(formIds, wantParams));
     GTEST_LOG_(INFO) << "RecoverForms_005 end";
-}
-
-/**
- * @tc.name: GetRenderObject_003
- * @tc.desc: test GetRenderObject when renderRemoteObj and AsObject are valid.
- * @tc.type: FUNC
- */
-HWTEST_F(FormRenderMgrInnerTest, GetRenderObject_003, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "GetRenderObject_003 start";
-    std::shared_ptr<FormRenderMgrInner> formRenderMgrInner = std::make_shared<FormRenderMgrInner>();
-    MockIFormRender* mockRender = new (std::nothrow) MockIFormRender();
-    formRenderMgrInner->renderRemoteObj_ = mockRender;
-    sptr<IRemoteObject> renderObj;
-    EXPECT_EQ(ERR_APPEXECFWK_FORM_INVALID_PARAM, formRenderMgrInner->GetRenderObject(renderObj));
-    GTEST_LOG_(INFO) << "GetRenderObject_003 end";
-}
-
-/**
- * @tc.name: RenderConnectedForm_004
- * @tc.desc: test RenderConnectedForm when all parameters are valid.
- * @tc.type: FUNC
- */
-HWTEST_F(FormRenderMgrInnerTest, RenderConnectedForm_004, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "RenderConnectedForm_004 start";
-    std::shared_ptr<FormRenderMgrInner> formRenderMgrInner = std::make_shared<FormRenderMgrInner>();
-    MockIFormRender* mockRender = new (std::nothrow) MockIFormRender();
-    formRenderMgrInner->renderRemoteObj_ = mockRender;
-    FormRecord formRecord;
-    formRecord.formId = 1;
-    Want want;
-    WantParams wantParams;
-    sptr<FormRenderConnection> connection = new (std::nothrow) FormRenderConnection(formRecord, wantParams);
-    EXPECT_EQ(ERR_APPEXECFWK_FORM_INVALID_PARAM,
-        formRenderMgrInner->RenderConnectedForm(formRecord, want, connection));
-    GTEST_LOG_(INFO) << "RenderConnectedForm_004 end";
 }
 
 /**

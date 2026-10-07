@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2026 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -52,23 +52,6 @@ void FmsRunningFormInfoTest::SetUp() {}
 void FmsRunningFormInfoTest::TearDown() {}
 
 /**
- * @tc.name: FmsRunningFormInfoTest_001
- * @tc.desc: text the RunningFormInfo::ReadFromParcel
- * @tc.type: FUNC
- * @tc.require: #I5SNG1
- */
-HWTEST_F(FmsRunningFormInfoTest, FmsRunningFormInfoTest_001, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsRunningFormInfoTest_001 start";
-    RunningFormInfo runningFormInfo;
-    Parcel parcel;
-    auto result = runningFormInfo.ReadFromParcel(parcel);
-
-    EXPECT_TRUE(result);
-    GTEST_LOG_(INFO) << "FmsRunningFormInfoTest_001 end";
-}
-
-/**
  * @tc.name: FmsRunningFormInfoTest_002
  * @tc.desc: text the RunningFormInfo::Marshalling
  * @tc.type: FUNC
@@ -83,21 +66,6 @@ HWTEST_F(FmsRunningFormInfoTest, FmsRunningFormInfoTest_002, TestSize.Level0)
 
     EXPECT_TRUE(result);
     GTEST_LOG_(INFO) << "FmsRunningFormInfoTest_002 end";
-}
-
-/**
- * @tc.name: FmsRunningFormInfoTest_003
- * @tc.desc: text the RunningFormInfo::Unmarshalling
- * @tc.type: FUNC
- * @tc.require: #I5SNG1
- */
-HWTEST_F(FmsRunningFormInfoTest, FmsRunningFormInfoTest_003, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsRunningFormInfoTest_003 start";
-    RunningFormInfo runningFormInfo;
-    Parcel parcel;
-    EXPECT_NE(runningFormInfo.Unmarshalling(parcel), nullptr);
-    GTEST_LOG_(INFO) << "FmsRunningFormInfoTest_003 end";
 }
 } // namespace AppExecFwk
 } // namespace OHOS

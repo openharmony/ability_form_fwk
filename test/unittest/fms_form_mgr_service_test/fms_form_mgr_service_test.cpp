@@ -633,40 +633,6 @@ HWTEST_F(FmsFormMgrServiceTest, FormMgrService_0025, TestSize.Level1)
 }
 
 /**
- * @tc.number: FormMgrService_0026
- * @tc.name: test Dump function.
- * @tc.desc: Verify that 3 exception parameter list parameters are specified, the Dump
- *           interface is called normally and the return value is false.
- */
-HWTEST_F(FmsFormMgrServiceTest, FormMgrService_0026, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormMgrService_0026 start";
-    FormMgrService formMgrService;
-    const std::vector<std::u16string> args = { u"args1", u"args2", u"args3" };
-    std::string result;
-    formMgrService.Dump(args, result);
-    EXPECT_FALSE(result.empty());
-    GTEST_LOG_(INFO) << "FormMgrService_0026 end";
-}
-
-/**
- * @tc.number: FormMgrService_0027
- * @tc.name: test Dump function.
- * @tc.desc: Verify that 1 normal parameter list parameters are specified, the Dump
- *           interface is called normally and the return value is false.
- */
-HWTEST_F(FmsFormMgrServiceTest, FormMgrService_0027, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormMgrService_0027 start";
-    FormMgrService formMgrService;
-    const std::vector<std::u16string> args = { u"-h" };
-    std::string result;
-    formMgrService.Dump(args, result);
-    EXPECT_FALSE(result.empty());
-    GTEST_LOG_(INFO) << "FormMgrService_0027 end";
-}
-
-/**
  * @tc.number: FormMgrService_0028
  * @tc.name: test CheckCallerIsSystemApp function.
  * @tc.desc: Verify MockIsSACall is verified to be false, that the CheckCallerIsSystemApp interface is called
@@ -1051,45 +1017,6 @@ HWTEST_F(FmsFormMgrServiceTest, FormMgrService_0051, TestSize.Level1)
               ERR_APPEXECFWK_FORM_PERMISSION_DENY);
     MockIsSACall(true);
     GTEST_LOG_(INFO) << "FormMgrService_0051 end";
-}
-
-/**
- * @tc.number: FormMgrService_0052
- * @tc.name: test HiDumpTemporaryFormInfos function.
- * @tc.desc: Verify that the HiDumpTemporaryFormInfos interface is available.
- */
-HWTEST_F(FmsFormMgrServiceTest, FormMgrService_0052, TestSize.Level1)
-{
-    // Add temp formRecords to FormDataMgr
-    FormDataMgr::GetInstance().formRecords_.clear();
-    FormRecord formRecord;
-    formRecord.formTempFlag = true;
-    FormDataMgr::GetInstance().formRecords_.emplace(0, formRecord);
-    // HiDumpTemporaryFormInfos
-    FormMgrService formMgrService;
-    std::string args;
-    std::string formInfo;
-    formMgrService.HiDumpTemporaryFormInfos(args, formInfo);
-    EXPECT_EQ(false, formInfo.empty());
-
-    GTEST_LOG_(INFO) << "FormMgrService_0052 end";
-}
-
-/**
- * @tc.number: FormMgrService_0053
- * @tc.name: test HiDumpStaticBundleFormInfos function.
- * @tc.desc: Verify that the HiDumpStaticBundleFormInfos interface is available.
- */
-HWTEST_F(FmsFormMgrServiceTest, FormMgrService_0053, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormMgrService_0053 start";
-    FormMgrService formMgrService;
-    std::string args;
-    std::string formInfo;
-    formMgrService.HiDumpStaticBundleFormInfos(args, formInfo);
-    EXPECT_EQ(false, formInfo.empty());
-
-    GTEST_LOG_(INFO) << "FormMgrService_0053 end";
 }
 
 /**

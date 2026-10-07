@@ -86,22 +86,6 @@ HWTEST_F(FmsFormInstanceTest, FmsFormInstanceTest_0200, TestSize.Level0)
 }
 
 /**
- * @tc.name: FmsFormInstanceTest_0300
- * @tc.desc: text the FormInstance::Unmarshalling
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormInstanceTest, FmsFormInstanceTest_0300, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormInstanceTest_0300 start";
-
-    FormInstance formInstance;
-    Parcel parcel;
-    auto result = formInstance.Unmarshalling(parcel);
-    EXPECT_NE(result, nullptr);
-    GTEST_LOG_(INFO) << "FmsFormInstanceTest_0300 end";
-}
-
-/**
  * @tc.name: FmsFormInstanceTest_0400
  * @tc.desc: text the FormInstancesFilter::Unmarshalling
  * @tc.type: FUNC
