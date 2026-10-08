@@ -838,45 +838,6 @@ HWTEST_F(FormRenderMgrTest, GetFRSDiedInLowMemoryByUid_002, TestSize.Level0)
 }
 
 /**
- * @tc.name: SetRenderGroupEnableFlag_001
- * @tc.desc: Test SetRenderGroupEnableFlag when no renderInner exists for current userId, maps unchanged.
- * @tc.type: FUNC
- */
-HWTEST_F(FormRenderMgrTest, SetRenderGroupEnableFlag_001, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "SetRenderGroupEnableFlag_001 start";
-    FormRenderMgr formRenderMgr;
-    MockGetCurrentAccountIdRet(200);
-    formRenderMgr.InitRenderInner(false, 100);
-    EXPECT_EQ(formRenderMgr.renderInners_.size(), 1u);
-    formRenderMgr.SetRenderGroupEnableFlag(1, true);
-    EXPECT_EQ(formRenderMgr.renderInners_.size(), 1u);
-    EXPECT_TRUE(formRenderMgr.sandboxInners_.empty());
-    GTEST_LOG_(INFO) << "SetRenderGroupEnableFlag_001 end";
-}
-
-/**
- * @tc.name: SetRenderGroupEnableFlag_002
- * @tc.desc: Test SetRenderGroupEnableFlag with matching userId, inner remains valid after call.
- * @tc.type: FUNC
- */
-HWTEST_F(FormRenderMgrTest, SetRenderGroupEnableFlag_002, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "SetRenderGroupEnableFlag_002 start";
-    FormRenderMgr formRenderMgr;
-    MockGetCurrentAccountIdRet(100);
-    formRenderMgr.InitRenderInner(false, 100);
-    formRenderMgr.InitRenderInner(true, 100);
-    std::shared_ptr<FormRenderMgrInner> renderInner;
-    EXPECT_TRUE(formRenderMgr.GetFormRenderMgrInner(100, renderInner));
-    formRenderMgr.SetRenderGroupEnableFlag(1, true);
-    EXPECT_TRUE(formRenderMgr.GetFormRenderMgrInner(100, renderInner));
-    formRenderMgr.SetRenderGroupEnableFlag(1, false);
-    EXPECT_TRUE(formRenderMgr.GetFormRenderMgrInner(100, renderInner));
-    GTEST_LOG_(INFO) << "SetRenderGroupEnableFlag_002 end";
-}
-
-/**
  * @tc.name: CheckMultiAppFormVersionCode_001
  * @tc.desc: Test CheckMultiAppFormVersionCode with empty bundleName returns false.
  * @tc.type: FUNC

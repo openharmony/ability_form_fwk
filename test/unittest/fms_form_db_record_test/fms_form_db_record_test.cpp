@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2026 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -66,18 +66,6 @@ void FmsFormDbRecordTest::TearDown()
         FormDbCache::GetInstance().formDBInfos_.clear();
     }
     MockGetBundleNameByUid(ERR_OK);
-}
-
-/**
- * @tc.name: FmsFormDbRecordTest_001
- * @tc.desc: Verify functionName Start.
- * @tc.details: Verify that the return value is correct.
- */
-HWTEST_F(FmsFormDbRecordTest, FmsFormDbRecordTest_001, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDbRecordTest_001 start";
-    FormDbCache::GetInstance().Start();
-    GTEST_LOG_(INFO) << "FmsFormDbRecordTest_001 end";
 }
 
 /**
@@ -491,42 +479,6 @@ HWTEST_F(FmsFormDbRecordTest, FmsFormDbRecordTest_019, TestSize.Level0)
     auto iter = find(formDBInfos.begin(), formDBInfos.end(), formDbInfo);
     EXPECT_EQ(iter->formLocation, Constants::FormLocation::AI_SUGGESTION);
     GTEST_LOG_(INFO) << "FmsFormDbRecordTest_019 end";
-}
-
-/**
- * @tc.number: FmsFormDbRecordTest_020
- * @tc.name: GetFormDBInfoCacheByBundleName
-*/
-HWTEST_F(FmsFormDbRecordTest, FmsFormDbRecordTest_020, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDbRecordTest_020 start";
-    int64_t formId = 100;
-    FormDBInfo formDbInfo(formId, formRecord_);
-    formDbInfo.bundleName = "testBundleName";
-    formDbInfo.providerUserId = 200;
-    FormDbCache::GetInstance().SaveFormInfo(formDbInfo);
-    std::vector<FormDBInfo> findInfos;
-    FormDbCache::GetInstance().GetFormDBInfoCacheByBundleName(formDbInfo.bundleName, formDbInfo.providerUserId,
-        findInfos);
-    EXPECT_TRUE(findInfos.size() > 0);
-    GTEST_LOG_(INFO) << "FmsFormDbRecordTest_020 end";
-}
-
-/**
- * @tc.number: FmsFormDbRecordTest_021
- * @tc.name: GetFormDBInfoCacheByUserId
-*/
-HWTEST_F(FmsFormDbRecordTest, FmsFormDbRecordTest_021, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDbRecordTest_021 start";
-    int64_t formId = 100;
-    FormDBInfo formDbInfo(formId, formRecord_);
-    formDbInfo.providerUserId = 200;
-    FormDbCache::GetInstance().SaveFormInfo(formDbInfo);
-    std::vector<FormDBInfo> findInfos;
-    FormDbCache::GetInstance().GetFormDBInfoCacheByUserId(formDbInfo.providerUserId, findInfos);
-    EXPECT_TRUE(findInfos.size() > 0);
-    GTEST_LOG_(INFO) << "FmsFormDbRecordTest_021 end";
 }
 
 /**

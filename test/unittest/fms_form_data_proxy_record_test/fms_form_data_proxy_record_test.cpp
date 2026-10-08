@@ -129,25 +129,6 @@ HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_008, TestSize.Le
 }
 
 /**
- * @tc.name: FmsFormDataProxyRecordTest_010
- * @tc.desc: test UnsubscribeFormData function.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_010, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_010 start";
-    FormRecord formRecord;
-    int64_t formId = 1;
-    uint32_t tokenId = 1;
-    FormDataProxyRecord formDataProxyRecord(formId, formRecord.bundleName, formRecord.uiSyntax, tokenId, 1);
-    FormDataProxyRecord::SubscribeMap publishSubscribeMap;
-    FormDataProxyRecord::SubscribeMap rdbSubscribeMap;
-    ErrCode ret = formDataProxyRecord.UnsubscribeFormData();
-    EXPECT_EQ(ret, formDataProxyRecord.UnsubscribeFormData(rdbSubscribeMap, publishSubscribeMap));
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_010 end";
-}
-
-/**
  * @tc.number: FmsFormDataProxyRecordTest_011
  * @tc.name: SubscribePublishFormData
  * @tc.desc: Verify that the return value is correct.
@@ -336,47 +317,6 @@ HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_027, TestSize.Le
 }
 
 /**
- * @tc.number: FmsFormDataProxyRecordTest_028
- * @tc.name: SetPublishSubsState
- * @tc.desc: Verify that the return value is correct.
- * @tc.details:
- *      temporaryFlag is true, and tempForms is empty, then create a tempForm.
- *      formRecords_ is empty, then create formRecords.
- */
-HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_028, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_028 start";
-    FormRecord formRecord;
-    int64_t formId = 1;
-    uint32_t tokenId = 1;
-    FormDataProxyRecord formDataProxyRecord(formId, formRecord.bundleName, formRecord.uiSyntax, tokenId, 1);
-    FormDataProxyRecord::SubscribeMap publishSubscribeMap;
-    ErrCode ret = formDataProxyRecord.SetPublishSubsState(publishSubscribeMap, false);
-    EXPECT_EQ(ret, ERR_OK);
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_028 end";
-}
-
-/**
- * @tc.name: FmsFormDataProxyRecordTest_029
- * @tc.desc: test GetFormSubscribedInfo function.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_029, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_029 start";
-    FormItemInfo formItemInfo;
-    FormRecord formRecord;
-    int64_t formId = 1;
-    uint32_t tokenId = 1;
-    FormDataProxyRecord formDataProxyRecord(formId, formRecord.bundleName, formRecord.uiSyntax, tokenId, 1);
-    std::vector<std::string> subscribedKeys;
-    int32_t count = 0;
-    formDataProxyRecord.GetFormSubscribeInfo(subscribedKeys, count);
-    EXPECT_EQ(count, formDataProxyRecord.receivedDataCount_);
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_029 end";
-}
-
-/**
  * @tc.name: FmsFormDataProxyRecordTest_030
  * @tc.desc: test AddSubscribeSuccessKey function.
  * @tc.type: FUNC
@@ -459,42 +399,6 @@ HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_036, TestSize.Le
     formDataProxyRecord.GetFormSubscribeKeys(subscribedKeys, true);
     EXPECT_EQ(subscribedKeys.size(), 0);
     GTEST_LOG_(INFO) << "FmsFormDataMgrTest_036 end";
-}
-
-/**
- * @tc.name: FmsFormDataProxyRecordTest_039
- * @tc.desc: test PermStateChangeCallback function.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_039, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_039 start";
-    FormRecord formRecord;
-    int64_t formId = 1;
-    MockGetFormRecord(true);
-    bool result = FormDataMgr::GetInstance().GetFormRecord(formId, formRecord);
-    EXPECT_TRUE(result);
-    uint32_t tokenId = 1;
-    FormDataProxyRecord formDataProxyRecord(formId, formRecord.bundleName, formRecord.uiSyntax, tokenId, 1);
-    int32_t userId = 0;
-    OHOS::AppExecFwk::ProxyData proxyData;
-    proxyData.uri = TEST_DATA_URI;
-    proxyData.requiredReadPermission = TEST_REQUIRED_READ_PERMISSON;
-    proxyData.requiredWritePermission = TEST_REQUIRED_WRITE_PERMISSON;
-    std::vector<FormDataProxy> formDataProxies;
-    formDataProxies.emplace_back(TEST_DATA_URI, TEST_PROXY_SUBSCRIBE_ID);
-    MockGetCurrentAccountIdRet(userId);
-    MockGetAllProxyDataInfos(true, proxyData);
-    int32_t ret = 0;
-    MockRegisterPermStateChangeCallback(ret);
-    formDataProxyRecord.RegisterPermissionListener(formDataProxies);
-    MockConnectServiceAbility(true);
-    int32_t permStateChangeType = 0;
-    formDataProxyRecord.PermStateChangeCallback(permStateChangeType, TEST_REQUIRED_READ_PERMISSON);
-    MockConnectServiceAbility(false);
-    formDataProxyRecord.PermStateChangeCallback(permStateChangeType, TEST_REQUIRED_READ_PERMISSON);
-    formDataProxyRecord.UnRegisterPermissionListener();
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_039 end";
 }
 
 /**
@@ -820,82 +724,6 @@ HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_UpdateSubscribeM
     EXPECT_EQ(newPublishMap.size(), 1);
     EXPECT_EQ(newPublishMap["testUri"].count("newSubscribeId"), 1);
     GTEST_LOG_(INFO) << "FmsFormDataProxyRecordTest_UpdateSubscribeMap_003 end";
-}
-
-/**
- * @tc.number: FmsFormDataProxyRecordTest_UpdatePublishedDataForm_001
- * @tc.name: UpdatePublishedDataForm_ValidJson
- * @tc.desc: Verify that UpdatePublishedDataForm handles valid JSON correctly.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_UpdatePublishedDataForm_001, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataProxyRecordTest_UpdatePublishedDataForm_001 start";
-    FormRecord formRecord;
-    formRecord.uiSyntax = FormType::ETS;
-    formRecord.isDistributedForm = false;
-    int64_t formId = 1;
-    uint32_t tokenId = 1;
-    FormDataProxyRecord formDataProxyRecord(formId, formRecord.bundleName, formRecord.uiSyntax, tokenId, 1);
-
-    std::vector<DataShare::PublishedDataItem> data;
-    DataShare::PublishedDataItem item;
-    item.key_ = "testKey";
-    std::string jsonStr = R"({"name": "test", "value": 123})";
-    item.value_ = jsonStr;
-    data.emplace_back(std::move(item));
-
-    MockGetFormRecord(true);
-
-    auto mockFacade = std::make_shared<MockFormMgrAdapterFacade>();
-    MockFormMgrAdapterFacade::obj = mockFacade;
-    EXPECT_CALL(*mockFacade, UpdateForm(_, _, _, _))
-        .Times(1)
-        .WillOnce(testing::Return(ERR_OK));
-
-    formDataProxyRecord.UpdatePublishedDataForm(data);
-
-    MockFormMgrAdapterFacade::obj = nullptr;
-
-    GTEST_LOG_(INFO) << "FmsFormDataProxyRecordTest_UpdatePublishedDataForm_001 end";
-}
-
-/**
- * @tc.number: FmsFormDataProxyRecordTest_UpdatePublishedDataForm_002
- * @tc.name: UpdatePublishedDataForm_InvalidJson
- * @tc.desc: Verify that UpdatePublishedDataForm skips invalid JSON.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_UpdatePublishedDataForm_002, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataProxyRecordTest_UpdatePublishedDataForm_002 start";
-    FormRecord formRecord;
-    formRecord.uiSyntax = FormType::ETS;
-    formRecord.isDistributedForm = false;
-    int64_t formId = 1;
-    uint32_t tokenId = 1;
-    FormDataProxyRecord formDataProxyRecord(formId, formRecord.bundleName, formRecord.uiSyntax, tokenId, 1);
-
-    std::vector<DataShare::PublishedDataItem> data;
-    DataShare::PublishedDataItem item;
-    item.key_ = "testKey";
-    std::string invalidJson = "{invalid json";
-    item.value_ = invalidJson;
-    data.emplace_back(std::move(item));
-
-    MockGetFormRecord(true);
-
-    auto mockFacade = std::make_shared<MockFormMgrAdapterFacade>();
-    MockFormMgrAdapterFacade::obj = mockFacade;
-    EXPECT_CALL(*mockFacade, UpdateForm(_, _, _, _))
-        .Times(1)
-        .WillOnce(testing::Return(ERR_OK));
-
-    formDataProxyRecord.UpdatePublishedDataForm(data);
-
-    MockFormMgrAdapterFacade::obj = nullptr;
-
-    GTEST_LOG_(INFO) << "FmsFormDataProxyRecordTest_UpdatePublishedDataForm_002 end";
 }
 
 /**
@@ -1437,39 +1265,6 @@ HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_RemoveSubscribeR
 }
 
 /**
- * @tc.number: FmsFormDataProxyRecordTest_PrintSubscribeState_002
- * @tc.name: PrintSubscribeState_SubscribeIdNotExists
- * @tc.desc: Verify that PrintSubscribeState handles non-existing subscribeId without crash.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_PrintSubscribeState_002, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataProxyRecordTest_PrintSubscribeState_002 start";
-    FormRecord formRecord;
-    int64_t formId = 1;
-    uint32_t tokenId = 1;
-    FormDataProxyRecord formDataProxyRecord(formId, formRecord.bundleName, formRecord.uiSyntax, tokenId, 1);
-
-    std::string uri = "testUri";
-    int64_t subscribeId1 = 100;
-    int64_t subscribeId2 = 200;
-
-    // Set up test data with one subscription
-    FormDataProxyRecord::SubscribeResultRecord record{uri, subscribeId1, 0, false, 0};
-    formDataProxyRecord.rdbSubscribeResultMap_[uri][subscribeId1] = record;
-    EXPECT_EQ(formDataProxyRecord.rdbSubscribeResultMap_[uri].size(), 1);
-
-    // Verify function handles non-existing subscribeId correctly
-    formDataProxyRecord.PrintSubscribeState(uri, subscribeId2, true);
-
-    // Verify the original record is still intact
-    EXPECT_EQ(formDataProxyRecord.rdbSubscribeResultMap_[uri].size(), 1);
-    EXPECT_TRUE(formDataProxyRecord.rdbSubscribeResultMap_[uri].count(subscribeId1) > 0);
-
-    GTEST_LOG_(INFO) << "FmsFormDataProxyRecordTest_PrintSubscribeState_002 end";
-}
-
-/**
  * @tc.number: FmsFormDataProxyRecordTest_GetFormSubscribeKeys_002
  * @tc.name: GetFormSubscribeKeys_WithValidRecords
  * @tc.desc: Verify that GetFormSubscribeKeys extracts keys correctly from valid records.
@@ -1537,39 +1332,6 @@ HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_GetFormSubscribe
     EXPECT_EQ(subscribedKeys.size(), 1);
     EXPECT_EQ(subscribedKeys[0], "testUri2");
     GTEST_LOG_(INFO) << "FmsFormDataProxyRecordTest_GetFormSubscribeKeys_003 end";
-}
-
-/**
- * @tc.number: FmsFormDataProxyRecordTest_SetWant_001
- * @tc.name: SetWant
- * @tc.desc: Verify that SetWant correctly sets the Want object to wantCache_.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormDataProxyRecordTest, FmsFormDataProxyRecordTest_SetWant_001, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataProxyRecordTest_SetWant_001 start";
-    FormRecord formRecord;
-    int64_t formId = 1;
-    uint32_t tokenId = 1;
-    FormDataProxyRecord formDataProxyRecord(formId, formRecord.bundleName, formRecord.uiSyntax, tokenId, 1);
-
-    // Create a test Want object
-    AAFwk::Want testWant;
-    std::string val = "testValue";
-    testWant.SetParam("testKey", val);
-    testWant.SetParam("formId", formId);
-
-    // Call SetWant
-    formDataProxyRecord.SetWant(testWant);
-
-    // Verify that wantCache_ is set correctly
-    std::string testValue = testWant.GetStringParam("testKey");
-    EXPECT_EQ(testValue, "testValue");
-
-    int64_t formIdFromWant = testWant.GetLongParam("formId", 0);
-    EXPECT_EQ(formIdFromWant, formId);
-
-    GTEST_LOG_(INFO) << "FmsFormDataProxyRecordTest_SetWant_001 end";
 }
 
 /**

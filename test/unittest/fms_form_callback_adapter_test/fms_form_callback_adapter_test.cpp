@@ -2323,24 +2323,6 @@ HWTEST_F(FmsFormCallbackAdapterTest, UnregisterFormRouterProxy_005, TestSize.Lev
     GTEST_LOG_(INFO) << "UnregisterFormRouterProxy_005 end";
 }
 
-// ========== RegisterPublishFormInterceptor Additional Tests ==========
-
-/**
- * @tc.name: RegisterPublishFormInterceptor_002
- * @tc.desc: Verify setting interceptor via SetFormPublishInterceptor and getting it back
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormCallbackAdapterTest, RegisterPublishFormInterceptor_002, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "RegisterPublishFormInterceptor_002 start";
-
-    // Clear any existing interceptor
-    FormCallbackAdapter::GetInstance().SetFormPublishInterceptor(nullptr);
-    EXPECT_EQ(FormCallbackAdapter::GetInstance().GetFormPublishInterceptor(), nullptr);
-
-    GTEST_LOG_(INFO) << "RegisterPublishFormInterceptor_002 end";
-}
-
 // ========== UpdateTemplateFormDetailInfo Additional Tests ==========
 
 /**

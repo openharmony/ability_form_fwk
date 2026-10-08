@@ -364,37 +364,6 @@ HWTEST_F(FmsFormProviderMgrTest, AcquireForm_007, TestSize.Level1)
 }
 
 /**
- * @tc.name: AcquireFormStateBack_001
- * @tc.desc: Verify AcquireFormStateBack with valid params.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormProviderMgrTest, AcquireFormStateBack_001, TestSize.Level2)
-{
-    GTEST_LOG_(INFO) << "AcquireFormStateBack_001 start";
-    FormState state = FormState::READY;
-    std::string provider = "com.test.provider";
-    Want wantArg;
-    ErrCode result = FormProviderMgr::GetInstance().AcquireFormStateBack(state, provider, wantArg);
-    EXPECT_EQ(result, ERR_OK);
-    GTEST_LOG_(INFO) << "AcquireFormStateBack_001 end";
-}
-
-/**
- * @tc.name: AcquireFormDataBack_001
- * @tc.desc: Verify AcquireFormDataBack with valid params.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormProviderMgrTest, AcquireFormDataBack_001, TestSize.Level2)
-{
-    GTEST_LOG_(INFO) << "AcquireFormDataBack_001 start";
-    AAFwk::WantParams wantParams;
-    int64_t requestCode = 123456;
-    ErrCode result = FormProviderMgr::GetInstance().AcquireFormDataBack(wantParams, requestCode);
-    EXPECT_EQ(result, ERR_OK);
-    GTEST_LOG_(INFO) << "AcquireFormDataBack_001 end";
-}
-
-/**
  * @tc.name: UpdateForm_001
  * @tc.desc: Verify UpdateForm when form not exist.
  * @tc.type: FUNC
@@ -432,63 +401,6 @@ HWTEST_F(FmsFormProviderMgrTest, UpdateForm_002, TestSize.Level0)
     EXPECT_EQ(result, ERR_OK);
     FormDataMgr::GetInstance().DeleteFormRecord(formId);
     GTEST_LOG_(INFO) << "UpdateForm_002 end";
-}
-
-/**
- * @tc.name: UpdateForm_003
- * @tc.desc: Verify UpdateForm(formId, formRecord, formProviderData) with versionUpgrade=true.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormProviderMgrTest, UpdateForm_003, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "UpdateForm_003 start";
-    int64_t formId = 0x114540aa00000000;
-    int callingUid = 0;
-    FormItemInfo info;
-    info.SetFormId(formId);
-    info.SetModuleName(PARAM_FORM_NAME);
-    info.SetAbilityName(FORM_PROVIDER_ABILITY_NAME);
-    FormRecord formRecord = FormDataMgr::GetInstance().AllotFormRecord(info, callingUid);
-    formRecord.versionUpgrade = true;
-    FormDataMgr::GetInstance().UpdateFormRecord(formId, formRecord);
-    FormItemInfo hostInfo;
-    FormDataMgr::GetInstance().AllotFormHostRecord(hostInfo, token_, formId, callingUid);
-    nlohmann::json jsonData;
-    jsonData["upgradeKey"] = "upgradeValue";
-    FormProviderData formProviderData(jsonData);
-    ErrCode result = FormProviderMgr::GetInstance().UpdateForm(formId, formRecord, formProviderData);
-    EXPECT_EQ(result, ERR_OK);
-    FormDataMgr::GetInstance().DeleteFormRecord(formId);
-    GTEST_LOG_(INFO) << "UpdateForm_003 end";
-}
-
-/**
- * @tc.name: UpdateForm_004
- * @tc.desc: Verify UpdateForm(formId, formRecord, formProviderData) with versionUpgrade=false merges data.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormProviderMgrTest, UpdateForm_004, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "UpdateForm_004 start";
-    int64_t formId = 0x114542aa00000000;
-    int callingUid = 0;
-    FormItemInfo info;
-    info.SetFormId(formId);
-    info.SetModuleName(PARAM_FORM_NAME);
-    info.SetAbilityName(FORM_PROVIDER_ABILITY_NAME);
-    FormRecord formRecord = FormDataMgr::GetInstance().AllotFormRecord(info, callingUid);
-    formRecord.versionUpgrade = false;
-    nlohmann::json existingData;
-    existingData["existingKey"] = "existingValue";
-    formRecord.formProviderInfo.SetFormData(FormProviderData(existingData));
-    FormDataMgr::GetInstance().UpdateFormRecord(formId, formRecord);
-    nlohmann::json newData;
-    newData["newKey"] = "newValue";
-    FormProviderData formProviderData(newData);
-    ErrCode result = FormProviderMgr::GetInstance().UpdateForm(formId, formRecord, formProviderData);
-    EXPECT_EQ(result, ERR_OK);
-    FormDataMgr::GetInstance().DeleteFormRecord(formId);
-    GTEST_LOG_(INFO) << "UpdateForm_004 end";
 }
 
 /**

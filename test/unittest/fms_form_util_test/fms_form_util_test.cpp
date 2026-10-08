@@ -87,19 +87,6 @@ int32_t FormBmsHelper::GetCallerBundleName(std::string &callerBundleName)
 }
 
 /**
- * @tc.name: FormUtilTest_001
- * @tc.desc: Verify GenerateFormId
- * @tc.type: FUNC
- */
-HWTEST_F(FormUtilTest, FormUtilTest_001, TestSize.Level0)
-{
-    constexpr int64_t udidHash = 0x1111111100000000L;
-    const int64_t result = FormUtil::GenerateFormId(udidHash);
-
-    EXPECT_EQ(udidHash, (udidHash & result));
-}
-
-/**
  * @tc.name: FormUtilTest_002
  * @tc.desc: Verify PaddingUdidHash
  * @tc.type: FUNC

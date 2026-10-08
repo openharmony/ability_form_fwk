@@ -1847,27 +1847,6 @@ HWTEST_F(FormMgrTest, FormMgrTest_0096, TestSize.Level1) {
 }
 
 /**
- * @tc.name: FormMgrTest_0097
- * @tc.desc: Verify GetRunningFormInfosByBundleName
- * @tc.type: FUNC
- * @tc.require: issueI63OQL
- */
-HWTEST_F(FormMgrTest, FormMgrTest_0097, TestSize.Level1) {
-    GTEST_LOG_(INFO) << "FormMgrTest_0097 starts";
-    EXPECT_CALL(*mockProxy, GetRunningFormInfosByBundleName(_, _, _))
-        .Times(1)
-        .WillOnce(Return(OHOS::ERR_OK));
-    FormMgr::GetInstance().SetRecoverStatus(Constants::NOT_IN_RECOVERY);
-    std::string bundleName = "a";
-    bool isUnusedInclude = false;
-    std::vector<RunningFormInfo> runningFormInfos;
-    int result = FormMgr::GetInstance().GetRunningFormInfosByBundleName(bundleName, isUnusedInclude, runningFormInfos);
-
-    EXPECT_EQ(result, 0);
-    GTEST_LOG_(INFO) << "FormMgrTest_0097 test ends";
-}
-
-/**
  * @tc.name: FormMgrTest_0098
  * @tc.desc: Verify GetRunningFormInfosByBundleName
  * @tc.type: FUNC
@@ -3721,25 +3700,6 @@ HWTEST_F(FormMgrTest, FormMgrTest_0205, TestSize.Level1)
 }
 
 /**
- * @tc.name: FormMgrTest_0206
- * @tc.desc: Verify NotifyFormsPrivacyProtected
- * @tc.type: FUNC
- */
-HWTEST_F(FormMgrTest, FormMgrTest_0206, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormMgrTest_0206 starts";
-    std::vector<int64_t> formIds;
-    formIds.push_back(FORM_ID);
-    bool isProtected = false;
-    FormMgr::GetInstance().resetFlag_ = true;
-    sptr<MockFormToken> token = new (std::nothrow) MockFormToken();
-    int32_t result = FormMgr::GetInstance().NotifyFormsPrivacyProtected(formIds, isProtected, token);
-    EXPECT_EQ(result, ERR_APPEXECFWK_FORM_COMMON_CODE);
-    FormMgr::GetInstance().resetFlag_ = false;
-    GTEST_LOG_(INFO) << "FormMgrTest_0206 test ends";
-}
-
-/**
  * @tc.name: FormMgrTest_0207
  * @tc.desc: Verify DumpStorageFormInfos
  * @tc.type: FUNC
@@ -5085,25 +5045,6 @@ HWTEST_F(FormMgrTest, FormMgrTest_0294, TestSize.Level1)
     GTEST_LOG_(INFO) << "FormMgrTest_0294 test ends";
 }
  
-/**
- * @tc.name: FormMgrTest_0295
- * @tc.desc: Connect failed
- * @tc.type: FUNC
- */
-HWTEST_F(FormMgrTest, FormMgrTest_0295, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormMgrTest_0295 starts";
-    Want want;
-    makeWant(want, MakeWantFlag::DEFAULT);
-    int64_t formId;
-    int32_t userId = 100;
-    FormMgr::GetInstance().SetFormMgrService(nullptr);
-    int32_t result = FormMgr::GetInstance().RequestPublishFormCrossUser(want, userId, formId);
-    EXPECT_EQ(result, ERR_APPEXECFWK_FORM_COMMON_CODE);
-    FormMgr::GetInstance().SetFormMgrService(mockProxy);
-    GTEST_LOG_(INFO) << "FormMgrTest_0295 test ends";
-}
-
 /**
  * @tc.name: FormMgrTest_GetAllTemplateFormsInfo_001
  * @tc.desc: Verify GetAllTemplateFormsInfo

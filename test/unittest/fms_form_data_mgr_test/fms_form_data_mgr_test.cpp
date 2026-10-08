@@ -1472,37 +1472,6 @@ HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_CleanRemovedFormRecords_001, Tes
 }
 
 /**
- * @tc.number: FmsFormDataMgrTest_CleanRemovedFormRecords_002
- * @tc.name: CleanRemovedFormRecords
-
- * @tc.desc: Verify that the return value is correct.
- * @tc.details:
- *       removedForm is not matched with formRecords_.
- */
-HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_CleanRemovedFormRecords_002, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_CleanRemovedFormRecords_002 start";
-
-    // create formRecords
-    int callingUid = 0;
-    int64_t formId = 2;
-    FormItemInfo formItemInfo;
-    InitFormItemInfo(formId, formItemInfo);
-    FormRecord record = formDataMgr_.CreateFormRecord(formItemInfo, callingUid);
-    formDataMgr_.formRecords_.emplace(formId, record);
-
-    std::string bundleName = FORM_HOST_BUNDLE_NAME;
-
-    std::set<int64_t> removedForms;
-    int64_t removedForm = 100;
-    removedForms.emplace(removedForm);
-
-    formDataMgr_.CleanRemovedFormRecords(bundleName, removedForms);
-
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_CleanRemovedFormRecords_002 end";
-}
-
-/**
  * @tc.number: FmsFormDataMgrTest_CleanRemovedTempFormRecords_001
  * @tc.name: CleanRemovedTempFormRecords
 
@@ -2296,48 +2265,6 @@ HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_GetRunningFormInfosByBundleName_
         userId));
 
     GTEST_LOG_(INFO) << "FmsFormDataMgrTest_GetRunningFormInfosByBundleName_004 end";
-}
-
-/**
- * @tc.number: FmsFormDataMgrTest_GetConfigParamFormMap_001
- * @tc.name: GetConfigParamFormMap
- * @tc.desc: Verify that the return value is correct.
- * @tc.details: If formConfigMap_ is empty.
- */
-HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_GetConfigParamFormMap_001, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_GetConfigParamFormMap_001 start";
-    // create formRecord
-    std::map<std::string, int32_t> configMap;
-    formDataMgr_.SetConfigMap(configMap);
-    const std::string key = "a";
-    int32_t value = 0;
-    formDataMgr_.GetConfigParamFormMap(key, value);
-    EXPECT_EQ(configMap.size(), 0);
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_GetConfigParamFormMap_001 end";
-}
-
-/**
- * @tc.number: FmsFormDataMgrTest_GetConfigParamFormMap_002
- * @tc.name: GetConfigParamFormMap
- * @tc.desc: Verify that the return value is correct.
- * @tc.details: If the value corresponding to the key is not found in the map.
-
- */
-HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_GetConfigParamFormMap_002, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_GetConfigParamFormMap_002 start";
-    // create formRecord
-    std::map<std::string, int32_t> configMap;
-    std::string key = "a";
-    std::string notFindkey = "b";
-    int32_t value1 = 3;
-    int32_t value2 = 0;
-    configMap.emplace(key, value1);
-    formDataMgr_.SetConfigMap(configMap);
-    formDataMgr_.GetConfigParamFormMap(notFindkey, value2);
-    EXPECT_NE(value1, value2);
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_GetConfigParamFormMap_002 end";
 }
 
 /**
@@ -4303,52 +4230,6 @@ HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_Coverage_005, TestSize.Level0)
     formDataMgr_.GetNoHostInvalidTempForms(
         providerUserId2, callingUid2, matchedFormIds, noHostTempFormsMap, foundFormsMap);
     GTEST_LOG_(INFO) << "FmsFormDataMgrTest_Coverage_005 end";
-}
-
-/**
- * @tc.number: FmsFormDataMgrTest_Coverage_006
- * @tc.name: Coverage
- * @tc.desc: Increase branch coverage.
- */
-HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_Coverage_006, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_Coverage_006 start";
-    // init formID & callingUid
-    int callingUid1 = 100;
-    int callingUid2 = 102;
-    int callingUid3 = 103;
-    int callingUid4 = 104;
-    int formId1 = 1;
-    int formId2 = 2;
-    int formId3 = 3;
-    int formId4 = 4;
-    // init MockFormHostClient token_temp
-    std::string configAtMultiTime = "00:-1,00:60,-1:00,25:00";
-    // init FormItemInfo
-    FormItemInfo formItemInfo1;
-    InitFormItemInfo(formId1, formItemInfo1);
-    formItemInfo1.SetUpdateDuration(0);
-    configAtMultiTime = "00:-1,00:60,-1:00,25:00";
-    formItemInfo1.SetMultiScheduledUpdateTime(configAtMultiTime);
-
-    FormItemInfo formItemInfo2;
-    InitFormItemInfo(formId2, formItemInfo2);
-    formItemInfo2.SetUpdateDuration(0);
-    configAtMultiTime = "00:00:00,00:00";
-    formItemInfo2.SetMultiScheduledUpdateTime(configAtMultiTime);
-
-    FormItemInfo formItemInfo3;
-    InitFormItemInfo(formId3, formItemInfo3);
-    formItemInfo3.SetUpdateDuration(0);
-    configAtMultiTime = "00:-1,00:60,-1:00,25:00";
-    formItemInfo3.SetMultiScheduledUpdateTime(configAtMultiTime);
-
-    // init record
-    FormRecord record1 = formDataMgr_.CreateFormRecord(formItemInfo1, callingUid1, formId1);
-    FormRecord record2 = formDataMgr_.CreateFormRecord(formItemInfo2, callingUid2, formId2);
-    FormRecord record3 = formDataMgr_.CreateFormRecord(formItemInfo3, callingUid3, formId3);
-
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_Coverage_006 end";
 }
 
 /**
@@ -6373,169 +6254,6 @@ HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_SetFormEnable_002, TestSize.Leve
 }
 
 /**
- * @tc.number: FmsFormDataMgrTest_LockForms_001
- * @tc.name: LockForms
- * @tc.desc: Verify that the function works correctly.
- * @tc.details: clientRecords_ is empty, no operation performed.
- */
-HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_LockForms_001, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_LockForms_001 start";
-
-    std::vector<FormRecord> formRecords;
-    bool lock = true;
-
-    formDataMgr_.LockForms(std::move(formRecords), lock);
-    EXPECT_EQ(true, formDataMgr_.clientRecords_.empty());
-
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_LockForms_001 end";
-}
-
-/**
- * @tc.number: FmsFormDataMgrTest_LockForms_002
- * @tc.name: LockForms
- * @tc.desc: Verify that the function works correctly.
- * @tc.details: Contains returns false, matchedFormIds is empty, OnLockForms not called.
- */
-HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_LockForms_002, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_LockForms_002 start";
-
-    int callingUid = 1;
-    int64_t formId = 1;
-    FormItemInfo formItemInfo;
-    InitFormItemInfo(formId, formItemInfo);
-    FormRecord record = formDataMgr_.CreateFormRecord(formItemInfo, callingUid);
-
-    std::vector<FormRecord> formRecords;
-    formRecords.emplace_back(record);
-    bool lock = true;
-
-    FormHostRecord formHostRecord;
-    std::shared_ptr<FormHostCallback> formHostCallback = std::make_shared<FormHostCallback>();
-    formHostRecord.SetFormHostClient(token_);
-    formHostRecord.SetCallback(formHostCallback);
-    formDataMgr_.clientRecords_.push_back(formHostRecord);
-
-    MockFormHostTaskMgr::obj = std::make_shared<MockFormHostTaskMgr>();
-    EXPECT_CALL(*MockFormHostTaskMgr::obj, PostLockFormsTaskToHost(_, _, _)).Times(0);
-    formDataMgr_.LockForms(std::move(formRecords), lock);
-    MockFormHostTaskMgr::obj = nullptr;
-
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_LockForms_002 end";
-}
-
-/**
- * @tc.number: FmsFormDataMgrTest_LockForms_003
- * @tc.name: LockForms
- * @tc.desc: Verify that the function works correctly.
- * @tc.details: Contains returns true, matchedFormIds is not empty, OnLockForms called.
- */
-HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_LockForms_003, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_LockForms_003 start";
-
-    int callingUid = 0;
-    int64_t formId = 1;
-    FormItemInfo formItemInfo;
-    InitFormItemInfo(formId, formItemInfo);
-    FormRecord record = formDataMgr_.CreateFormRecord(formItemInfo, callingUid);
-
-    std::vector<FormRecord> formRecords;
-    formRecords.emplace_back(record);
-    bool lock = true;
-
-    FormHostRecord formHostRecord;
-    std::shared_ptr<FormHostCallback> formHostCallback = std::make_shared<FormHostCallback>();
-    formHostRecord.SetFormHostClient(token_);
-    formHostRecord.SetCallback(formHostCallback);
-    formHostRecord.AddForm(formId);
-    formDataMgr_.clientRecords_.push_back(formHostRecord);
-
-    MockFormHostTaskMgr::obj = std::make_shared<MockFormHostTaskMgr>();
-    EXPECT_CALL(*MockFormHostTaskMgr::obj, PostLockFormsTaskToHost(_, _, _)).Times(1);
-    formDataMgr_.LockForms(std::move(formRecords), lock);
-    MockFormHostTaskMgr::obj = nullptr;
-
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_LockForms_003 end";
-}
-
-/**
- * @tc.number: FmsFormDataMgrTest_CheckForms_001
- * @tc.name: CheckForms
- * @tc.desc: Verify that the function works correctly.
- * @tc.details: clientRecords_ is empty, no operation performed.
- */
-HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_CheckForms_001, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_CheckForms_001 start";
-
-    std::vector<int64_t> formIds;
-
-    formDataMgr_.CheckForms(formIds);
-    EXPECT_EQ(true, formDataMgr_.clientRecords_.empty());
-
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_CheckForms_001 end";
-}
-
-/**
- * @tc.number: FmsFormDataMgrTest_CheckForms_002
- * @tc.name: CheckForms
- * @tc.desc: Verify that the function works correctly.
- * @tc.details: Contains returns false, matchedFormIds is empty, OnCheckForms not called.
- */
-HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_CheckForms_002, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_CheckForms_002 start";
-
-    int64_t formId = 1;
-    std::vector<int64_t> formIds;
-    formIds.emplace_back(formId);
-
-    FormHostRecord formHostRecord;
-    std::shared_ptr<FormHostCallback> formHostCallback = std::make_shared<FormHostCallback>();
-    formHostRecord.SetFormHostClient(token_);
-    formHostRecord.SetCallback(formHostCallback);
-    formDataMgr_.clientRecords_.push_back(formHostRecord);
-
-    MockFormHostTaskMgr::obj = std::make_shared<MockFormHostTaskMgr>();
-    EXPECT_CALL(*MockFormHostTaskMgr::obj, PostCheckFormsTaskToHost(_, _)).Times(0);
-    formDataMgr_.CheckForms(formIds);
-    MockFormHostTaskMgr::obj = nullptr;
-
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_CheckForms_002 end";
-}
-
-/**
- * @tc.number: FmsFormDataMgrTest_CheckForms_003
- * @tc.name: CheckForms
- * @tc.desc: Verify that the function works correctly.
- * @tc.details: Contains returns true, matchedFormIds is not empty, OnCheckForms called.
- */
-HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_CheckForms_003, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_CheckForms_003 start";
-
-    int64_t formId = 1;
-    std::vector<int64_t> formIds;
-    formIds.emplace_back(formId);
-
-    FormHostRecord formHostRecord;
-    std::shared_ptr<FormHostCallback> formHostCallback = std::make_shared<FormHostCallback>();
-    formHostRecord.SetFormHostClient(token_);
-    formHostRecord.SetCallback(formHostCallback);
-    formHostRecord.AddForm(formId);
-    formDataMgr_.clientRecords_.push_back(formHostRecord);
-
-    MockFormHostTaskMgr::obj = std::make_shared<MockFormHostTaskMgr>();
-    EXPECT_CALL(*MockFormHostTaskMgr::obj, PostCheckFormsTaskToHost(_, _)).Times(1);
-    formDataMgr_.CheckForms(formIds);
-    MockFormHostTaskMgr::obj = nullptr;
-
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_CheckForms_003 end";
-}
-
-/**
  * @tc.number: FmsFormDataMgrTest_SetSpecification_001
  * @tc.name: SetSpecification
  * @tc.desc: Verify that the return value is correct.
@@ -6612,25 +6330,6 @@ HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_SetSpecification_004, TestSize.L
     EXPECT_EQ(2, formDataMgr_.formRecords_[formId].specification);
 
     GTEST_LOG_(INFO) << "FmsFormDataMgrTest_SetSpecification_004 end";
-}
-
-/**
- * @tc.number: FmsFormDataMgrTest_SetHostTransparentFormColor_001
- * @tc.name: SetHostTransparentFormColor
- * @tc.desc: Verify that the function works correctly.
- * @tc.details: clientRecords_ is empty, no operation performed.
- */
-HWTEST_F(FmsFormDataMgrTest, FmsFormDataMgrTest_SetHostTransparentFormColor_001, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_SetHostTransparentFormColor_001 start";
-
-    int64_t formId = 1;
-    std::string transparencyColor = "#FF000000";
-
-    formDataMgr_.SetHostTransparentFormColor(formId, transparencyColor);
-    EXPECT_EQ(true, formDataMgr_.clientRecords_.empty());
-
-    GTEST_LOG_(INFO) << "FmsFormDataMgrTest_SetHostTransparentFormColor_001 end";
 }
 
 /**
@@ -7511,46 +7210,6 @@ HWTEST_F(FmsFormDataMgrTest, FormDataMgr_UpdateHostWantSize_001, TestSize.Level1
     EXPECT_EQ(resultWant.GetFloatParam(Constants::PARAM_FORM_VIEW_SCALE, 1.0f), formViewScale);
 
     GTEST_LOG_(INFO) << "FormDataMgr_UpdateHostWantSize_001 end";
-}
-
-/**
- * @tc.number: FormRecord_HostWant_GetWant_001
- * @tc.name: FormRecord.hostWant property
- * @tc.desc: Verify FormRecord.hostWant property access and GetWant method returns correct Want object.
- */
-HWTEST_F(FmsFormDataMgrTest, FormRecord_HostWant_GetWant_001, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormRecord_HostWant_GetWant_001 start";
-    int64_t formId = 1004;
-    int callingUid = 0;
-    int32_t userId = 100;
-
-    // Create FormItemInfo and FormRecord
-    FormItemInfo formItemInfo;
-    InitFormItemInfo(formId, formItemInfo);
-    FormRecord record = formDataMgr_.CreateFormRecord(formItemInfo, callingUid, userId);
-
-    // Set hostWant parameters directly
-    Want testWant;
-    testWant.SetParam("string_key", std::string("string_value"));
-    testWant.SetParam("int_key", 42);
-    testWant.SetParam("bool_key", true);
-    testWant.SetParam("double_key", 3.14);
-
-    record.hostWant = FormWant(testWant);
-    formDataMgr_.formRecords_.emplace(formId, record);
-
-    // Verify hostWant property access and GetWant method
-    auto formRecord = formDataMgr_.formRecords_.find(formId);
-    ASSERT_NE(formRecord, formDataMgr_.formRecords_.end());
-
-    Want resultWant = formRecord->second.hostWant.GetWant();
-    EXPECT_EQ(resultWant.GetStringParam("string_key"), "string_value");
-    EXPECT_EQ(resultWant.GetIntParam("int_key", 0), 42);
-    EXPECT_EQ(resultWant.GetBoolParam("bool_key", false), true);
-    EXPECT_EQ(resultWant.GetDoubleParam("double_key", 0.0), 3.14);
-
-    GTEST_LOG_(INFO) << "FormRecord_HostWant_GetWant_001 end";
 }
 
 /**

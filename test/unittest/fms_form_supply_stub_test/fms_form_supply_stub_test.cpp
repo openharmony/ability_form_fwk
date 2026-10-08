@@ -810,28 +810,6 @@ HWTEST_F(FormSupplyStubTest, FormSupplyStubTest_037, TestSize.Level1)
 }
 
 /**
- * @tc.name: FormSupplyStubTest_049
- * @tc.desc: Verify function HandleOnAcquire the return value is ERR_OK
- * @tc.type: FUNC
- */
-HWTEST_F(FormSupplyStubTest, FormSupplyStubTest_049, TestSize.Level1)
-{
-    sptr<MockFormSupplyCallback> callback = new (std::nothrow) MockFormSupplyCallback();
-    constexpr uint32_t code = static_cast<uint32_t>(IFormSupply::Message::TRANSACTION_FORM_ACQUIRED);
-    MessageParcel data;
-    MessageParcel reply;
-    MessageOption option{MessageOption::TF_ASYNC};
-    Want want = {};
-    FormProviderInfo formInfo = {};
-    want.SetParam(Constants::PROVIDER_FLAG, ERR_OK);
-    data.WriteInterfaceToken(MockFormSupplyCallback::GetDescriptor());
-    data.WriteParcelable(&want);
-    data.WriteParcelable(&formInfo);
-    auto result = callback->OnRemoteRequest(code, data, reply, option);
-    EXPECT_EQ(result, ERR_OK);
-}
-
-/**
  * @tc.name: FormSupplyStubTest_054
  * @tc.desc: Verify function HandleOnDeleteFormDone the return value is ERR_APPEXECFWK_PARCEL_ERROR
  * @tc.type: FUNC

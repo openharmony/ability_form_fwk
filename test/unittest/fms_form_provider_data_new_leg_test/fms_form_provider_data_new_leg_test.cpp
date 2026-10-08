@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2026 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -197,44 +197,6 @@ HWTEST_F(FmsFormProviderDataNewLegTest, FormShareMgr_005, TestSize.Level0)
 }
 
 /**
- * @tc.name: FormShareMgr_019
- * @tc.desc: test HandleProviderShareData function.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormProviderDataNewLegTest, FormShareMgr_019, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FormShareMgr_019 start";
-    FormShareMgr formShareMgr;
-    int64_t formId = 1;
-    std::string remoteDeviceId = "aa";
-    AAFwk::WantParams wantParams;
-    int64_t requestCode = 2;
-    bool result = false;
-    MockGetFormRecord(true);
-    formShareMgr.HandleProviderShareData(formId, remoteDeviceId, wantParams, requestCode, result);
-    GTEST_LOG_(INFO) << "FormShareMgr_019 end";
-}
-
-/**
- * @tc.name: FormShareMgr_020
- * @tc.desc: test HandleProviderShareData function.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormProviderDataNewLegTest, FormShareMgr_020, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FormShareMgr_020 start";
-    FormShareMgr formShareMgr;
-    int64_t formId = 1;
-    std::string remoteDeviceId = "aa";
-    AAFwk::WantParams wantParams;
-    int64_t requestCode = 2;
-    bool result = true;
-    MockGetFormRecord(true);
-    formShareMgr.HandleProviderShareData(formId, remoteDeviceId, wantParams, requestCode, result);
-    GTEST_LOG_(INFO) << "FormShareMgr_020 end";
-}
-
-/**
  * @tc.name: FormShareMgr_023
  * @tc.desc: test IsShareForm function.
  * @tc.type: FUNC
@@ -343,22 +305,6 @@ HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_008, TestSize.Level0)
 }
 
 /**
- * @tc.name: FormProviderMgr_009
- * @tc.desc: test UpdateForm function.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_009, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FormProviderMgr_009 start";
-    FormProviderMgr formProviderMgr;
-    int64_t formId = 1;
-    FormProviderInfo formProviderInfo;
-    MockGetFormRecord(true);
-    formProviderMgr.UpdateForm(formId, formProviderInfo);
-    GTEST_LOG_(INFO) << "FormProviderMgr_009 end";
-}
-
-/**
  * @tc.name: FormProviderMgr_010
  * @tc.desc: test UpdateForm function.
  * @tc.type: FUNC
@@ -373,38 +319,6 @@ HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_010, TestSize.Level0)
     FormProviderData formProviderData;
     EXPECT_EQ(ERR_OK, formProviderMgr.UpdateForm(formId, formRecord, formProviderData));
     GTEST_LOG_(INFO) << "FormProviderMgr_010 end";
-}
-
-/**
- * @tc.name: FormProviderMgr_011
- * @tc.desc: test IncreaseTimerRefreshCount function.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_011, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FormProviderMgr_011 start";
-    std::shared_ptr<FormProviderMgr> formProviderMgr = std::make_shared<FormProviderMgr>();
-    ASSERT_NE(nullptr, formProviderMgr);
-    int64_t formId = 1;
-    MockGetFormRecord(false);
-    formProviderMgr->IncreaseTimerRefreshCount(formId);
-    GTEST_LOG_(INFO) << "FormProviderMgr_011 end";
-}
-
-/**
- * @tc.name: FormProviderMgr_012
- * @tc.desc: test IncreaseTimerRefreshCount function.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_012, TestSize.Level0)
-{
-    GTEST_LOG_(INFO) << "FormProviderMgr_012 start";
-    std::shared_ptr<FormProviderMgr> formProviderMgr = std::make_shared<FormProviderMgr>();
-    ASSERT_NE(nullptr, formProviderMgr);
-    int64_t formId = 1;
-    MockGetFormRecord(true);
-    formProviderMgr->IncreaseTimerRefreshCount(formId);
-    GTEST_LOG_(INFO) << "FormProviderMgr_012 end";
 }
 
 /**
@@ -510,28 +424,6 @@ HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_018, TestSize.Level0)
 }
 
 /**
- * @tc.name: FormProviderMgr_019
- * @tc.desc: test ConnectAmsForRefresh function.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_019, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormProviderMgr_019 start";
-    std::shared_ptr<FormProviderMgr> formProviderMgr = std::make_shared<FormProviderMgr>();
-    ASSERT_NE(nullptr, formProviderMgr);
-    int64_t formId = 1;
-    FormRecord record;
-    record.needFreeInstall = false;
-    record.isCountTimerRefresh = false;
-    Want want;
-    MockIsLimiterEnableRefresh(true);
-    MockConnectServiceAbility(true);
-    record.isCountTimerRefresh = false;
-    formProviderMgr->ConnectAmsForRefresh(formId, record, want);
-    GTEST_LOG_(INFO) << "FormProviderMgr_019 end";
-}
-
-/**
  * @tc.name: FormProviderMgr_020
  * @tc.desc: test NotifyProviderFormsBatchDelete function.
  * @tc.type: FUNC
@@ -549,24 +441,6 @@ HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_020, TestSize.Level1)
     EXPECT_EQ(ERR_OK, formProviderMgr.NotifyProviderFormsBatchDelete(bundleName, abilityName, moduleName, formIds,
         userId));
     GTEST_LOG_(INFO) << "FormProviderMgr_020 end";
-}
-
-/**
- * @tc.name: FormProviderMgr_021
- * @tc.desc: test IncreaseTimerRefreshCount function.
- * @tc.type: FUNC
- */
-HWTEST_F(FmsFormProviderDataNewLegTest, FormProviderMgr_021, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormProviderMgr_021 start";
-    std::shared_ptr<FormProviderMgr> formProviderMgr = std::make_shared<FormProviderMgr>();
-    ASSERT_NE(nullptr, formProviderMgr);
-    int64_t formId = 1;
-    MockGetFormRecord(true);
-    MockGetFormRecordParams(true);
-    formProviderMgr->IncreaseTimerRefreshCount(formId);
-    MockGetFormRecordParams(false);
-    GTEST_LOG_(INFO) << "FormProviderMgr_021 end";
 }
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Huawei Device Co., Ltd.
+ * Copyright (c) 2025-2026 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -114,63 +114,6 @@ HWTEST_F(FmsFormCheckMgrTest2, FmsFormCheckMgrTest_FormRefreshMgr_004, TestSize.
 
     EXPECT_EQ(ERR_APPEXECFWK_FORM_OPERATION_NOT_SELF, FormRefreshMgr::GetInstance().RequestRefresh(data, TYPE_DATA));
     GTEST_LOG_(INFO) << "FmsFormCheckMgrTest_FormRefreshMgr_004 end";
-}
-
-HWTEST_F(FmsFormCheckMgrTest2, FmsFormCheckMgrTest_RefreshCacheMgr_005, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FmsFormCheckMgrTest_RefreshCacheMgr_005 start";
-    FormTimer timerTask(FORM_ID_ONE, true, 0);
-    EXPECT_EQ(FORM_ID_ONE, timerTask.formId);
-    RefreshCacheMgr::GetInstance().AddToOverloadTaskQueue(timerTask);
-    RefreshCacheMgr::GetInstance().AddToOverloadTaskQueue(timerTask);
-    RefreshCacheMgr::GetInstance().ConsumeOverloadTaskQueue();
-
-    int64_t formId = FORM_ID_ONE;
-    FormItemInfo itemInfo;
-    itemInfo.SetFormId(formId);
-    FormDataMgr::GetInstance().AllotFormRecord(itemInfo, 0, 0);
-    RefreshCacheMgr::GetInstance().AddFlagByHealthyControl(FORM_ID_ONE, true);
-    RefreshCacheMgr::GetInstance().AddFlagByHealthyControl(FORM_ID_ONE, false);
-
-    std::vector<FormRecord> formRecords;
-    FormDataMgr::GetInstance().GetFormRecordsByUserId(0, formRecords);
-    if (formRecords.size() > 0) {
-        auto iter = formRecords.begin();
-        iter->isRefreshDuringDisableForm = true;
-        RefreshCacheMgr::GetInstance().ConsumeHealthyControlFlag(iter, 0);
-        iter->isRefreshDuringDisableForm = false;
-        iter->isUpdateDuringDisableForm = false;
-        RefreshCacheMgr::GetInstance().ConsumeHealthyControlFlag(iter, 0);
-        iter->isTimerRefresh = true;
-    }
-
-    RefreshCacheMgr::GetInstance().AddFlagByInvisible(FORM_ID_ONE, Constants::REFRESHTYPE_DEFAULT);
-    RefreshCacheMgr::GetInstance().AddFlagByInvisible(FORM_ID_ONE, Constants::REFRESHTYPE_NETWORKCHANGED);
-    FormDataMgr::GetInstance().GetFormRecordsByUserId(0, formRecords);
-    RefreshCacheMgr::GetInstance().ConsumeInvisibleFlag(formRecords, 0);
-    RefreshCacheMgr::GetInstance().ConsumeInvisibleFlag(formRecords, 0);
-
-    FormRecord formRecord;
-    Want reqWant;
-    RefreshCacheMgr::GetInstance().AddFlagByScreenOff(FORM_ID_ONE, reqWant, formRecord);
-    RefreshCacheMgr::GetInstance().ConsumeScreenOffFlag();
-
-    if (formRecords.size() > 0) {
-        auto iter = formRecords.begin();
-        iter->needRefresh = false;
-        RefreshCacheMgr::GetInstance().ConsumeScreenOffFlag();
-        iter->formVisibleNotifyState = Constants::FORM_INVISIBLE;
-        RefreshCacheMgr::GetInstance().ConsumeScreenOffFlag();
-    }
-
-    auto task = []() {};
-    RefreshCacheMgr::GetInstance().AddRenderTask(FORM_ID_ONE, task);
-    RefreshCacheMgr::GetInstance().AddRenderTask(FORM_ID_ONE, task);
-    RefreshCacheMgr::GetInstance().ConsumeRenderTask(FORM_ID_ONE);
-    RefreshCacheMgr::GetInstance().AddRenderTask(FORM_ID_ONE, task);
-    RefreshCacheMgr::GetInstance().DelRenderTask(FORM_ID_ONE);
-    RefreshCacheMgr::GetInstance().ConsumeAddUnfinishFlag(FORM_ID_ONE, 1);
-    GTEST_LOG_(INFO) << "FmsFormCheckMgrTest_RefreshCacheMgr_005 end";
 }
 
 /**

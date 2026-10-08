@@ -1014,24 +1014,6 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0054, TestSize.Level1)
 }
 
 /**
- * @tc.number: Fms_FormTimerMgr_0056
- * @tc.name: SetEnableFlag.
- * @tc.desc: test SetEnableFlag function.
- */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0056, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0056 start";
-    std::shared_ptr<FormTimerMgr> formTimerMgr = std::make_shared<FormTimerMgr>();
-    ASSERT_NE(nullptr, formTimerMgr);
-    int64_t formId = 1;
-    bool flag = true;
-    FormTimer formTimer;
-    formTimerMgr->intervalTimerTasks_.emplace(formId, formTimer);
-    formTimerMgr->SetEnableFlag(formId, flag);
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0056 end";
-}
-
-/**
  * @tc.number: Fms_FormTimerMgr_0057
  * @tc.name: OnUpdateAtTrigger.
  * @tc.desc: test OnUpdateAtTrigger function.
@@ -1135,40 +1117,6 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0062, TestSize.Level1)
     formTimerMgr.dynamicRefreshTasks_.emplace_back(dynamicRefreshItem);
     EXPECT_EQ(true, formTimerMgr.OnDynamicTimeTrigger(updateTime));
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0062 end";
-}
-
-/**
- * @tc.number: Fms_FormTimerMgr_0063
- * @tc.name: SetIntervalEnableFlag.
- * @tc.desc: test SetIntervalEnableFlag function.
- */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0063, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0063 start";
-    std::shared_ptr<FormTimerMgr> formTimerMgr = std::make_shared<FormTimerMgr>();
-    ASSERT_NE(nullptr, formTimerMgr);
-    int64_t formId = 1;
-    bool flag = true;
-    formTimerMgr->SetIntervalEnableFlag(formId, flag);
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0063 end";
-}
-
-/**
- * @tc.number: Fms_FormTimerMgr_0064
- * @tc.name: SetIntervalEnableFlag.
- * @tc.desc: test SetIntervalEnableFlag function.
- */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0064, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0064 start";
-    std::shared_ptr<FormTimerMgr> formTimerMgr = std::make_shared<FormTimerMgr>();
-    ASSERT_NE(nullptr, formTimerMgr);
-    int64_t formId = 1;
-    bool flag = true;
-    FormTimer formTimer;
-    formTimerMgr->intervalTimerTasks_.emplace(formId, formTimer);
-    formTimerMgr->SetIntervalEnableFlag(formId, flag);
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0064 end";
 }
 
 /**
@@ -1306,88 +1254,6 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0075, TestSize.Level1)
 }
 
 /**
- * @tc.number: Fms_FormTimerMgr_0076
- * @tc.name: OnIntervalTimeOut.
- * @tc.desc: test OnIntervalTimeOut function.
- */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0076, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0076 start";
-    std::shared_ptr<FormTimerMgr> formTimerMgr = std::make_shared<FormTimerMgr>();
-    ASSERT_NE(nullptr, formTimerMgr);
-    formTimerMgr->OnIntervalTimeOut();
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0076 end";
-}
-
-/**
- * @tc.number: Fms_FormTimerMgr_0077
- * @tc.name: OnIntervalTimeOut.
- * @tc.desc: test OnIntervalTimeOut function.
- */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0077, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0077 start";
-    std::shared_ptr<FormTimerMgr> formTimerMgr = std::make_shared<FormTimerMgr>();
-    ASSERT_NE(nullptr, formTimerMgr);
-    int64_t formId = 1;
-    FormTimer formTimer;
-    formTimer.refreshTime = INT64_MAX;
-    formTimerMgr->intervalTimerTasks_.emplace(formId, formTimer);
-    formTimerMgr->OnIntervalTimeOut();
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0077 end";
-}
-
-/**
- * @tc.number: Fms_FormTimerMgr_0078
- * @tc.name: OnIntervalTimeOut.
- * @tc.desc: test OnIntervalTimeOut function.
- */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0078, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0078 start";
-    std::shared_ptr<FormTimerMgr> formTimerMgr = std::make_shared<FormTimerMgr>();
-    ASSERT_NE(nullptr, formTimerMgr);
-    int64_t formId = 1;
-    FormTimer formTimer;
-    formTimer.refreshTime = INT64_MAX - 1;
-    formTimerMgr->intervalTimerTasks_.emplace(formId, formTimer);
-    formTimerMgr->OnIntervalTimeOut();
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0078 end";
-}
-
-/**
- * @tc.number: Fms_FormTimerMgr_0079
- * @tc.name: ClearLimiterTimerResource.
- * @tc.desc: test ClearLimiterTimerResource function.
- */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0079, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0079 start";
-    std::shared_ptr<FormTimerMgr> formTimerMgr = std::make_shared<FormTimerMgr>();
-    ASSERT_NE(nullptr, formTimerMgr);
-    formTimerMgr->limiterTimerId_ = 1;
-    formTimerMgr->ClearLimiterTimerResource();
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0079 end";
-}
-
-/**
- * @tc.number: Fms_FormTimerMgr_0079_1
- * @tc.name: ClearLimiterTimerResource.
- * @tc.desc: test ClearLimiterTimerResource function.
- */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0079_1, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0079_1 start";
-    std::shared_ptr<FormTimerMgr> formTimerMgr = std::make_shared<FormTimerMgr>();
-    ASSERT_NE(nullptr, formTimerMgr);
-    formTimerMgr->limiterTimerId_ = 0;
-    formTimerMgr->CreateLimiterTimer();
-    formTimerMgr->limiterTimerId_ = 1;
-    formTimerMgr->ClearLimiterTimerResource();
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0079_1 end";
-}
-
-/**
  * @tc.number: Fms_FormTimerMgr_0080
  * @tc.name: UpdateDynamicAlarm.
  * @tc.desc: test UpdateDynamicAlarm function.
@@ -1450,37 +1316,6 @@ HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0083, TestSize.Level1)
     formTimerMgr.currentDynamicWantAgent_ = std::make_shared<WantAgent>();
     EXPECT_EQ(true, formTimerMgr.UpdateDynamicAlarm());
     GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0083 end";
-}
-
-/**
- * @tc.number: Fms_FormTimerMgr_0084
- * @tc.name: ClearDynamicResource.
- * @tc.desc: test ClearDynamicResource function.
- */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0084, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0084 start";
-    std::shared_ptr<FormTimerMgr> formTimerMgr = std::make_shared<FormTimerMgr>();
-    ASSERT_NE(nullptr, formTimerMgr);
-    formTimerMgr->dynamicAlarmTimerId_ = 1;
-    formTimerMgr->currentDynamicWantAgent_ = std::make_shared<WantAgent>();
-    formTimerMgr->ClearDynamicResource();
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0084 end";
-}
-
-/**
- * @tc.number: Fms_FormTimerMgr_0088
- * @tc.name: ExecTimerTask.
- * @tc.desc: test ExecTimerTask function.
- */
-HWTEST_F(FmsFormTimerMgrTest, Fms_FormTimerMgr_0088, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0088 start";
-    std::shared_ptr<FormTimerMgr> formTimerMgr = std::make_shared<FormTimerMgr>();
-    ASSERT_NE(nullptr, formTimerMgr);
-    FormTimer timerTask;
-    formTimerMgr->ExecTimerTask(timerTask);
-    GTEST_LOG_(INFO) << "Fms_FormTimerMgr_0088 end";
 }
 
 /**

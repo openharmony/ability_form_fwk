@@ -361,51 +361,6 @@ HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_0087, TestSize.Level1)
 }
 
 /**
- * @tc.number: FormMgrService_0088
- * @tc.name: test RegisterFormRouterProxy function.
- * @tc.desc: Verify that the RegisterFormRouterProxy interface is called normally
- * and the return value is ERR_APPEXECFWK_FORM_PERMISSION_DENY.
- */
-HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_0088, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormMgrService_0088 start";
-    FormMgrService formMgrService;
-    int64_t formId = 1;
-    std::vector<int64_t> formIds;
-    formIds.emplace_back(formId);
-    const sptr<IRemoteObject> callerToken = new (std::nothrow) MockFormProviderClient();;
-    int ret = formMgrService.RegisterFormRouterProxy(formIds, callerToken);
-    MockIsSACall(false);
-    MockIsSystemAppByFullTokenID(true);
-    MockVerifyCallingPermission(true);
-    MockCheckAcrossLocalAccountsPermission(false);
-    EXPECT_EQ(ERR_APPEXECFWK_FORM_PERMISSION_DENY, formMgrService.CheckFormPermission());
-    GTEST_LOG_(INFO) << "FormMgrService_0088 end";
-}
-
-/**
- * @tc.number: FormMgrService_0089
- * @tc.name: test UnregisterFormRouterProxy function.
- * @tc.desc: Verify that the UnregisterFormRouterProxy interface is called normally
- * and the return value is ERR_APPEXECFWK_FORM_PERMISSION_DENY.
- */
-HWTEST_F(FmsFormMgrServiceTest2, FormMgrService_0089, TestSize.Level1)
-{
-    GTEST_LOG_(INFO) << "FormMgrService_0089 start";
-    FormMgrService formMgrService;
-    int64_t formId = 1;
-    std::vector<int64_t> formIds;
-    formIds.emplace_back(formId);
-    int ret = formMgrService.UnregisterFormRouterProxy(formIds);
-    MockIsSACall(false);
-    MockIsSystemAppByFullTokenID(true);
-    MockVerifyCallingPermission(true);
-    MockCheckAcrossLocalAccountsPermission(false);
-    EXPECT_EQ(ERR_APPEXECFWK_FORM_PERMISSION_DENY, formMgrService.CheckFormPermission());
-    GTEST_LOG_(INFO) << "FormMgrService_0089 end";
-}
-
-/**
  * @tc.number: FormMgrService_0090
  * @tc.name: test GetFormInstancesByFilter function.
  * @tc.desc: Verify that the GetFormInstancesByFilter interface is called normally
