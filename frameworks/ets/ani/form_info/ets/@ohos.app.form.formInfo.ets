@@ -410,48 +410,6 @@ export default namespace formInfo {
     isRepeatAdditionSupported: boolean;
   }
 
-  export interface FormHostServiceInfo {
-    serviceName: string;
-    serviceDisplayName: string;
-    displayId: string;
-    customData?: Record<string, string>;
-  }
-
-  class FormHostServiceInfoInner implements FormHostServiceInfo {
-    serviceName: string = '';
-    serviceDisplayName: string = '';
-    displayId: string = '';
-    customData?: Record<string, string> = {};
-  }
-
-  export interface PeerFormHostServiceInfo {
-    serviceName: string;
-    serviceDisplayName: string;
-    displayId: string;
-    customData?: Record<string, string>;
-    deviceId: string;
-    networkId: string;
-    serviceId: string;
-  }
-
-  class PeerFormHostServiceInfoInner implements PeerFormHostServiceInfo {
-    serviceName: string = '';
-    serviceDisplayName: string = '';
-    displayId: string = '';
-    customData?: Record<string, string> = {};
-    deviceId: string = '';
-    networkId: string = '';
-    serviceId: string = '';
-  }
-
-  export interface PublishFormCrossDeviceResult {
-    formId: string;
-  }
-
-  class PublishFormCrossDeviceResultInner implements PublishFormCrossDeviceResult {
-    formId: string = '';
-  }
-
   type UpdateFormsConfigCallback = (configInfo: Array<FormCustomConfig>) => void;
 
   type DeleteFormsCallback = (formIds: Array<string>) => void;
