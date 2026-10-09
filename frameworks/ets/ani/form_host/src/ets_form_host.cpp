@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Huawei Device Co., Ltd.
+ * Copyright (c) 2025-2026 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,8 +30,6 @@
 #include "form_host_delegate_stub.h"
 #include "form_info.h"
 #include "form_info_filter.h"
-#include "form_service_info.h"
-#include "peer_form_service_info.h"
 #include "form_instance.h"
 #include "form_instances_filter.h"
 #include "form_callback_interface.h"
@@ -3275,109 +3273,6 @@ void GetFormIdsByFormLocation(ani_env *env, ani_object location, ani_object asyn
     InvokeAsyncWithBusinessError(env, asyncCallback, ERR_OK, result);
 }
 
-void ParseFormHostServiceInfo(ani_env *env, ani_object serviceObj, AppExecFwk::FormHostServiceInfo &service)
-{
-    HILOG_DEBUG("call");
-    if (env == nullptr || serviceObj == nullptr) {
-        HILOG_ERROR("null env or serviceObj");
-        return;
-    }
-    std::string serviceName;
-    if (GetStringProperty(env, serviceObj, "serviceName", serviceName) && !serviceName.empty()) {
-        service.serviceName = serviceName;
-    }
-    GetStringProperty(env, serviceObj, "serviceDisplayName", service.serviceDisplayName);
-    GetStringProperty(env, serviceObj, "displayId", service.displayId);
-    GetStringProperty(env, serviceObj, "customData", service.customData);
-}
-
-ani_object CreatePeerFormHostServiceInfo(ani_env *env, const AppExecFwk::PeerFormHostServiceInfo &service)
-{
-    HILOG_DEBUG("call");
-    ani_object obj = CreateAniObject(env, "@ohos.app.form.formInfo.formInfo.PeerFormHostServiceInfoInner");
-    if (obj == nullptr) {
-        HILOG_ERROR("CreateAniObject failed");
-        return nullptr;
-    }
-    SetPropertyStringByName(env, obj, "serviceName", service.serviceName);
-    SetPropertyStringByName(env, obj, "serviceDisplayName", service.serviceDisplayName);
-    SetPropertyStringByName(env, obj, "displayId", service.displayId);
-    SetPropertyStringByName(env, obj, "customData", service.customData);
-    SetPropertyStringByName(env, obj, "deviceId", service.deviceId);
-    SetPropertyStringByName(env, obj, "networkId", service.networkId);
-    SetPropertyStringByName(env, obj, "serviceId", service.serviceId);
-    return obj;
-}
-
-ani_object CreatePeerFormHostServiceInfos(ani_env *env,
-    const std::vector<AppExecFwk::PeerFormHostServiceInfo> &services)
-{
-    HILOG_DEBUG("call");
-    ani_object arrayObj = GetAniArray(env, services.size());
-    if (arrayObj == nullptr) {
-        HILOG_ERROR("GetAniArray failed");
-        return nullptr;
-    }
-    for (size_t i = 0; i < services.size(); ++i) {
-        ani_object item = CreatePeerFormHostServiceInfo(env, services[i]);
-        if (item == nullptr) {
-            HILOG_ERROR("CreatePeerFormHostServiceInfo failed at index %{public}zu", i);
-            continue;
-        }
-        env->Array_Set(static_cast<ani_array>(arrayObj), i, static_cast<ani_ref>(item));
-    }
-    return arrayObj;
-}
-
-void RegisterFormHostServiceInner(ani_env *env, ani_object serviceObj, ani_object asyncCallback)
-{
-    HILOG_INFO("call");
-    if (env == nullptr) {
-        HILOG_ERROR("null env");
-        return;
-    }
-    AppExecFwk::FormHostServiceInfo service;
-    ParseFormHostServiceInfo(env, serviceObj, service);
-    if (service.serviceName.empty()) {
-        HILOG_ERROR("serviceName is empty");
-        FormAniUtil::InvokeAsyncWithBusinessError(env, asyncCallback,
-            static_cast<int32_t>(ERR_APPEXECFWK_FORM_INVALID_PARAM), nullptr);
-        return;
-    }
-    int64_t serviceId = -1;
-    auto retCode = FormMgr::GetInstance().RegisterFormHostService(service, serviceId);
-    if (retCode == ERR_OK) {
-        ani_string aniStrServiceId = FormAniUtil::GetAniString(env, std::to_string(serviceId));
-        FormAniUtil::InvokeAsyncWithBusinessError(env, asyncCallback, ERR_OK,
-            static_cast<ani_object>(aniStrServiceId));
-    } else {
-        FormAniUtil::InvokeAsyncWithBusinessError(env, asyncCallback, retCode, nullptr);
-    }
-}
-
-void UnregisterFormHostServiceInner(ani_env *env, ani_string aniRegistryId, ani_object asyncCallback)
-{
-    HILOG_INFO("call");
-    if (env == nullptr) {
-        HILOG_ERROR("null env");
-        return;
-    }
-    std::string registryIdStr = FormAniUtil::AniStringToStdString(env, aniRegistryId);
-    int64_t registryId = -1;
-    if (!FormAniUtil::ConvertStringToInt64(registryIdStr, registryId)) {
-        HILOG_ERROR("registryId is not a numeric string");
-        FormAniUtil::InvokeAsyncWithBusinessError(env, asyncCallback,
-            static_cast<int32_t>(ERR_APPEXECFWK_FORM_INVALID_PARAM), nullptr);
-        return;
-    }
-    auto retCode = FormMgr::GetInstance().UnregisterFormHostService(registryId);
-    if (retCode == ERR_OK) {
-        FormAniUtil::InvokeAsyncWithBusinessError(env, asyncCallback, ERR_OK, nullptr);
-    } else {
-        FormAniUtil::InvokeAsyncWithBusinessError(env, asyncCallback, retCode, nullptr);
-    }
-}
-
 std::vector<ani_native_function> GetBindMethods()
 {
     std::vector methods = {
@@ -3487,15 +3382,6 @@ std::vector<ani_native_function> GetBindMethods()
             "getFormIdsByFormLocationInner",
             "C{@ohos.app.form.formInfo.formInfo.FormLocation}C{@ohos.app.form.formHost.AsyncCallbackWrapper}:",
             reinterpret_cast<void *>(GetFormIdsByFormLocation)},
-        ani_native_function {
-            "registerFormHostServiceInner",
-            "C{@ohos.app.form.formInfo.formInfo.FormHostServiceInfo}"
-            "C{@ohos.app.form.formHost.AsyncCallbackWrapper}:",
-            reinterpret_cast<void *>(RegisterFormHostServiceInner)},
-        ani_native_function {
-            "unregisterFormHostServiceInner",
-            "C{std.core.String}C{@ohos.app.form.formHost.AsyncCallbackWrapper}:",
-            reinterpret_cast<void *>(UnregisterFormHostServiceInner)},
     };
     return methods;
 }
