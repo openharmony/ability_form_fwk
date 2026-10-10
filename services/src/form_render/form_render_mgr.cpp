@@ -54,8 +54,8 @@ void FormRenderMgr::GetFormRenderState(const int32_t userId)
     // Check whether the account is authenticated.
     bool isVerified = false;
     AccountSA::OsAccountManager::IsOsAccountVerified(userId, isVerified);
-    HILOG_INFO("isVerified:%{public}d,isVerified_:%{public}d,mounted:%{public}d,screen:%{public}d,userId:%{public}d",
-        isVerified, isVerified_, isSecondMounted_, isScreenUnlocked_, userId);
+    HILOG_INFO("isVerified:%{public}d,isVerified_:%{public}d,screen:%{public}d,userId:%{public}d",
+        isVerified, isVerified_.load(), isScreenUnlocked_.load(), userId);
 
     std::lock_guard<std::mutex> lock(isVerifiedMutex_);
     if (isVerified_ == isVerified) {
@@ -69,16 +69,12 @@ void FormRenderMgr::GetFormRenderState(const int32_t userId)
     if (!isScreenUnlocked_) {
         PostOnUnlockTask(userId);
     }
-    if (isSecondMounted_) {
-        ExecAcquireProviderTask(userId);
-    }
+    ExecAcquireProviderTask(userId);
 }
 
-bool FormRenderMgr::GetIsSecondMounted() const
+bool FormRenderMgr::GetIsVerified() const
 {
-    HILOG_DEBUG("GetIsSecondMounted");
-    std::lock_guard<std::mutex> lock(isVerifiedMutex_);
-    return isSecondMounted_;
+    return isVerified_.load();
 }
 
 ErrCode FormRenderMgr::RenderForm(
@@ -86,7 +82,8 @@ ErrCode FormRenderMgr::RenderForm(
 {
     HILOG_INFO("formId:%{public}" PRId64 ", formUserId:%{public}d", formRecord.formId, formRecord.userId);
     GetFormRenderState(formRecord.userId);
-    HILOG_INFO("the current user authentication status:%{public}d,%{public}d", isVerified_, isScreenUnlocked_);
+    HILOG_INFO("the current user authentication status:%{public}d,%{public}d",
+        isVerified_.load(), isScreenUnlocked_.load());
     if (formRecord.uiSyntax != FormType::ETS) {
         return ERR_OK;
     }
@@ -375,39 +372,32 @@ void FormRenderMgr::NotifyScreenOn(const int32_t userId)
 
 void FormRenderMgr::OnScreenUnlock(const int32_t userId)
 {
-    // Check whether the account is authenticated.
-    bool isVerified = false;
-    AccountSA::OsAccountManager::IsOsAccountVerified(userId, isVerified);
-    HILOG_INFO("isVerified_:%{public}d, screenUnlocked:%{public}d, isVerified:%{public}d, userId:%{public}d",
-        isVerified_, isScreenUnlocked_, isVerified, userId);
-    std::lock_guard<std::mutex> lock(isVerifiedMutex_);
-    if (isVerified && !isSecondMounted_) {
-        isSecondMounted_ = true;
-    }
+    HILOG_INFO("isVerified_:%{public}d, screenUnlocked:%{public}d, userId:%{public}d",
+        isVerified_.load(), isScreenUnlocked_.load(), userId);
 
-    if (isScreenUnlocked_) {
+    if (isScreenUnlocked_.load()) {
         return;
     }
 
     // el2 path maybe not unlocked, should not acquire data
+    std::lock_guard<std::mutex> lock(isVerifiedMutex_);
     isScreenUnlocked_ = true;
-    if (!isVerified_) {
+    if (!isVerified_.load()) {
         PostOnUnlockTask(userId);
     }
 }
 
 void FormRenderMgr::OnUnlock(int32_t userId)
 {
-    HILOG_INFO("call. %{public}d,%{public}d,%{public}d,%{public}d",
-        isVerified_, isSecondMounted_, isScreenUnlocked_, userId);
-    if (isSecondMounted_) {
+    HILOG_INFO("call. %{public}d,%{public}d,%{public}d",
+        isVerified_.load(), isScreenUnlocked_.load(), userId);
+    if (isVerified_.load()) {
         return;
     }
-
     {
         std::lock_guard<std::mutex> lock(isVerifiedMutex_);
-        isSecondMounted_ = true;
-        if (!isScreenUnlocked_) {
+        isVerified_ = true;
+        if (!isScreenUnlocked_.load()) {
             PostOnUnlockTask(userId);
         }
     }
@@ -417,14 +407,14 @@ void FormRenderMgr::OnUnlock(int32_t userId)
 void FormRenderMgr::SetRenderGroupEnableFlag(int64_t formId, bool isEnable)
 {
     HILOG_INFO("call.");
-    int32_t userId = FormUtil::GetCurrentAccountId();
-    auto renderIter = renderInners_.find(userId);
-    if (renderIter != renderInners_.end()) {
-        renderIter->second->PostSetRenderGroupEnableFlagTask(formId, isEnable);
+    int32_t userId = IPCSkeleton::GetCallingUid() / Constants::CALLING_UID_TRANSFORM_DIVISOR;
+    std::shared_ptr<FormRenderMgrInner> renderInner;
+    if (GetFormRenderMgrInner(userId, renderInner)) {
+        renderInner->PostSetRenderGroupEnableFlagTask(formId, isEnable);
     }
-    auto sandboxIter = sandboxInners_.find(userId);
-    if (sandboxIter != sandboxInners_.end()) {
-        sandboxIter->second->PostSetRenderGroupEnableFlagTask(formId, isEnable);
+    std::shared_ptr<FormSandboxRenderMgrInner> sandboxInner;
+    if (GetFormSandboxMgrInner(userId, sandboxInner)) {
+        sandboxInner->PostSetRenderGroupEnableFlagTask(formId, isEnable);
     }
 }
 

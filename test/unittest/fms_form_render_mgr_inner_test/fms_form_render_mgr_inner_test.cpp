@@ -1897,6 +1897,40 @@ HWTEST_F(FormRenderMgrInnerTest, RemoveHostToken_001, TestSize.Level0)
 }
 
 /**
+ * @tc.name: RemoveHostToken_002
+ * @tc.desc: test RemoveHostToken collects only removed host's forms when other hosts still exist.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormRenderMgrInnerTest, RemoveHostToken_002, TestSize.Level0)
+{
+    GTEST_LOG_(INFO) << "RemoveHostToken_002 start";
+    FormRenderMgrInner formRenderMgrInner;
+    sptr<IRemoteObject> host1 = new (std::nothrow) MockFormProviderClient();
+    sptr<IRemoteObject> host2 = new (std::nothrow) MockFormProviderClient();
+    std::unordered_set<int64_t> form1;
+    form1.insert(999);
+    std::unordered_set<int64_t> form2;
+    form2.insert(1000);
+    formRenderMgrInner.etsHosts_.emplace(host1, form1);
+    formRenderMgrInner.etsHosts_.emplace(host2, form2);
+    WantParams wantParams;
+    FormRecord formRecord;
+    sptr<FormRenderConnection> conn1 = new (std::nothrow) FormRenderConnection(formRecord, wantParams);
+    sptr<FormRenderConnection> conn2 = new (std::nothrow) FormRenderConnection(formRecord, wantParams);
+    formRenderMgrInner.renderFormConnections_.emplace(999, conn1);
+    formRenderMgrInner.renderFormConnections_.emplace(1000, conn2);
+    MockGetFormRecord(false, 0);
+    MockDisconnectServiceAbility(false);
+    formRenderMgrInner.RemoveHostToken(host1);
+    EXPECT_EQ(1, formRenderMgrInner.etsHosts_.size());
+    // Global swap is skipped; only host1's form is collected and disconnected.
+    EXPECT_EQ(1, formRenderMgrInner.renderFormConnections_.size());
+    EXPECT_NE(formRenderMgrInner.renderFormConnections_.find(1000),
+        formRenderMgrInner.renderFormConnections_.end());
+    GTEST_LOG_(INFO) << "RemoveHostToken_002 end";
+}
+
+/**
  * @tc.name: RecoverForms_005
  * @tc.desc: test RecoverForms when LoadStatusData fails.
  * @tc.type: FUNC

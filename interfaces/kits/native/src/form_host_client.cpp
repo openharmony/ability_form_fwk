@@ -25,8 +25,6 @@
 
 namespace OHOS {
 namespace AppExecFwk {
-sptr<FormHostClient> FormHostClient::instance_ = nullptr;
-std::mutex FormHostClient::instanceMutex_;
 
 FormHostClient::FormHostClient()
 {
@@ -43,16 +41,8 @@ FormHostClient::~FormHostClient()
  */
 sptr<FormHostClient> FormHostClient::GetInstance()
 {
-    if (instance_ == nullptr) {
-        std::lock_guard<std::mutex> lock_l(instanceMutex_);
-        if (instance_ == nullptr) {
-            instance_ = new (std::nothrow) FormHostClient();
-            if (instance_ == nullptr) {
-                HILOG_ERROR("create FormHostClient failed");
-            }
-        }
-    }
-    return instance_;
+    static sptr<FormHostClient> instance(new FormHostClient());
+    return instance;
 }
 
 /**
@@ -222,11 +212,14 @@ void FormHostClient::OnUninstall(const std::vector<int64_t> &formIds)
         HILOG_ERROR("empty formIds");
         return;
     }
+    // Callback posts a sync task that may re-enter Register*; invoke outside the lock.
+    UninstallCallback callback = nullptr;
     {
         std::lock_guard<std::mutex> lock(uninstallCallbackMutex_);
-        if (uninstallCallback_ != nullptr) {
-            uninstallCallback_(formIds);
-        }
+        callback = uninstallCallback_;
+    }
+    if (callback != nullptr) {
+        callback(formIds);
     }
     for (auto &formId : formIds) {
         if (formId < 0) {

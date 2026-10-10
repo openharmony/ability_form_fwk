@@ -165,16 +165,7 @@ bool EtsFormRemoveCallbackClient::IsStrictEqual(ani_object callback)
 
 sptr<EtsFormStateObserver> EtsFormStateObserver::GetInstance()
 {
-    static std::once_flag initFlag;
-    static sptr<EtsFormStateObserver> instance;
-
-    std::call_once(initFlag, []() {
-        instance = sptr<EtsFormStateObserver>(new (std::nothrow) EtsFormStateObserver());
-        if (instance == nullptr) {
-            HILOG_ERROR("create EtsFormStateObserver failed");
-        }
-    });
-
+    static sptr<EtsFormStateObserver> instance(new EtsFormStateObserver());
     return instance;
 }
 

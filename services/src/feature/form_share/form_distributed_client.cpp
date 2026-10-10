@@ -88,7 +88,11 @@ int32_t FormDistributedClient::ShareForm(
         HILOG_ERROR("request failed, error:%{public}d", error);
         return error;
     }
-    int32_t result = reply.ReadInt32();
+    int32_t result = 0;
+    if (!reply.ReadInt32(result)) {
+        HILOG_ERROR("invalid DMS reply, read result failed");
+        return ERR_APPEXECFWK_FORM_DISTRIBUTED_SCHEDULE_FAILED;
+    }
     HILOG_DEBUG("get result from server data = %{public}d", result);
     return result;
 }

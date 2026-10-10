@@ -69,7 +69,7 @@ public:
 
     void GetFormRenderState(const int32_t userId);
 
-    bool GetIsSecondMounted() const;
+    bool GetIsVerified() const;
 
     ErrCode AddConnection(int64_t formId, sptr<FormRenderConnection> connection, const FormRecord &formRecord);
 
@@ -155,9 +155,8 @@ private:
     std::unordered_map<int32_t, std::shared_ptr<FormRenderMgrInner>> renderInners_;
     // <userId, FormSandboxRenderMgrInner>
     std::unordered_map<int32_t, std::shared_ptr<FormSandboxRenderMgrInner>> sandboxInners_;
-    bool isScreenUnlocked_ = false;
-    bool isVerified_ = false;
-    bool isSecondMounted_ = false;
+    std::atomic<bool> isScreenUnlocked_ {false};
+    std::atomic<bool> isVerified_ {false};
 };
 } // namespace AppExecFwk
 } // namespace OHOS

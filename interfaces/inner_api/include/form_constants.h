@@ -448,6 +448,8 @@ namespace Constants {
     constexpr const int32_t UPDATE_FORM_CONFIG_MAX_NUM = 64;
     // Delete forms filter max num
     constexpr const int32_t DELETE_FORMS_FILTER_MAX_NUM = 64;
+    // Max form provider data buffer size (32 MB)
+    constexpr const int32_t MAX_FORM_PROVIDER_DATA_BUFFER_SIZE = 32 * 1024 * 1024;
     // Form version code
     constexpr const int32_t FORM_VERSION_CODE = 100003;
     // Form domain id

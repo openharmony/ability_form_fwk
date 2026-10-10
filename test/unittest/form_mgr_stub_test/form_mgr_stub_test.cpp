@@ -3124,11 +3124,40 @@ HWTEST_F(FormMgrStubTest, FormMgrStubTest_HandleBatchRefreshForms_001, TestSize.
     GTEST_LOG_(INFO) << "FormMgrStubTest_HandleBatchRefreshForms_001 starts";
     MessageParcel data;
     MessageParcel reply;
-    const std::string bundleName = "bundleName";
-    data.WriteString(bundleName);
+    data.WriteInt32(Constants::REFRESH_ALL_FORM);
     EXPECT_CALL(*mockFormMgrService, BatchRefreshForms(_)).Times(1).WillOnce(Return(ERR_OK));
     EXPECT_EQ(mockFormMgrService->HandleBatchRefreshForms(data, reply), ERR_OK);
     GTEST_LOG_(INFO) << "FormMgrStubTest_HandleBatchRefreshForms_001 ends";
+}
+
+/**
+ * @tc.number: FormMgrStubTest_HandleBatchRefreshForms_002
+ * @tc.name: test HandleBatchRefreshForms function.
+ * @tc.desc: Verify that HandleBatchRefreshForms returns error when formRefreshType exceeds upper bound.
+ */
+HWTEST_F(FormMgrStubTest, FormMgrStubTest_HandleBatchRefreshForms_002, TestSize.Level1) {
+    GTEST_LOG_(INFO) << "FormMgrStubTest_HandleBatchRefreshForms_002 starts";
+    MessageParcel data;
+    MessageParcel reply;
+    data.WriteInt32(Constants::REFRESH_SYSTEMAPP_FORM + 1);
+    EXPECT_CALL(*mockFormMgrService, BatchRefreshForms(_)).Times(0);
+    EXPECT_EQ(mockFormMgrService->HandleBatchRefreshForms(data, reply), ERR_APPEXECFWK_FORM_INVALID_PARAM);
+    GTEST_LOG_(INFO) << "FormMgrStubTest_HandleBatchRefreshForms_002 ends";
+}
+
+/**
+ * @tc.number: FormMgrStubTest_HandleBatchRefreshForms_003
+ * @tc.name: test HandleBatchRefreshForms function.
+ * @tc.desc: Verify that HandleBatchRefreshForms returns error when formRefreshType is below lower bound.
+ */
+HWTEST_F(FormMgrStubTest, FormMgrStubTest_HandleBatchRefreshForms_003, TestSize.Level1) {
+    GTEST_LOG_(INFO) << "FormMgrStubTest_HandleBatchRefreshForms_003 starts";
+    MessageParcel data;
+    MessageParcel reply;
+    data.WriteInt32(-1);
+    EXPECT_CALL(*mockFormMgrService, BatchRefreshForms(_)).Times(0);
+    EXPECT_EQ(mockFormMgrService->HandleBatchRefreshForms(data, reply), ERR_APPEXECFWK_FORM_INVALID_PARAM);
+    GTEST_LOG_(INFO) << "FormMgrStubTest_HandleBatchRefreshForms_003 ends";
 }
 
 /**

@@ -19,7 +19,6 @@
 #include <map>
 #include <mutex>
 #include <vector>
-#include <singleton.h>
 #include "event_handler.h"
 #include "form_mgr_interface.h"
 #include "form_mgr.h"
@@ -99,8 +98,7 @@ private:
     napi_env env_;
 };
 
-class JsFormStateObserver : public JsFormStateObserverStub,
-                            public DelayedRefSingleton<JsFormStateObserver> {
+class JsFormStateObserver : public JsFormStateObserverStub {
 public:
     JsFormStateObserver() = default;
 
@@ -153,9 +151,6 @@ public:
 private:
     bool DelCallbackFromMap(std::map<std::string, std::shared_ptr<NativeReference>> &callbackMap,
         const std::string &bundleName, napi_value jsObserverObject);
-    static std::mutex mutex_;
-    static std::once_flag onceFlag_;
-    static sptr<JsFormStateObserver> instance_;
     mutable std::mutex addFormCallbackMutex_;
     mutable std::mutex removeFormCallbackMutex_;
     mutable std::mutex formIsvisibleCallbackMutex_;

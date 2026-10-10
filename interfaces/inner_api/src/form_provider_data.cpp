@@ -35,7 +35,6 @@ const std::string JSON_EMPTY_STRING = "{}";
 const std::string JSON_IMAGES_STRING = "formImages";
 constexpr int32_t READ_PARCEL_MAX_IMAGE_DATA_NUM_SIZE = 1000;
 constexpr int32_t MAX_IMAGE_BYTE_SIZE = 50 * 1024 * 1024;
-constexpr int32_t MAX_BUFFER_SIZE = 32 * 1024 * 1024;
 constexpr int32_t BIG_DATA = 32 * 1024;
 constexpr int32_t SHARE_MEM_ALLOC = 2;
 /**
@@ -247,7 +246,7 @@ void FormProviderData::SetDataString(std::string &jsonDataString)
     if (jsonDataString.empty()) {
         jsonDataString = JSON_EMPTY_STRING;
     }
-    if (jsonDataString.size() > MAX_BUFFER_SIZE) {
+    if (jsonDataString.size() > static_cast<size_t>(Constants::MAX_FORM_PROVIDER_DATA_BUFFER_SIZE)) {
         HILOG_ERROR("jsonDataString too large: %{public}zu", jsonDataString.size());
         return;
     }
@@ -421,7 +420,7 @@ char *FormProviderData::ReadAshmemDataFromParcel(Parcel &parcel, int32_t bufferS
         fdsan_close_with_tag(fd, Constants::FORM_DOMAIN_ID);
         return nullptr;
     }
-    if (bufferSize <= 0 || bufferSize > MAX_BUFFER_SIZE) {
+    if (bufferSize <= 0 || bufferSize > Constants::MAX_FORM_PROVIDER_DATA_BUFFER_SIZE) {
         HILOG_INFO("malloc parameter bufferSize:[%{public}d] error.", bufferSize);
         fdsan_close_with_tag(fd, Constants::FORM_DOMAIN_ID);
         return nullptr;

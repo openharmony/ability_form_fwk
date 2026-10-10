@@ -30,14 +30,14 @@ void FormEditExtensionContext::SetWant(const std::shared_ptr<AAFwk::Want> &want)
 
 ErrCode FormEditExtensionContext::StartAbilityByFms(const AAFwk::Want &want)
 {
-    TAG_LOGI(AAFwkTag::UI_EXT, "StartAbilityByFms wantToHost: %{public}s", want.ToString().c_str());
+    TAG_LOGI(AAFwkTag::UI_EXT, "StartAbilityByFms wantToHost: %{private}s", want.ToString().c_str());
     Want wantToHost(want);
     std::string requestMethod = "openFormEditSecPageView";
     wantToHost.SetParam(Constants::PARAM_PAGE_ROUTER_SERVICE_CODE, Constants::PAGE_ROUTER_SERVICE_CODE_FORM_EDIT);
     wantToHost.SetParam(Constants::PARMA_REQUEST_METHOD, requestMethod);
     wantToHost.SetAction(Constants::FORM_PAGE_ACTION);
 
-    TAG_LOGI(AAFwkTag::UI_EXT, "StartAbilityByFms wantToHost: %{public}s", wantToHost.ToString().c_str());
+    TAG_LOGI(AAFwkTag::UI_EXT, "StartAbilityByFms wantToHost: %{private}s", wantToHost.ToString().c_str());
     ErrCode err = AppExecFwk::FormMgr::GetInstance().StartAbilityByFms(wantToHost);
     if (err != ERR_OK) {
         TAG_LOGE(AAFwkTag::UI_EXT, "ret = %{public}d", err);

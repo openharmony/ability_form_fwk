@@ -33,10 +33,6 @@ namespace {
     constexpr uint KEY_LIMIT = 16;
 }
 
-sptr<JsFormStateObserver> JsFormStateObserver::instance_ = nullptr;
-std::mutex JsFormStateObserver::mutex_;
-std::once_flag JsFormStateObserver::onceFlag_;
-
 FormAddCallbackClient::FormAddCallbackClient(napi_env env, napi_ref callbackRef)
 {
     env_ = env;
@@ -163,13 +159,8 @@ bool FormRemoveCallbackClient::IsStrictEqual(napi_value callback)
 
 sptr<JsFormStateObserver> JsFormStateObserver::GetInstance()
 {
-    std::call_once(onceFlag_, []() {
-        instance_ = new (std::nothrow) JsFormStateObserver();
-        if (instance_ == nullptr) {
-            HILOG_ERROR("create JsFormStateObserver failed");
-        }
-    });
-    return instance_;
+    static sptr<JsFormStateObserver> instance(new JsFormStateObserver());
+    return instance;
 }
 
 bool JsFormStateObserver::CheckMapSize(const std::string &type, const std::string &bundleName)
@@ -361,12 +352,17 @@ int32_t JsFormStateObserver::OnRemoveForm(const std::string &bundleName,
 {
     HILOG_DEBUG("call");
 
-    std::lock_guard<std::mutex> lock(removeFormCallbackMutex_);
-    auto callbackClient = formRemoveCallbackMap_.find(bundleName);
-    if (callbackClient != formRemoveCallbackMap_.end()) {
-        for (auto iter : callbackClient->second) {
-            iter->ProcessFormRemove(bundleName, runningFormInfo);
+    // Snapshot under lock: the JS callback may call off() which re-enters this mutex.
+    std::vector<std::shared_ptr<FormRemoveCallbackClient>> callbackClients;
+    {
+        std::lock_guard<std::mutex> lock(removeFormCallbackMutex_);
+        auto callbackClient = formRemoveCallbackMap_.find(bundleName);
+        if (callbackClient != formRemoveCallbackMap_.end()) {
+            callbackClients = callbackClient->second;
         }
+    }
+    for (auto &iter : callbackClients) {
+        iter->ProcessFormRemove(bundleName, runningFormInfo);
     }
     return ERR_OK;
 }

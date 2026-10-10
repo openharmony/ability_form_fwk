@@ -46,4 +46,44 @@ void FmsFormRenderConnectionTest::SetUp()
 
 void FmsFormRenderConnectionTest::TearDown()
 {}
+
+/**
+ * @tc.name: OnAbilityConnectDone_001
+ * @tc.desc: Test OnAbilityConnectDone with null remoteObject posts failed task while failedTimes within limit.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FmsFormRenderConnectionTest, OnAbilityConnectDone_001, TestSize.Level0)
+{
+    GTEST_LOG_(INFO) << "OnAbilityConnectDone_001 start";
+    FormRecord formRecord;
+    formRecord.formId = 1;
+    formRecord.bundleName = "com.test.bundle";
+    WantParams wantParams;
+    sptr<FormRenderConnection> connection = new FormRenderConnection(formRecord, wantParams);
+    ElementName element;
+    connection->OnAbilityConnectDone(element, nullptr, ERR_OK);
+    EXPECT_EQ(1, connection->failedTimes.load());
+    GTEST_LOG_(INFO) << "OnAbilityConnectDone_001 end";
+}
+
+/**
+ * @tc.name: OnAbilityConnectDone_002
+ * @tc.desc: Test OnAbilityConnectDone stops posting failed task once failedTimes exceeds limit.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FmsFormRenderConnectionTest, OnAbilityConnectDone_002, TestSize.Level0)
+{
+    GTEST_LOG_(INFO) << "OnAbilityConnectDone_002 start";
+    FormRecord formRecord;
+    formRecord.formId = 1;
+    formRecord.bundleName = "com.test.bundle";
+    WantParams wantParams;
+    sptr<FormRenderConnection> connection = new FormRenderConnection(formRecord, wantParams);
+    // MAX_FAILED_TIMES is 5 in form_render_connection.cpp; preset the counter to it.
+    connection->failedTimes.store(5);
+    ElementName element;
+    connection->OnAbilityConnectDone(element, nullptr, ERR_OK);
+    EXPECT_EQ(6, connection->failedTimes.load());
+    GTEST_LOG_(INFO) << "OnAbilityConnectDone_002 end";
+}
 }  // namespace

@@ -42,7 +42,7 @@ std::map<int64_t, std::queue<FormRecordReportInfo>>& FormRecordReport::GetFormRe
 
 void FormRecordReport::SetFormRecordRecordInfo(int64_t formId, const Want &want)
 {
-    FormRecordReportInfo info;
+    FormRecordReportInfo info {};
     std::lock_guard<std::mutex> guard(formRecordReportMutex_);
     if (formRecordReportMap_.find(formId) == formRecordReportMap_.end()) {
         std::queue<FormRecordReportInfo> queue;
@@ -169,7 +169,7 @@ void FormRecordReport::AddNewDayReportInfo()
     for (auto &entry : formRecordReportMap_) {
         auto &queue = entry.second;
         if (queue.size() < REPORT_INFO_QUEUE_MAX_LEN) {
-            FormRecordReportInfo record;
+            FormRecordReportInfo record {};
             queue.push(record);
         }
     }

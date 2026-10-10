@@ -149,8 +149,6 @@ public:
 
     bool UnregisterPublishFormCrossBundleControl();
 private:
-    static std::mutex mutex_;
-    static sptr<JsFormProviderProxyMgr> instance_;
     mutable std::mutex FormProviderProxyCallbackMutex_;
 
     DISALLOW_COPY_AND_MOVE(JsFormProviderProxyMgr);

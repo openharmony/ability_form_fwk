@@ -54,10 +54,10 @@ void FormRenderConnection::OnAbilityConnectDone(const AppExecFwk::ElementName &e
         return;
     }
     if (remoteObject == nullptr || remoteObject->IsObjectDead()) {
-        failedTimes++;
+        int32_t failed = failedTimes.fetch_add(1) + 1;
         HILOG_WARN("remoteObject is null or dead, formId:%{public}" PRId64 ", failedTimes:%{public}d",
-            GetFormId(), failedTimes);
-        if (failedTimes <= MAX_FAILED_TIMES) {
+            GetFormId(), failed);
+        if (failed <= MAX_FAILED_TIMES) {
             FormHostTaskMgr::GetInstance().PostConnectFRSFailedTaskToHost(
                 GetFormId(), ERR_APPEXECFWK_FORM_RENDER_SERVICE_DIED, FORM_FRS_DIED_TASK_DELAY_TIME);
         }
@@ -65,11 +65,11 @@ void FormRenderConnection::OnAbilityConnectDone(const AppExecFwk::ElementName &e
     }
     FormRenderReport::GetInstance().RecordFRSStart();
     connectState_.store(ConnectState::CONNECTED);
-    failedTimes = 0;
+    failedTimes.store(0);
     int32_t compileMode = 0;
     FormRecord newRecord;
     {
-        std::lock_guard<std::mutex> lock(formRecordMutex_);
+        std::lock_guard<std::mutex> lock(connectionDataMutex_);
         newRecord = formRecord_;
     }
     if (!FormBmsHelper::GetInstance().GetCompileMode(newRecord.bundleName, newRecord.moduleName,
@@ -88,7 +88,10 @@ void FormRenderConnection::OnAbilityConnectDone(const AppExecFwk::ElementName &e
     FormRenderMgr::GetInstance().AddConnection(GetFormId(), connection, newRecord);
     FormRenderMgr::GetInstance().AddRenderDeathRecipient(remoteObject, newRecord);
     Want want;
-    want.SetParams(wantParams_);
+    {
+        std::lock_guard<std::mutex> lock(connectionDataMutex_);
+        want.SetParams(wantParams_);
+    }
     want.SetParam(Constants::FORM_CONNECT_ID, this->GetConnectId());
     want.SetParam(Constants::FORM_COMPILE_MODE_KEY, compileMode);
     FormStatusTaskMgr::GetInstance().PostRenderForm(newRecord, std::move(want), remoteObject);
@@ -99,7 +102,12 @@ void FormRenderConnection::OnAbilityDisconnectDone(const AppExecFwk::ElementName
     if (resultCode && connectState_.load() == ConnectState::CONNECTING) {
         HILOG_WARN("formId:%{public}" PRId64 ", resultCode:%{public}d, connectState:%{public}d",
             GetFormId(), resultCode, connectState_.load());
-        FormRenderMgr::GetInstance().RemoveConnection(GetFormId(), formRecord_);
+        FormRecord recordSnapshot;
+        {
+            std::lock_guard<std::mutex> lock(connectionDataMutex_);
+            recordSnapshot = formRecord_;
+        }
+        FormRenderMgr::GetInstance().RemoveConnection(GetFormId(), recordSnapshot);
         FormHostTaskMgr::GetInstance().PostConnectFRSFailedTaskToHost(
             GetFormId(), ERR_APPEXECFWK_FORM_RENDER_SERVICE_DIED, FORM_RECONNECT_DELAY_TIME);
     } else {
@@ -107,7 +115,7 @@ void FormRenderConnection::OnAbilityDisconnectDone(const AppExecFwk::ElementName
             GetFormId(), resultCode, connectState_.load());
     }
     connectState_.store(ConnectState::DISCONNECTED);
-    failedTimes = 0;
+    failedTimes.store(0);
 }
 
 void FormRenderConnection::SetStateConnecting()
@@ -122,12 +130,13 @@ void FormRenderConnection::SetStateDisconnected()
 
 void FormRenderConnection::UpdateWantParams(const WantParams &wantParams)
 {
+    std::lock_guard<std::mutex> lock(connectionDataMutex_);
     wantParams_ = wantParams;
 }
 
 void FormRenderConnection::UpdateFormRecord(const FormRecord &formRecord)
 {
-    std::lock_guard<std::mutex> lock(formRecordMutex_);
+    std::lock_guard<std::mutex> lock(connectionDataMutex_);
     formRecord_ = formRecord;
 }
 }  // namespace AppExecFwk

@@ -34,6 +34,7 @@
 #include "want_params.h"
 #include "form_provider_data.h"
 #include "form_provider_data_proxy.h"
+#include "form_render/form_render_mgr.h"
 
 #include "mock_form_data_mgr.h"
 #include "mock_form_info_mgr.h"
@@ -979,6 +980,31 @@ HWTEST_F(FmsFormDataAdapterTest, AcquireProviderFormInfoAsync_003, TestSize.Leve
     EXPECT_EQ(result, ERR_OK);
 
     GTEST_LOG_(INFO) << "AcquireProviderFormInfoAsync_003 end";
+}
+
+/**
+ * @tc.name: AcquireProviderFormInfoAsync_004
+ * @tc.desc: Verify AcquireProviderFormInfoAsync acquires immediately when render mgr is verified
+ * @tc.type: FUNC
+ */
+HWTEST_F(FmsFormDataAdapterTest, AcquireProviderFormInfoAsync_004, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "AcquireProviderFormInfoAsync_004 start";
+
+    FormItemInfo info;
+    info.SetFormId(TEST_FORM_ID);
+    info.SetProviderBundleName("com.test.bundle");
+    info.SetEnableForm(true);
+    WantParams wantParams;
+
+    // Verified render mgr takes the inner path, so invalid formId fails there
+    // instead of falling into the pending-task path with GetFormRecord.
+    FormRenderMgr::GetInstance().OnUnlock(TEST_USER_ID);
+    EXPECT_CALL(*MockFormDataMgr::obj, GetFormRecord(_, _)).Times(0);
+    auto result = FormDataAdapter::GetInstance().AcquireProviderFormInfoAsync(0, info, wantParams);
+    EXPECT_EQ(result, ERR_APPEXECFWK_FORM_INVALID_PARAM);
+
+    GTEST_LOG_(INFO) << "AcquireProviderFormInfoAsync_004 end";
 }
 
 // ========== IsDeleteCacheInUpgradeScene Tests ==========

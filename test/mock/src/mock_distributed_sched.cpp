@@ -17,6 +17,16 @@
 #include "ipc_skeleton.h"
 #include "mock_distributed_sched.h"
 
+namespace {
+// Toggle for testing ShareForm behavior when DMS reply carries no result.
+bool g_writeShareFormReply = true;
+}
+
+void MockStartRemoteShareFormWriteReply(bool enable)
+{
+    g_writeShareFormReply = enable;
+}
+
 namespace OHOS {
 namespace DistributedSchedule {
 using namespace std;
@@ -26,6 +36,7 @@ namespace {
 const std::string TAG = "MockDistributedSched";
 const std::u16string DMS_STUB_INTERFACE_TOKEN = u"ohos.distributedschedule.accessToken";
 }
+
 DistributedSchedStub::DistributedSchedStub()
 {
     localFuncsMap_[static_cast<uint32_t>(IDSchedInterfaceCode::START_REMOTE_SHARE_FORM)] =
@@ -70,7 +81,11 @@ int32_t DistributedSchedStub::StartRemoteShareFormInner(MessageParcel &data, Mes
     }
 
     int32_t result = StartRemoteShareForm(deviceId, *formShareInfo);
-    return result;
+    // Mirror real DMS behavior: the stub always writes the result into reply.
+    if (!g_writeShareFormReply) {
+        return 0;
+    }
+    return reply.WriteInt32(result) ? 0 : ERR_FLATTEN_OBJECT;
 }
 
 int32_t DistributedSchedService::StopRemoteExtensionAbility(

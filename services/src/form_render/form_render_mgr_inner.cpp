@@ -715,6 +715,7 @@ void FormRenderMgrInner::RemoveHostToken(const sptr<IRemoteObject> &host)
 {
     size_t renderConnectionSize = 0;
     std::unordered_set<int64_t> formIdSet;
+    std::unordered_map<int64_t, sptr<FormRenderConnection>> connections;
     bool disconnectAll = false;
     {
         std::lock_guard<std::mutex> lock(resourceMutex_);
@@ -727,16 +728,12 @@ void FormRenderMgrInner::RemoveHostToken(const sptr<IRemoteObject> &host)
         etsHosts_.erase(host);
         disconnectAll = etsHosts_.empty();
         renderConnectionSize = renderFormConnections_.size();
+        if (disconnectAll) {
+            connections.swap(renderFormConnections_);
+        }
     }
 
-    std::unordered_map<int64_t, sptr<FormRenderConnection>> connections;
-
-    if (disconnectAll) {
-        std::lock_guard<std::mutex> lock(resourceMutex_);
-        HILOG_DEBUG("etsHosts is empty, disconnect all connections size:%{public}zu",
-            renderConnectionSize);
-        connections.swap(renderFormConnections_);
-    } else {
+    if (!disconnectAll) {
         CollectConnectionsToDisconnect(formIdSet, connections);
     }
 

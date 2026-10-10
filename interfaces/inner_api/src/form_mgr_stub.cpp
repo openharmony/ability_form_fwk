@@ -2350,6 +2350,10 @@ ErrCode FormMgrStub::HandleBatchRefreshForms(MessageParcel &data, MessageParcel 
         HILOG_ERROR("read formRefreshType failed");
         return ERR_APPEXECFWK_PARCEL_ERROR;
     }
+    if (formRefreshType < Constants::REFRESH_ALL_FORM || formRefreshType > Constants::REFRESH_SYSTEMAPP_FORM) {
+        HILOG_ERROR("invalid formRefreshType:%{public}d", formRefreshType);
+        return ERR_APPEXECFWK_FORM_INVALID_PARAM;
+    }
     ErrCode result = BatchRefreshForms(formRefreshType);
     if (!reply.WriteInt32(result)) {
         HILOG_ERROR("write result failed");

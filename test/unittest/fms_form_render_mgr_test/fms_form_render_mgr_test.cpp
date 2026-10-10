@@ -16,6 +16,7 @@
 #include <chrono>
 #include <dirent.h>
 #include <fstream>
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <string>
 #include <thread>
@@ -29,6 +30,7 @@
 #include "ipc_types.h"
 #include "fms_log_wrapper.h"
 #include "mock_form_provider_client.h"
+#include "inner/mock_form_render_mgr_inner.h"
 
 using namespace testing::ext;
 using namespace OHOS;
@@ -55,7 +57,10 @@ void FormRenderMgrTest::SetUp()
 {}
 
 void FormRenderMgrTest::TearDown()
-{}
+{
+    // Static gmock object needs explicit per-case verification.
+    testing::Mock::VerifyAndClearExpectations(&MockInnerTask());
+}
 
 /**
  * @tc.name: FormRenderMgrTest_001
@@ -835,6 +840,68 @@ HWTEST_F(FormRenderMgrTest, GetFRSDiedInLowMemoryByUid_002, TestSize.Level0)
     iter->second->isFrsDiedInLowMemory_ = true;
     EXPECT_TRUE(formRenderMgr.GetFRSDiedInLowMemoryByUid(userId));
     GTEST_LOG_(INFO) << "GetFRSDiedInLowMemoryByUid_002 end";
+}
+
+/**
+ * @tc.name: SetRenderGroupEnableFlag_001
+ * @tc.desc: Test SetRenderGroupEnableFlag when no renderInner exists for current userId, maps unchanged.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormRenderMgrTest, SetRenderGroupEnableFlag_001, TestSize.Level0)
+{
+    GTEST_LOG_(INFO) << "SetRenderGroupEnableFlag_001 start";
+    FormRenderMgr formRenderMgr;
+    // callingUid 40000000 maps to userId 200, which has no renderInner.
+    MockGetCallingUid(40000000);
+    formRenderMgr.InitRenderInner(false, 100);
+    EXPECT_EQ(formRenderMgr.renderInners_.size(), 1u);
+    EXPECT_CALL(MockInnerTask(), PostSetRenderGroupEnableFlagTask(testing::_, testing::_)).Times(0);
+    formRenderMgr.SetRenderGroupEnableFlag(1, true);
+    EXPECT_EQ(formRenderMgr.renderInners_.size(), 1u);
+    EXPECT_TRUE(formRenderMgr.sandboxInners_.empty());
+    GTEST_LOG_(INFO) << "SetRenderGroupEnableFlag_001 end";
+}
+
+/**
+ * @tc.name: SetRenderGroupEnableFlag_002
+ * @tc.desc: Test SetRenderGroupEnableFlag with matching userId, inner remains valid after call.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormRenderMgrTest, SetRenderGroupEnableFlag_002, TestSize.Level0)
+{
+    GTEST_LOG_(INFO) << "SetRenderGroupEnableFlag_002 start";
+    FormRenderMgr formRenderMgr;
+    // callingUid 20000001 maps to userId 100, which matches the inners below.
+    MockGetCallingUid(20000001);
+    formRenderMgr.InitRenderInner(false, 100);
+    formRenderMgr.InitRenderInner(true, 100);
+    std::shared_ptr<FormRenderMgrInner> renderInner;
+    EXPECT_TRUE(formRenderMgr.GetFormRenderMgrInner(100, renderInner));
+    // renderInner and sandboxInner each posts exactly once per call.
+    EXPECT_CALL(MockInnerTask(), PostSetRenderGroupEnableFlagTask(1, true)).Times(2);
+    formRenderMgr.SetRenderGroupEnableFlag(1, true);
+    testing::Mock::VerifyAndClearExpectations(&MockInnerTask());
+    EXPECT_CALL(MockInnerTask(), PostSetRenderGroupEnableFlagTask(1, false)).Times(2);
+    formRenderMgr.SetRenderGroupEnableFlag(1, false);
+    EXPECT_TRUE(formRenderMgr.GetFormRenderMgrInner(100, renderInner));
+    GTEST_LOG_(INFO) << "SetRenderGroupEnableFlag_002 end";
+}
+
+/**
+ * @tc.name: OnUnlock_001
+ * @tc.desc: Test OnUnlock marks verified and second call takes the early-return path.
+ * @tc.type: FUNC
+ */
+HWTEST_F(FormRenderMgrTest, OnUnlock_001, TestSize.Level0)
+{
+    GTEST_LOG_(INFO) << "OnUnlock_001 start";
+    FormRenderMgr formRenderMgr;
+    EXPECT_FALSE(formRenderMgr.isVerified_);
+    formRenderMgr.OnUnlock(100);
+    EXPECT_TRUE(formRenderMgr.isVerified_);
+    formRenderMgr.OnUnlock(100);
+    EXPECT_TRUE(formRenderMgr.isVerified_);
+    GTEST_LOG_(INFO) << "OnUnlock_001 end";
 }
 
 /**
