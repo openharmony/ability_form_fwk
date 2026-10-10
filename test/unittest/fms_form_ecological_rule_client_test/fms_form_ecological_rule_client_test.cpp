@@ -102,7 +102,6 @@ HWTEST_F(FmsFormEcologicalRuleClientTest, ConnectService_003, TestSize.Level1)
     auto proxy = FormEcologicalRuleClient::ConnectService();
     ASSERT_NE(nullptr, proxy);
     // The proxy binds the system ability remote object.
-    // Compare raw pointers: mixed sptr types make operator== ambiguous.
     EXPECT_EQ(remote.GetRefPtr(), proxy->AsObject().GetRefPtr());
     // The recipient is registered on the remote exactly once and matches the cached one.
     EXPECT_EQ(1, remote->addDeathRecipientCount_);
